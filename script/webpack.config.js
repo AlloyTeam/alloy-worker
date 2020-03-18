@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ReplaceWorkerFileNamePlaceholderPlugin = require('./replace-worker-file-name-placeholder-plugin');
 
 const {
     isProduction,
@@ -10,12 +11,13 @@ const {
     manifestFileForWorker,
 } = require('./project.config');
 
+
 const sourceMap = isProduction ? 'source-map' : 'cheap-module-source-map';
-const workerEntry = path.join(projectDir, './src/worker/worker-thread/index');
+const pagePath = path.join(projectDir, './src/page');
 
 const config = {
     entry: {
-        [workerFileName]: workerEntry,
+        index: path.join(pagePath, '/index.ts'),
     },
     output: {
         filename: isProduction ? '[name]-[hash:8].js' : '[name].js',
@@ -38,12 +40,18 @@ const config = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            __WORKER__: true,
+            __WORKER__: false,
         }),
-        new ManifestPlugin({
-            fileName: manifestFileForWorker,
+        new HtmlWebpackPlugin({
+            template: path.join(pagePath, '/index.html'),
         }),
-    ]
+        new ReplaceWorkerFileNamePlaceholderPlugin({
+            test: [/\.html$/],
+            workerFileName: `${workerFileName}.js`,
+            workerFileNamePlaceholder: 'WORKER_FILE_NAME_PLACEHOLDER',
+            manifestFileForWorkerPath: path.join(outputPath, manifestFileForWorker),
+        }),
+    ],
 }
 
 module.exports = config;
