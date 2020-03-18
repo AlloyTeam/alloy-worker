@@ -6,6 +6,7 @@ const {
     isProduction,
     outputPath,
     projectDir,
+    workerFileName,
 } = require('./project.config');
 
 const sourceMap = isProduction ? 'source-map' : 'cheap-module-source-map';
@@ -13,7 +14,7 @@ const workerEntry = path.join(projectDir, './src/worker/worker-thread/index');
 
 const config = {
     entry: {
-        worker: workerEntry,
+        [workerFileName]: workerEntry,
     },
     output: {
         filename: isProduction ? '[name]-[hash:8].js' : '[name].js',
