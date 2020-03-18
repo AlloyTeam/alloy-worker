@@ -1,0 +1,28 @@
+{
+    "name": "alloy-worker",
+    "version": "0.1.0",
+    "description": "面向事务的高可用 Worker 通信框架",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev:worker": "cross-env NODE_ENV=development node ./script/build-worker.js",
+        "dist:worker": "cross-env NODE_ENV=production node ./script/build-worker.js"
+    },
+    "keywords": [
+        "Web",
+        "Worker",
+        "Channel",
+        "Message"
+    ],
+    "author": "CntChen",
+    "license": "MIT",
+    "devDependencies": {
+        "webpack": "^4.42.0",
+        "webpack-manifest-plugin": "^2.2.0"
+    },
+    "dependencies": {
+        "cross-env": "^7.0.2",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.8.3"
+    }
+}
