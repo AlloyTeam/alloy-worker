@@ -165,8 +165,9 @@ export default class Channel {
      * @returns 会话 Id
      */
     private generateSessionId(): string {
-        // sessionId 长度为 21 位, 以 `w_` 开头, 避免 nanoid 生成时可能以数字开头, 无法作为 Map 的 key
-        const sessionId: string = `w_${nanoid(19)}`;
+        // sessionId 长度为 16 位, 有效位数 14 位
+        // 以 `w_` 开头, 避免 nanoid 生成时可能以数字开头, 无法作为 Map 的 key
+        const sessionId: string = `w_${nanoid(14)}`;
         return sessionId;
     }
 
