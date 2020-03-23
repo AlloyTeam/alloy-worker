@@ -61,7 +61,7 @@ export default class BaseController implements IController {
      * @param actionType 事务类型
      * @param handler 事务处理器
      */
-    listen(actionType: string, handler: Function) {
+    listen(actionType: string, handler: Function): void {
         // TODO 修改为数据输出
         // console.log(`%cactionType: ${actionType}`, 'color: orange');
         if (this.hasActionHandler(actionType)) {
@@ -76,16 +76,28 @@ export default class BaseController implements IController {
      * @param message 会话消息
      * @returns
      */
-    actionHandler(message: IMessage) {
+    actionHandler(message: IMessage): Promise<any> {
         const { actionType, payload } = message;
 
         if (this.hasActionHandler(actionType)) {
-            // 触发指定事务的处理器, 并返回事务处理的结果
-            // 支持回调事件是一个 Promise
-            const actionResultPromise = this.actionHandlerMap[actionType](payload).catch((error) => {
+            // 执行指定的事务处理器, 并返回 Promise 封装的事务结果
+            try {
+                const actionResult = this.actionHandlerMap[actionType](payload);
+
+                // 对于 Promise 形式的结果, 需要进行 Promise 错误捕获
+                if (this.isPromise(actionResult)) {
+                    return actionResult.catch(error => {
+                        // TODO 做错误上报
+                        console.error('error:', error);
+                    });
+                }
+
+                // 对数据结果, 包装为 Promise
+                return Promise.resolve(actionResult);
+            } catch(error) {
                 // TODO 做错误上报
-            });
-            return actionResultPromise;
+                console.error('error:', error);
+            }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);
         }
@@ -101,4 +113,14 @@ export default class BaseController implements IController {
     protected hasActionHandler(actionType: string): boolean {
         return !!this.actionHandlerMap[actionType];
     }
+
+    /**
+     * 判断是不是 promise
+     * @param obj 要判断的对象
+     * @returns {boolean} 判断结果
+     */
+    private isPromise(obj: any): obj is Promise<any> {
+        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+    }
+
 }

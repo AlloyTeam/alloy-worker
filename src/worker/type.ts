@@ -14,16 +14,6 @@ export interface IAlloyWorkerOptions {
 }
 
 /**
- * 通信控制器需要实现的 interface
- */
-export interface IController {
-    /**
-     * 事务处理器
-     */
-    actionHandler: Function;
-}
-
-/**
  * 会话消息类型枚举
  */
 export const enum MessageType {
@@ -40,3 +30,14 @@ export interface IMessage {
     sessionId: string;
     payload: any;
 }
+
+/**
+ * 通信控制器需要实现的 interface
+ */
+export interface IController {
+    /**
+     * 事务处理器
+     */
+    actionHandler: (message: IMessage) => Promise<any>;
+}
+
