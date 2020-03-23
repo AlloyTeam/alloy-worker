@@ -8,9 +8,8 @@ import MainThreadWorker from './main-thread/index';
 /**
  * 创建 Alloy Worker 的工厂函数
  *
- * @export
- * @param {IAlloyWorkerOptions} options
- * @returns {MainThreadWorker}
+ * @param options 工厂函数参数
+ * @returns {MainThreadWorker} Alloy Worker 实例
  */
 export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThreadWorker {
     const mainThreadWorker = new MainThreadWorker(options);

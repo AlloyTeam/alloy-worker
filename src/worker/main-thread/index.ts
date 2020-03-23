@@ -15,4 +15,3 @@ import Controller from './controller';
         this.controller = new Controller(options);
     }
  }
-
