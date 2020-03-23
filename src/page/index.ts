@@ -16,3 +16,7 @@ const alloyWorker = createAlloyWorker({
 });
 
 console.log('alloyWorker', alloyWorker);
+
+// 测试是否可通信
+alloyWorker.workerAbilityTest.runTest()
+    .then(payload => console.log('worker ability test result:', payload));
