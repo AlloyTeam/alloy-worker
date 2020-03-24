@@ -25,6 +25,13 @@ const config = {
     },
     resolve: {
         extensions: ['.ts'],
+        alias: {
+            worker: path.resolve(projectDir, 'src/worker'),
+        },
+    },
+    externals: {
+        'worker/worker-thread': 'worker.WorkerThreadWorker',
+        'worker/worker-thread/index': 'worker.WorkerThreadWorker',
     },
     devtool: sourceMap,
     optimization: {
