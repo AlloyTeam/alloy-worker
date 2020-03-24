@@ -1,4 +1,5 @@
 import Controller from './controller';
+import WorkerThreadWorker from './index';
 
 export default class WorkerAbilityTest {
     private controller: Controller;
@@ -16,6 +17,7 @@ export default class WorkerAbilityTest {
     }
 
     messageTestHandler(payload: WorkerAbilityTestPayload.IMessageTest) {
+        WorkerThreadWorker.cookie.getCookie();
         const mainThreadPostTime = payload;
         const workerGetMessageDuration = Date.now() - mainThreadPostTime;
 

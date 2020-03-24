@@ -5,6 +5,7 @@
 import { IAlloyWorkerOptions } from '../type';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
+import Cookie from './cookie';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -17,10 +18,12 @@ export default class MainThreadWorker {
      */
     private controller: Controller;
     workerAbilityTest: WorkerAbilityTest;
+    cookie: Cookie;
 
     constructor(options: IAlloyWorkerOptions) {
         this.controller = new Controller(options);
 
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
+        this.cookie = new Cookie(this.controller);
     }
 }

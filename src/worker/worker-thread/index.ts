@@ -8,6 +8,7 @@
 
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
+import Cookie from './cookie';
 
 /**
  * Worker 线程的 Alloy Worker Class
@@ -20,17 +21,18 @@ class WorkerThreadWorker {
      */
     private controller: Controller;
     workerAbilityTest: WorkerAbilityTest;
+    cookie: Cookie;
 
     constructor() {
         this.controller = new Controller();
 
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
+        this.cookie = new Cookie(this.controller);
     }
 }
 
 // 新建 Worker 线程的 AlloyWorker
 const alloyWorker = new WorkerThreadWorker();
-
 
 // 将 alloyWorker 挂载到 Worker 线程的全局环境, 可用于调试
 // @ts-ignore
