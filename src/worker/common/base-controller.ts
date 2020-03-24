@@ -45,7 +45,7 @@ export default class BaseController implements IController {
      * @param [timeOut] 等待响应的
      * @memberof BaseController
      */
-    requestPromise(actionType: string, payload: any, timeOut?: number): Promise<any> {
+    requestPromise(actionType: string, payload: any = '', timeOut?: number): Promise<any> {
         // 有 Channel 实例才能进行通信, 此时还没有实例化是浏览器不支持创建 worker
         if (this.channel) {
             return this.channel.requestPromise(actionType, payload, timeOut);
