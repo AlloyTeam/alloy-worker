@@ -1,7 +1,7 @@
 {
     "name": "alloy-worker",
     "version": "0.1.0",
-    "description": "面向事务的高可用 Worker 通信框架",
+    "description": "面向事务的高可用 Web Worker 通信框架",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
