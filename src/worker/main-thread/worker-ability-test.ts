@@ -1,17 +1,15 @@
+import BaseAction from '../common/base-action';
 import Controller from './controller';
 
-export default class WorkerAbilityTest {
-    private controller: Controller;
-
+/**
+ * 用于测试 Worker 能力的事务
+ */
+export default class WorkerAbilityTest extends BaseAction {
     constructor(controller: Controller) {
-        this.controller = controller;
-        this.addActionListener();
+        super(controller);
     }
 
-    /**
-     * 添加事务处理函数
-     */
-    private addActionListener() {}
+    addActionHandler() {}
 
     runTest() {
         const mainThreadPostTime = Date.now();

@@ -61,7 +61,7 @@ export default class BaseController implements IController {
      * @param actionType 事务类型
      * @param handler 事务处理器
      */
-    listen(actionType: string, handler: Function): void {
+    addActionHandler(actionType: string, handler: (payload: any) => any): void {
         // TODO 修改为数据输出
         // console.log(`%cactionType: ${actionType}`, 'color: orange');
         if (this.hasActionHandler(actionType)) {
