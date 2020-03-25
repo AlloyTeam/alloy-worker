@@ -1,4 +1,7 @@
 
-declare module WorkerAbilityTestPayload {
-    type IMessageTest = number;
+declare module WorkerPayload {
+    module WorkerAbilityTest {
+        type ICommunicationTest = number;
+        type IHeartBeatTest = number;
+    }
 }

@@ -9,11 +9,20 @@ export default class WorkerAbilityTest extends BaseAction {
         super(controller);
     }
 
-    addActionHandler() {}
+    protected addActionHandler() {}
 
-    runTest() {
-        const mainThreadPostTime = Date.now();
-        const payload: WorkerAbilityTestPayload.IMessageTest = mainThreadPostTime;
-        return this.controller.requestPromise(WorkerAbilityTestActionType.MessageTest, payload);
+    /**
+     * 通信能力检测
+     */
+    communicationTest() {
+        const mainThreadPostTime: WorkerPayload.WorkerAbilityTest.ICommunicationTest = Date.now();
+        return this.controller.requestPromise(WorkerAbilityTestActionType.CommunicationTest, mainThreadPostTime);
+    }
+
+    /**
+     * 心跳检测
+     */
+    heartBeatTest(heartBeat: WorkerPayload.WorkerAbilityTest.IHeartBeatTest) {
+        return this.controller.requestPromise(WorkerAbilityTestActionType.HeartBeatTest, heartBeat);
     }
 }

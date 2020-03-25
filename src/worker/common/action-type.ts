@@ -1,4 +1,5 @@
 
 const enum WorkerAbilityTestActionType {
-    MessageTest = 'MessageTest',
+    CommunicationTest = 'CommunicationTest',
+    HeartBeatTest = 'HeartBeatTest',
 }

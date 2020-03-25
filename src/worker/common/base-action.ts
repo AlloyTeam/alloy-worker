@@ -17,5 +17,5 @@ export default abstract class BaseAction {
     /**
      * 添加事务的处理器
      */
-    protected abstract addActionHandler(): void; 
+    protected abstract addActionHandler(): void;
 }

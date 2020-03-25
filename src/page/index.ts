@@ -12,11 +12,11 @@ const workerUrl: string = window.__globalWorkerFilePath;
 // 初始化 AlloyWorker
 const alloyWorker = createAlloyWorker({
     workerUrl,
-    workerName: 'test-worker',
+    workerName: 'alloyWorker--test',
 });
 
 console.log('alloyWorker', alloyWorker);
 
 // 测试是否可通信
-alloyWorker.workerAbilityTest.runTest()
+alloyWorker.workerAbilityTest.communicationTest()
     .then(payload => console.log('worker ability test result:', payload));
