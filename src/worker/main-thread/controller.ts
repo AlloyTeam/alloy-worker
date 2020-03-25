@@ -8,11 +8,6 @@ import Channel from '../common/channel';
  * @class Controller
  */
 export default class Controller extends BaseController {
-     /**
-     * worker 实例
-     */
-    private worker: Worker;
-
     constructor(options: IAlloyWorkerOptions) {
         super();
 

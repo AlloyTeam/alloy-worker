@@ -7,6 +7,10 @@ import Channel from './channel';
  * @class BaseController
  */
 export default class BaseController implements IController {
+     /**
+     * 原生 worker, 在子类中实例化
+     */
+    protected worker: Worker;
     /**
      * 通信 Channel, 在子类中实例化
      */
