@@ -51,7 +51,7 @@ function raven(errorSource: WorkerErrorSource, error: Error) {
 }
 
 function weblog(log: any) {
-
+    console.log(log);
 }
 
 export default {

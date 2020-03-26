@@ -25,6 +25,16 @@ export default class MainThreadWorker {
      * Worker 状态上报标识
      */
     private hasReportWorkerStatus: boolean = false;
+    /**
+     * Worker 状态信息
+     */
+    workerStatus: {
+        hasWorkerClass: boolean,
+        canNewWorker: boolean,
+        canPostMessage: boolean,
+        workerReadyDuration: number,
+        newWorkerDuration: number,
+    };
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
@@ -95,20 +105,20 @@ export default class MainThreadWorker {
         /**
          * 主线程创建 Worker 的同步耗时, 正常为 0
          */
-        const newWorkerDurationMainThread = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
+        const newWorkerDuration = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
 
-        const workerStatus = {
+        this.workerStatus = {
             hasWorkerClass,
             canNewWorker,
             canPostMessage,
             workerReadyDuration,
-            newWorkerDurationMainThread,
+            newWorkerDuration,
         };
 
         workerReport.weblog({
             module: 'worker',
             action: 'worker_status',
-            info: JSON.stringify(workerStatus),
+            info: JSON.stringify(this.workerStatus),
         });
 
         if (!canNewWorker) {
