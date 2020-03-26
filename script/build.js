@@ -9,6 +9,19 @@ const {
     outputPath,
 } = require('./project.config');
 
+function getBuildFinishTime() {
+    function addZero(num) {
+        return ('0' + num).slice(-2);
+    }
+
+    const now = new Date();
+    const hours = addZero(now.getHours());
+    const minutes = addZero(now.getMinutes());
+    const seconds = addZero(now.getSeconds());
+
+    return `@${hours}:${minutes}:${seconds}`;
+}
+
 const statFunc = (cb) => {
     return (err, stats) => {
         if (!err) {
@@ -37,7 +50,7 @@ if (isProduction) {
     const compiler = webpack([workerConfig, config]);
     compiler.run(
         statFunc((err, stats) => {
-            console.log('dist: 页面构建完成');
+            console.log('dist: 页面构建完成', getBuildFinishTime());
         })
     );
 } else {
@@ -47,7 +60,7 @@ if (isProduction) {
         aggregateTimeout: 300,
     },
         statFunc((err, stats) => {
-            console.log('dev: 页面构建完成');
+            console.log('dev: 页面构建完成', getBuildFinishTime());
         })
     );
 }
