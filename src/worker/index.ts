@@ -3,10 +3,9 @@
  */
 
 import { IAlloyWorkerOptions } from './type';
+import { CommunicationTimeout, HeartBeatCheckStartDelay } from './common/config';
 import MainThreadWorker from './main-thread/index';
-import {
-    CommunicationTimeout,
-} from './common/config';
+import HeartBeatCheck from './heart-beat-check';
 
 /**
  * 创建 Alloy Worker 的工厂函数
@@ -49,9 +48,14 @@ export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThr
         firstCommunicationTimeoutHandle = setTimeout(() => {
             mainThreadWorker.reportWorkerStatus();
         }, CommunicationTimeout);
+
+        // 心跳检测, 延迟启动
+        // 避免打开页面时主线程的同步逻辑阻塞 Worker js 加载; 也等待 Worker 线程启动完
+        setTimeout(() => {
+            const heartBeatCheck = new HeartBeatCheck(mainThreadWorker);
+            heartBeatCheck.start();
+        }, HeartBeatCheckStartDelay);
     }
 
     return mainThreadWorker;
 }
-
-

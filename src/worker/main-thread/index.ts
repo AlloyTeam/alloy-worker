@@ -14,6 +14,10 @@ import workerReport, { WorkerMonitorId, WorkerErrorSource } from '../common/work
  */
 export default class MainThreadWorker {
     /**
+     * Alloy Worker 名称
+     */
+    name: string;
+    /**
      * 主线程通信控制器
      */
     private controller: Controller;
@@ -26,6 +30,7 @@ export default class MainThreadWorker {
     workerAbilityTest: WorkerAbilityTest;
 
     constructor(options: IAlloyWorkerOptions) {
+        this.name = options.workerName;
         this.controller = new Controller(options);
 
         // 实例化各种业务
