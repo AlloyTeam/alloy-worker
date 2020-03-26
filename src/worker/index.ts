@@ -34,6 +34,8 @@ export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThr
                 const timeWorkerReplyMessage = Date.now();
                 clearTimeout(firstCommunicationTimeoutHandle);
 
+                console.log('Worker get message duration:', workerGetMessageDuration);
+
                 mainThreadWorker.reportWorkerStatus(true, timeWorkerReplyMessage);
             })
             .catch((error) => {

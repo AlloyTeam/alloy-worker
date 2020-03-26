@@ -1,7 +1,6 @@
 import createAlloyWorker from '../worker/index';
 
 // console.log('test', __WORKER__);
-// document.writeln('test<br />');
 
 /** worker url 会在构建时替换到 html 中的全局变量
  * <script>window.__globalWorkerFilePath = 'WORKER_FILE_NAME_PLACEHOLDER'</script>
@@ -16,7 +15,3 @@ const alloyWorker = createAlloyWorker({
 });
 
 console.log('alloyWorker', alloyWorker);
-
-// 测试是否可通信
-alloyWorker.workerAbilityTest.communicationTest()
-    .then(payload => console.log('worker ability test result:', payload));
