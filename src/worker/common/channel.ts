@@ -102,10 +102,10 @@ export default class Channel {
      *
      * @param actionType 事务类型
      * @param payload 负载
-     * @param timeOut 等待响应的超时时间
+     * @param timeout 等待响应的超时时间
      * @returns {Promise<IMessage>}
      */
-    requestPromise(actionType: string, payload: any, timeOut: number = 30000): Promise<any> {
+    requestPromise(actionType: string, payload: any, timeout: number = 30000): Promise<any> {
         const sessionId = this.generateSessionId();
         const message = {
             messageType: MessageType.REQUEST,

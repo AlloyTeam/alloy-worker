@@ -1,17 +1,12 @@
+import BaseAction from '../common/base-action';
 import Controller from './controller';
 
-export default class Cookie {
-    private controller: Controller;
-
+export default class Cookie extends BaseAction {
     constructor(controller: Controller) {
-        this.controller = controller;
-        this.addActionListener();
+        super(controller);
     }
 
-    /**
-     * 添加事务处理函数
-     */
-    private addActionListener() {
+    protected addActionHandler() {
     }
 
     getCookie() {

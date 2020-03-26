@@ -1,21 +1,28 @@
+import BaseAction from '../common/base-action';
 import Controller from './controller';
 
-export default class WorkerAbilityTest {
-    private controller: Controller;
-
+/**
+ * 用于测试 Worker 能力的事务
+ */
+export default class WorkerAbilityTest extends BaseAction {
     constructor(controller: Controller) {
-        this.controller = controller;
-        this.addActionListener();
+        super(controller);
+    }
+
+    protected addActionHandler() {}
+
+    /**
+     * 通信能力检测
+     */
+    communicationTest() {
+        const mainThreadPostTime: WorkerPayload.WorkerAbilityTest.ICommunicationTest = Date.now();
+        return this.controller.requestPromise(WorkerAbilityTestActionType.CommunicationTest, mainThreadPostTime);
     }
 
     /**
-     * 添加事务处理函数
+     * 心跳检测
      */
-    private addActionListener() {}
-
-    runTest() {
-        const mainThreadPostTime = Date.now();
-        const payload: WorkerAbilityTestPayload.IMessageTest = mainThreadPostTime;
-        return this.controller.requestPromise(WorkerAbilityTestActionType.MessageTest, payload);
+    heartBeatTest(heartBeat: WorkerPayload.WorkerAbilityTest.IHeartBeatTest) {
+        return this.controller.requestPromise(WorkerAbilityTestActionType.HeartBeatTest, heartBeat);
     }
 }

@@ -7,6 +7,10 @@ import Channel from './channel';
  * @class BaseController
  */
 export default class BaseController implements IController {
+     /**
+     * 原生 worker, 在子类中实例化
+     */
+    protected worker: Worker;
     /**
      * 通信 Channel, 在子类中实例化
      */
@@ -42,13 +46,13 @@ export default class BaseController implements IController {
      *
      * @param actionType 事务类型
      * @param payload 负载
-     * @param [timeOut] 等待响应的
+     * @param [timeout] 等待响应的
      * @memberof BaseController
      */
-    requestPromise(actionType: string, payload: any = '', timeOut?: number): Promise<any> {
+    requestPromise(actionType: string, payload: any = '', timeout?: number): Promise<any> {
         // 有 Channel 实例才能进行通信, 此时还没有实例化是浏览器不支持创建 worker
         if (this.channel) {
-            return this.channel.requestPromise(actionType, payload, timeOut);
+            return this.channel.requestPromise(actionType, payload, timeout);
         }
 
         // 兼容上层调用的 .then().catch()
@@ -61,7 +65,7 @@ export default class BaseController implements IController {
      * @param actionType 事务类型
      * @param handler 事务处理器
      */
-    listen(actionType: string, handler: Function): void {
+    addActionHandler(actionType: string, handler: (payload: any) => any): void {
         // TODO 修改为数据输出
         // console.log(`%cactionType: ${actionType}`, 'color: orange');
         if (this.hasActionHandler(actionType)) {
