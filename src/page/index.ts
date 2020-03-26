@@ -15,3 +15,19 @@ const alloyWorker = createAlloyWorker({
 });
 
 console.log('alloyWorker', alloyWorker);
+
+setTimeout(() => {
+    const workerStatus = alloyWorker.workerStatus;
+
+    const workerStatusHtml = `
+        <ul>
+            <li><h4>Has Worker Class:</h4> ${workerStatus.hasWorkerClass}</li>
+            <li><h4>Can New Worker:</h4> ${workerStatus.canNewWorker}</li>
+            <li><h4>Can Post Message:</h4> ${workerStatus.canPostMessage}</li>
+            <li><h4>Worker Ready Duration:</h4> ${workerStatus.workerReadyDuration}ms</li>
+            <li><h4>New Worker Duration:</h4> ${workerStatus.newWorkerDuration}ms</li>
+        <ul>
+        `;
+
+    document.getElementById('test-result').innerHTML = workerStatusHtml; 
+}, 1000);

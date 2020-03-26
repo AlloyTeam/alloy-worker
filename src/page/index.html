@@ -6,10 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Alloy Worker</title>
+    <style>
+        html, body { margin: 0; padding: 0;}
+        
+        /* https://github.com/loadingio/css-spinner/tree/master/src/dual-ring */
+        .lds-dual-ring {
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            margin-left: calc(50% - 60px);
+        }
+        .lds-dual-ring:before {
+            content: "Checking...";
+            position: absolute;
+            width: 120px;
+            text-align: center;
+            font-size: 14px;
+            height: 20px;
+            line-height: 20px;
+            margin: 50px 0;
+        }
+        .lds-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 104px;
+            height: 104px;
+            margin: 2px;
+            border-radius: 50%;
+            border: 6px solid #fff;
+            border-color: #c0cccc transparent #c0cccc transparent;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+        @keyframes lds-dual-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
     <script>window.__globalWorkerFilePath = 'WORKER_FILE_NAME_PLACEHOLDER'</script>
 </head>
 
 <body>
+    <h2 class="header"
+        style="width: 100%; text-align: center;">
+        Web Worker Ability Test
+    </h2>
+    <div class="container" style="width: 100%;">
+        <div id="test-result">
+            <div class="lds-dual-ring"></div>
+        </div>
+    </div>
+    <h4 class="footer"
+        style="width: 100%; text-align: center; color:gray; position: fixed; bottom: 0;">
+        Power by <a href="https://github.com/CntChen/alloy-worker">alloy-worker</a>
+    </h4>
 </body>
 
 </html>
