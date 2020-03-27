@@ -10,8 +10,14 @@ export default class WorkerAbilityTest extends BaseAction {
     }
 
     protected addActionHandler() {
-        this.controller.addActionHandler(WorkerAbilityTestActionType.CommunicationTest, this.CommunicationTestHandler.bind(this));
-        this.controller.addActionHandler(WorkerAbilityTestActionType.HeartBeatTest, this.heartBeatTestHandler.bind(this));
+        this.controller.addActionHandler(
+            WorkerAbilityTestActionType.CommunicationTest,
+            this.CommunicationTestHandler.bind(this)
+        );
+        this.controller.addActionHandler(
+            WorkerAbilityTestActionType.HeartBeatTest,
+            this.heartBeatTestHandler.bind(this)
+        );
     }
 
     /**

@@ -29,11 +29,11 @@ export default class MainThreadWorker {
      * Worker 状态信息
      */
     workerStatus: {
-        hasWorkerClass: boolean,
-        canNewWorker: boolean,
-        canPostMessage: boolean,
-        workerReadyDuration: number,
-        newWorkerDuration: number,
+        hasWorkerClass: boolean;
+        canNewWorker: boolean;
+        canPostMessage: boolean;
+        workerReadyDuration: number;
+        newWorkerDuration: number;
     };
 
     // 各种业务的实例

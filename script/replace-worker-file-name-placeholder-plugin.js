@@ -15,7 +15,7 @@ const fs = require('fs');
 function getAllFiles(root) {
     var res = [],
         files = fs.readdirSync(root);
-    files.forEach(function(file) {
+    files.forEach(function (file) {
         var pathname = root + '/' + file,
             stat = fs.lstatSync(pathname);
 
@@ -34,9 +34,7 @@ class ReplaceWorkerFileNamePlaceholderPlugin {
     constructor(options) {
         this.options = {};
         this.options.dir = options.dir;
-        this.options.test = options.test ?
-            (options.test instanceof Array) ? options.test : [options.test]
-            : null;
+        this.options.test = options.test ? (options.test instanceof Array ? options.test : [options.test]) : null;
 
         if (!options.workerFileName) {
             console.error(this.name, '缺少 workerFileName 参数');
@@ -73,14 +71,17 @@ class ReplaceWorkerFileNamePlaceholderPlugin {
             // 根据过滤规则进行文件过滤
             if (this.options.test) {
                 targetFiles = targetFiles.filter((file) => {
-                    return this.options.test.some(test => test.test(file));
+                    return this.options.test.some((test) => test.test(file));
                 });
             }
             // console.log('匹配到的文件: ', targetFiles);
 
-            targetFiles.forEach(file => {
+            targetFiles.forEach((file) => {
                 let fileStr = fs.readFileSync(file).toString();
-                let newFileStr = fileStr.replace(new RegExp(this.options.workerFileNamePlaceholder, 'g'), workerFileNameWithHash);
+                let newFileStr = fileStr.replace(
+                    new RegExp(this.options.workerFileNamePlaceholder, 'g'),
+                    workerFileNameWithHash
+                );
                 if (fileStr != newFileStr) {
                     // console.log('进行替换的文件: ', file);
                 }

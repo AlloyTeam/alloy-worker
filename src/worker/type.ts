@@ -40,4 +40,3 @@ export interface IController {
      */
     actionHandler: (message: IMessage) => Promise<any>;
 }
-
