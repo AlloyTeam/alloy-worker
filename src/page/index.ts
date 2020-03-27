@@ -1,4 +1,5 @@
 import createAlloyWorker from '../worker/index';
+import MainThreadWorker from '../worker/main-thread/index';
 
 // console.log('test', __WORKER__);
 
@@ -14,20 +15,60 @@ const alloyWorker = createAlloyWorker({
     workerName: 'alloyWorker--test',
 });
 
+// 暴露到全局环境
+// @ts-ignore
+window.alloyWorker = alloyWorker;
+
 console.log('alloyWorker', alloyWorker);
 
-setTimeout(() => {
+// 轮循 alloyWorker 的状态, 并渲染到页面上
+const testIntervalHandle = setInterval(() => {
     const workerStatus = alloyWorker.workerStatus;
+
+    if (!workerStatus) {
+        return;
+    }
+    clearInterval(testIntervalHandle);
+
+    type TWorkerStatus = typeof alloyWorker.workerStatus;
+    const workerStatusTip: {
+        [key in keyof TWorkerStatus]: string;
+    } = {
+        hasWorkerClass: '是否实现了 HTML 规范的 Worker Class',
+        canNewWorker: '是否支持 new Worker',
+        canPostMessage: 'Worker 实例有无通讯能力(脚本加载失败认为无)',
+        workerReadyDuration: '第一条信息从发出到收到的时间间隔',
+        newWorkerDuration: '主线程创建 Worker 的同步耗时',
+    };
+
+    const workerStatusItems = Object.keys(workerStatus)
+        .map((key) => {
+            let status = workerStatus[key];
+            if (typeof status === 'number') {
+                status = status >= 0 ? `- ${status} ms` : status;
+            } else {
+                status = status ? '&nbsp;✔️' : '&nbsp;❌';
+            }
+
+            return `<li class="worker-status-item">
+                <div class="worker-status-key">
+                    ${key.slice(0, 1).toUpperCase() + key.slice(1)}
+                </div>
+                <div class="worker-status-value">
+                    ${status}
+                </div>
+                <div class="worker-status-tip">
+                    > ${workerStatusTip[key]}
+                <div>
+            </li>`;
+        })
+        .join('\n');
 
     const workerStatusHtml = `
         <ul>
-            <li><h4>Has Worker Class:</h4> ${workerStatus.hasWorkerClass}</li>
-            <li><h4>Can New Worker:</h4> ${workerStatus.canNewWorker}</li>
-            <li><h4>Can Post Message:</h4> ${workerStatus.canPostMessage}</li>
-            <li><h4>Worker Ready Duration:</h4> ${workerStatus.workerReadyDuration}ms</li>
-            <li><h4>New Worker Duration:</h4> ${workerStatus.newWorkerDuration}ms</li>
-        <ul>
+            ${workerStatusItems}
+        </ul>
         `;
 
-    document.getElementById('test-result').innerHTML = workerStatusHtml; 
-}, 1000);
+    document.getElementById('test-result').innerHTML = workerStatusHtml;
+}, 500);
