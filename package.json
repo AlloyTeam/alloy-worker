@@ -28,6 +28,7 @@
         "cz-conventional-changelog": "^3.1.0",
         "html-webpack-plugin": "^3.2.0",
         "husky": "^4.2.3",
+        "lint-staged": "^10.0.9",
         "prettier": "^2.0.2",
         "ts-loader": "^6.2.1",
         "typescript": "^3.8.3",
@@ -35,9 +36,15 @@
         "webpack-manifest-plugin": "^2.2.0"
     },
     "dependencies": {},
+    "lint-staged": {
+        "src/**/*.{js,ts}": [
+            "prettier --write"
+        ]
+    },
     "husky": {
         "hooks": {
-            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+            "pre-commit": "lint-staged"
         }
     },
     "config": {
