@@ -2,13 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ManifestPlugin = require('webpack-manifest-plugin');
 
-const {
-    isProduction,
-    outputPath,
-    projectDir,
-    workerFileName,
-    manifestFileForWorker,
-} = require('./project.config');
+const { isProduction, outputPath, projectDir, workerFileName, manifestFileForWorker } = require('./project.config');
 
 const sourceMap = isProduction ? 'source-map' : 'cheap-module-source-map';
 const workerEntry = path.join(projectDir, './src/worker/worker-thread/index');
@@ -33,7 +27,7 @@ const config = {
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
-            }
+            },
         ],
     },
     plugins: [
@@ -43,7 +37,7 @@ const config = {
         new ManifestPlugin({
             fileName: manifestFileForWorker,
         }),
-    ]
-}
+    ],
+};
 
 module.exports = config;

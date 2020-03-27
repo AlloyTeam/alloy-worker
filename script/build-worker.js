@@ -3,10 +3,7 @@ const execSync = require('child_process').execSync;
 
 const workerConfig = require('./worker.webpack.config');
 
-const {
-    isProduction,
-    outputPath,
-} = require('./project.config');
+const { isProduction, outputPath } = require('./project.config');
 
 function getBuildFinishTime() {
     function addZero(num) {
@@ -54,10 +51,11 @@ if (isProduction) {
     );
 } else {
     const workerCompiler = webpack(workerConfig);
-    workerCompiler.watch({
-        ignored: ['node_modules', 'script'],
-        aggregateTimeout: 300,
-    },
+    workerCompiler.watch(
+        {
+            ignored: ['node_modules', 'script'],
+            aggregateTimeout: 300,
+        },
         statFunc((err, stats) => {
             console.log('dev: worker 构建完成', getBuildFinishTime());
         })
