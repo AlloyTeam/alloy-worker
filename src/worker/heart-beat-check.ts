@@ -1,7 +1,4 @@
-import {
-    HeartBeatCheckInterVal,
-    HeartBeatCheckTimeout,
-} from './common/config';
+import { HeartBeatCheckInterVal, HeartBeatCheckTimeout } from './common/config';
 import MainThreadWorker from './main-thread/index';
 import workerReport, { WorkerMonitorId } from './common/worker-report';
 
@@ -98,12 +95,12 @@ export default class HeartBeatCheck {
      * Worker 线程死亡的 UI 提示
      */
     showDeadTip() {
-        console.error(`Worker 线程 \`${this.mainThreadWorker.name}\` 已经挂掉了.`)
+        console.error(`Worker 线程 \`${this.mainThreadWorker.name}\` 已经挂掉了.`);
     }
 
     /**
      * 心跳时长的上报
-     * 
+     *
      * @param heartBeatDuration 心跳时长
      */
     durationReport(heartBeatDuration: number) {

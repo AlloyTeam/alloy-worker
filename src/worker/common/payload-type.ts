@@ -1,4 +1,3 @@
-
 declare module WorkerPayload {
     module WorkerAbilityTest {
         type ICommunicationTest = number;

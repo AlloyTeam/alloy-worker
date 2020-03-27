@@ -31,7 +31,7 @@ export enum WorkerMonitorId {
      * 事务处理器逻辑报错
      */
     ActionHandleError,
-};
+}
 
 export enum WorkerErrorSource {
     CreateWorkerError = 'CreateWorkerError',
@@ -58,4 +58,4 @@ export default {
     monitor,
     raven,
     weblog,
-}
+};

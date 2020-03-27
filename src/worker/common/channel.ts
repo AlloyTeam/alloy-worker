@@ -44,7 +44,7 @@ export default class Channel {
 
         // 接收到请求
         if (messageType === MessageType.REQUEST) {
-            this.controller.actionHandler(message).then(actionResult => {
+            this.controller.actionHandler(message).then((actionResult) => {
                 this.response(sessionId, actionResult);
             });
         } else if (messageType === MessageType.REPLY) {
@@ -74,7 +74,7 @@ export default class Channel {
 
     /**
      * 封装的 Worker 原生 postMessage 接口
-     * 
+     *
      * @param message 会话消息
      */
     private postMessage(message: IMessage) {

@@ -7,7 +7,7 @@ import Channel from './channel';
  * @class BaseController
  */
 export default class BaseController implements IController {
-     /**
+    /**
      * 原生 worker, 在子类中实例化
      */
     protected worker: Worker;
@@ -28,7 +28,7 @@ export default class BaseController implements IController {
 
     /**
      * 发送事务，不等待结果
-     * 
+     *
      * @param actionType 事务类型
      * @param payload 负载
      */
@@ -61,7 +61,7 @@ export default class BaseController implements IController {
 
     /**
      * 添加事务处理器, 不允许重复添加
-     * 
+     *
      * @param actionType 事务类型
      * @param handler 事务处理器
      */
@@ -90,7 +90,7 @@ export default class BaseController implements IController {
 
                 // 对于 Promise 形式的结果, 需要进行 Promise 错误捕获
                 if (this.isPromise(actionResult)) {
-                    return actionResult.catch(error => {
+                    return actionResult.catch((error) => {
                         // TODO 做错误上报
                         console.error('error:', error);
                     });
@@ -98,7 +98,7 @@ export default class BaseController implements IController {
 
                 // 对数据结果, 包装为 Promise
                 return Promise.resolve(actionResult);
-            } catch(error) {
+            } catch (error) {
                 // TODO 做错误上报
                 console.error('error:', error);
             }
@@ -126,5 +126,4 @@ export default class BaseController implements IController {
     private isPromise(obj: any): obj is Promise<any> {
         return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
     }
-
 }

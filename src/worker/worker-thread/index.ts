@@ -31,7 +31,6 @@ class WorkerThreadWorker {
 // 新建 Worker 线程的 AlloyWorker
 const alloyWorker = new WorkerThreadWorker();
 
-
 // 将 alloyWorker 挂载到 Worker 线程的全局环境, 可用于调试
 // @ts-ignore
 self.alloyWorker = alloyWorker;
