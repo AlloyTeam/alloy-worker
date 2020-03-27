@@ -96,16 +96,19 @@ export default class MainThreadWorker {
         const canPostMessage = !!timeWorkerReplyMessage;
         /**
          * 第一条信息从发出到收到的时间间隔
-         * 如果无法通信, 则默认为 -1
+         * 如果无法通信, 则默认为 NaN
          */
-        let workerReadyDuration: number = -1;
+        let workerReadyDuration: number = NaN;
         if (canPostMessage) {
             workerReadyDuration = timeWorkerReplyMessage - this.controller.timeBeforeNewWorker;
         }
         /**
-         * 主线程创建 Worker 的同步耗时, 正常为 0
+         * 主线程创建 Worker 的同步耗时, 正常为 1ms 就完成了
          */
-        const newWorkerDuration = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
+        let newWorkerDuration: number = NaN;
+        if (this.controller.timeAfterNewWorker && this.controller.timeBeforeNewWorker) {
+            newWorkerDuration = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
+        }
 
         this.workerStatus = {
             hasWorkerClass,
