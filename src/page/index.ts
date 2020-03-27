@@ -1,7 +1,4 @@
 import createAlloyWorker from '../worker/index';
-import MainThreadWorker from '../worker/main-thread/index';
-
-// console.log('test', __WORKER__);
 
 /** worker url 会在构建时替换到 html 中的全局变量
  * <script>window.__globalWorkerFilePath = 'WORKER_FILE_NAME_PLACEHOLDER'</script>
