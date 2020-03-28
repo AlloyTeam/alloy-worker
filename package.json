@@ -21,8 +21,11 @@
     "author": "CntChen",
     "license": "MIT",
     "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "@babel/preset-env": "^7.9.0",
         "@commitlint/cli": "^8.3.5",
         "@commitlint/config-conventional": "^8.3.4",
+        "babel-loader": "^8.1.0",
         "commitizen": "^4.0.3",
         "cross-env": "^7.0.2",
         "cz-conventional-changelog": "^3.1.0",
@@ -35,7 +38,10 @@
         "webpack": "^4.42.0",
         "webpack-manifest-plugin": "^2.2.0"
     },
-    "dependencies": {},
+    "dependencies": {
+        "core-js": "^3.6.4",
+        "regenerator-runtime": "^0.13.5"
+    },
     "lint-staged": {
         "src/**/*.{js,ts}": [
             "prettier --write"

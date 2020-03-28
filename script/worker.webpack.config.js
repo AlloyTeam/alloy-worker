@@ -16,7 +16,7 @@ const config = {
         path: outputPath,
     },
     resolve: {
-        extensions: ['.ts'],
+        extensions: ['.js', '.ts'],
     },
     devtool: sourceMap,
     optimization: {
@@ -26,7 +26,10 @@ const config = {
         rules: [
             {
                 test: /\.ts$/,
-                use: 'ts-loader',
+                use: [
+                    'babel-loader',
+                    'ts-loader'
+                ],
             },
         ],
     },

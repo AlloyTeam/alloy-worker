@@ -17,7 +17,7 @@ const config = {
         path: outputPath,
     },
     resolve: {
-        extensions: ['.ts'],
+        extensions: ['.js', '.ts'],
         alias: {
             worker: path.resolve(projectDir, 'src/worker'),
         },
@@ -34,7 +34,10 @@ const config = {
         rules: [
             {
                 test: /\.ts$/,
-                use: 'ts-loader',
+                use: [
+                    'babel-loader',
+                    'ts-loader'
+                ],
             },
         ],
     },
