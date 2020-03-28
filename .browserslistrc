@@ -1,0 +1,3 @@
+defaults
+ie >= 10 # 2012, 支持 Web Worker 的最低 IE 版本
+ios >= 9 # 2015
