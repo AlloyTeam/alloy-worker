@@ -46,7 +46,7 @@ export default class BaseController implements IController {
      *
      * @param actionType 事务类型
      * @param payload 负载
-     * @param [timeout] 等待响应的
+     * @param [timeout] 响应的超时; Worker 通道是可靠的, 超时后只上报, 不阻止当前请求
      * @memberof BaseController
      */
     requestPromise(actionType: string, payload: any = '', timeout?: number): Promise<any> {

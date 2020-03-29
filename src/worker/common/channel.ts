@@ -1,5 +1,6 @@
 import { IController, MessageType, IMessage } from '../type';
 import nanoid from './nanoid-no-secure';
+import workerReport from './worker-report';
 
 /**
  * 通信 Channel
@@ -102,10 +103,13 @@ export default class Channel {
      *
      * @param actionType 事务类型
      * @param payload 负载
-     * @param timeout 等待响应的超时时间
+     * @param timeout 响应超时
      * @returns {Promise<IMessage>}
      */
     requestPromise(actionType: string, payload: any, timeout = 30000): Promise<any> {
+        // 发送请求的时刻
+        const timeRequestStart = Date.now();
+
         const sessionId = this.generateSessionId();
         const message = {
             messageType: MessageType.REQUEST,
@@ -118,6 +122,11 @@ export default class Channel {
         const PromiseFunction = (resolve: Function): any => {
             const sessionHandler: Function = (message: IMessage) => {
                 this.deleteSessionListener(message.sessionId);
+
+                // 请求时长上报
+                const requestDuration = Date.now() - timeRequestStart;
+                this.requestDurationReport(requestDuration, timeout, actionType);
+
                 resolve(message.payload);
             };
 
@@ -149,7 +158,7 @@ export default class Channel {
      * 移除会话响应器
      *
      * @private
-     * @param {string} sessionId
+     * @param sessionId
      * @memberof Channel
      */
     private deleteSessionListener(sessionId: string): void {
@@ -180,5 +189,29 @@ export default class Channel {
      */
     private hasSessionHandler(sessionId: string): boolean {
         return !!this.sessionHandlerMap[sessionId];
+    }
+
+    /**
+     * 请求时长上报
+     *
+     * @private
+     * @param postMessageDuration 请求时长
+     * @param number} timeout 超时时长
+     * @param actionType 事务类型
+     */
+    private requestDurationReport(postMessageDuration: number, timeout: number, actionType: string): void {
+        if (postMessageDuration > timeout) {
+            const requestDurationInfo = {
+                actionType,
+                duration: postMessageDuration,
+                isInWorker: __WORKER__,
+            };
+
+            workerReport.weblog({
+                module: 'webworker',
+                action: 'channel_long_time',
+                info: JSON.stringify(requestDurationInfo),
+            });
+        }
     }
 }
