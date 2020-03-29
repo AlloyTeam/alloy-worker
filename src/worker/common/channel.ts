@@ -1,4 +1,5 @@
 import { IController, MessageType, IMessage } from '../type';
+import { CommunicationTimeout } from './config';
 import nanoid from './nanoid-no-secure';
 import workerReport from './worker-report';
 
@@ -106,7 +107,7 @@ export default class Channel {
      * @param timeout 响应超时
      * @returns {Promise<IMessage>}
      */
-    requestPromise(actionType: string, payload: any, timeout = 30000): Promise<any> {
+    requestPromise(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<any> {
         // 发送请求的时刻
         const timeRequestStart = Date.now();
 
