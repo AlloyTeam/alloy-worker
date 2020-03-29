@@ -9,6 +9,7 @@
         "dist": "cross-env NODE_ENV=production node ./script/build.js",
         "dev:worker": "cross-env NODE_ENV=development node ./script/build-worker.js",
         "dist:worker": "cross-env NODE_ENV=production node ./script/build-worker.js",
+        "ts-check": "tsc --noEmit",
         "commit": "git-cz",
         "prettier": "prettier --write 'src/**/*.{js,ts}'",
         "eslint": "eslint 'src/**/*.{js,ts}'"
@@ -56,7 +57,7 @@
     "husky": {
         "hooks": {
             "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-            "pre-commit": "lint-staged"
+            "pre-commit": "npm run ts-check && lint-staged"
         }
     },
     "config": {
