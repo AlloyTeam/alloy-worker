@@ -20,7 +20,7 @@ while (i-- - 10) {
     url += i.toString(36).toUpperCase();
 }
 
-export default (size = 21) => {
+export default (size = 21): string => {
     let id = '';
     // Compact alternative for `for (var i = 0; i < size; i++)`
     while (size--) {

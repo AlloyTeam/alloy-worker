@@ -1,4 +1,5 @@
 import BaseAction from '../common/base-action';
+import { WorkerAbilityTestActionType } from '../common/action-type';
 import Controller from './controller';
 
 /**
@@ -9,20 +10,22 @@ export default class WorkerAbilityTest extends BaseAction {
         super(controller);
     }
 
-    protected addActionHandler() {}
+    protected addActionHandler(): void {}
 
     /**
      * 通信能力检测
      */
-    communicationTest() {
-        const mainThreadPostTime: WorkerPayload.WorkerAbilityTest.ICommunicationTest = Date.now();
+    communicationTest(): Promise<WorkerReponse.WorkerAbilityTest.CommunicationTest> {
+        const mainThreadPostTime: WorkerPayload.WorkerAbilityTest.CommunicationTest = Date.now();
         return this.controller.requestPromise(WorkerAbilityTestActionType.CommunicationTest, mainThreadPostTime);
     }
 
     /**
      * 心跳检测
      */
-    heartBeatTest(heartBeat: WorkerPayload.WorkerAbilityTest.IHeartBeatTest) {
+    heartBeatTest(
+        heartBeat: WorkerPayload.WorkerAbilityTest.HeartBeatTest
+    ): Promise<WorkerReponse.WorkerAbilityTest.HeartBeatTest> {
         return this.controller.requestPromise(WorkerAbilityTestActionType.HeartBeatTest, heartBeat);
     }
 }

@@ -1,4 +1,4 @@
-const enum WorkerAbilityTestActionType {
+export const enum WorkerAbilityTestActionType {
     CommunicationTest = 'CommunicationTest',
     HeartBeatTest = 'HeartBeatTest',
 }

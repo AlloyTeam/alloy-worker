@@ -38,7 +38,7 @@ export default class Channel {
      * 发现是响应，调用会话响应器
      * @param event
      */
-    private onmessage(event: { data: IMessage }) {
+    private onmessage(event: { data: IMessage }): void {
         const { data: message } = event;
         const { messageType, sessionId } = message;
 
@@ -63,7 +63,7 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param payload 负载
      */
-    response(sessionId: string, payload: any) {
+    response(sessionId: string, payload: any): void {
         this.postMessage({
             messageType: MessageType.REPLY,
             actionType: '',
@@ -77,7 +77,7 @@ export default class Channel {
      *
      * @param message 会话消息
      */
-    private postMessage(message: IMessage) {
+    private postMessage(message: IMessage): void {
         this.worker.postMessage(message);
     }
 
@@ -105,7 +105,7 @@ export default class Channel {
      * @param timeout 等待响应的超时时间
      * @returns {Promise<IMessage>}
      */
-    requestPromise(actionType: string, payload: any, timeout: number = 30000): Promise<any> {
+    requestPromise(actionType: string, payload: any, timeout = 30000): Promise<any> {
         const sessionId = this.generateSessionId();
         const message = {
             messageType: MessageType.REQUEST,
@@ -115,7 +115,7 @@ export default class Channel {
         };
 
         // 请求封装为一个 Promise, 等待会话响应器进行 resolve
-        const PromiseFunction = (resolve: Function, reject: Function) => {
+        const PromiseFunction = (resolve: Function): any => {
             const sessionHandler: Function = (message: IMessage) => {
                 this.deleteSessionListener(message.sessionId);
                 resolve(message.payload);
@@ -137,7 +137,7 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param handler 会话响应器
      */
-    private addSessionListener(sessionId: string, handler: Function) {
+    private addSessionListener(sessionId: string, handler: Function): void {
         if (!this.hasSessionHandler(sessionId)) {
             this.sessionHandlerMap[sessionId] = handler;
         } else {
@@ -152,7 +152,7 @@ export default class Channel {
      * @param {string} sessionId
      * @memberof Channel
      */
-    private deleteSessionListener(sessionId: string) {
+    private deleteSessionListener(sessionId: string): void {
         if (this.hasSessionHandler(sessionId)) {
             delete this.sessionHandlerMap[sessionId];
         }
@@ -167,7 +167,7 @@ export default class Channel {
     private generateSessionId(): string {
         // sessionId 长度为 16 位, 有效位数 14 位
         // 以 `w_` 开头, 避免 nanoid 生成时可能以数字开头, 无法作为 Map 的 key
-        const sessionId: string = `w_${nanoid(14)}`;
+        const sessionId = `w_${nanoid(14)}`;
         return sessionId;
     }
 
