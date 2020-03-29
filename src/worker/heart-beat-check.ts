@@ -10,11 +10,11 @@ export default class HeartBeatCheck {
     /**
      * 是否正在测心跳
      */
-    isHeartBeatChecking: boolean = false;
+    isHeartBeatChecking = false;
     /**
      * 当前的心跳动次
      */
-    heartBeatNow: number = 0;
+    heartBeatNow = 0;
     /**
      * 不正常的心跳列表
      */
@@ -30,7 +30,7 @@ export default class HeartBeatCheck {
     /**
      * 开始心跳检测
      */
-    start() {
+    start(): void {
         // 定时检查
         this.checkInterValHandle = setInterval(() => {
             this.checkOne();
@@ -40,14 +40,14 @@ export default class HeartBeatCheck {
     /**
      * 停止心跳检测
      */
-    stop() {
+    stop(): void {
         clearInterval(this.checkInterValHandle);
     }
 
     /**
      * 检查一次心跳
      */
-    checkOne() {
+    checkOne(): void {
         // 上一次检测未完成, 直接返回
         if (this.isHeartBeatChecking === true) {
             return;
@@ -79,7 +79,7 @@ export default class HeartBeatCheck {
     /**
      * 检查心跳是否健康
      */
-    checkHealth() {
+    checkHealth(): void {
         const sickHeartBeatsLength = this.sickHeartBeats.length;
         if (sickHeartBeatsLength >= 2) {
             // 检查规则: 连续2次心跳超时, 认为 Worker 线程死亡
@@ -94,7 +94,7 @@ export default class HeartBeatCheck {
     /**
      * Worker 线程死亡的 UI 提示
      */
-    showDeadTip() {
+    showDeadTip(): void {
         console.error(`Worker 线程 \`${this.mainThreadWorker.name}\` 已经挂掉了.`);
     }
 
@@ -103,7 +103,7 @@ export default class HeartBeatCheck {
      *
      * @param heartBeatDuration 心跳时长
      */
-    durationReport(heartBeatDuration: number) {
+    durationReport(heartBeatDuration: number): void {
         // TODO
         // console.log('Heart beat check, duration:', heartBeatDuration);
         // 心跳时长超过心跳检测间隔, 上报
@@ -122,7 +122,7 @@ export default class HeartBeatCheck {
     /**
      * Worker 线程死亡的上报
      */
-    deadReport() {
+    deadReport(): void {
         // TODO 移除
         //  worker 心跳停止上报
         workerReport.monitor(WorkerMonitorId.HeartBeatStop);

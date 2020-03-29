@@ -12,7 +12,7 @@ export default class Controller extends BaseController {
     /**
      * 浏览器是否实现了 HTML 规范的 Worker Class
      */
-    static hasWorkerClass: boolean = !!window.Worker;
+    static hasWorkerClass = !!window.Worker;
     /**
      * 是否支持 new Worker, 默认为 Wroker Class 是否实现
      */
@@ -45,7 +45,7 @@ export default class Controller extends BaseController {
 
             // TODO 确认 url state 非 200 window.onerror 能否监控到
             // 监控和上报 worker 中的报错, window.onerror 中也能监控到
-            this.worker.onerror = (error) => {
+            this.worker.onerror = (error): void => {
                 console.error('worker onerror:', error);
                 workerReport.monitor(WorkerMonitorId.WorkerOnerror);
             };
@@ -67,7 +67,7 @@ export default class Controller extends BaseController {
     /**
      * 销毁 worker 实例
      */
-    terminate() {
+    terminate(): void {
         this.worker.terminate();
     }
 }

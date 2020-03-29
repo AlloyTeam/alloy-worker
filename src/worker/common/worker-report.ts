@@ -42,15 +42,15 @@ export enum WorkerErrorSource {
  *
  * @param monitorId 监控点
  */
-function monitor(monitorId: WorkerMonitorId) {
+function monitor(monitorId: WorkerMonitorId): void {
     console.log('monitor 上报, id: ', monitorId);
 }
 
-function raven(errorSource: WorkerErrorSource, error: Error) {
+function raven(errorSource: WorkerErrorSource, error: Error): void {
     console.log('raven 上报, 报错信息:', errorSource, error);
 }
 
-function weblog(log: any) {
+function weblog(log: any): void {
     console.log(log);
 }
 

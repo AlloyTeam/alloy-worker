@@ -25,7 +25,7 @@ export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThr
         // 上报
         mainThreadWorker.reportWorkerStatus();
     } else {
-        let firstCommunicationTimeoutHandle: number;
+        let firstCommunicationTimeoutHandle: number = null;
         // 默认 worker 才进行 worker 能力上报
         // 上报 worker 信息
         mainThreadWorker.workerAbilityTest

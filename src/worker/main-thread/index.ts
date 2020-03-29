@@ -5,7 +5,7 @@
 import { IAlloyWorkerOptions } from '../type';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
-import workerReport, { WorkerMonitorId, WorkerErrorSource } from '../common/worker-report';
+import workerReport, { WorkerMonitorId } from '../common/worker-report';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -24,7 +24,7 @@ export default class MainThreadWorker {
     /**
      * Worker 状态上报标识
      */
-    private hasReportWorkerStatus: boolean = false;
+    private hasReportWorkerStatus = false;
     /**
      * Worker 状态信息
      */
@@ -50,7 +50,7 @@ export default class MainThreadWorker {
     /**
      * 销毁 worker 实例
      */
-    terminate() {
+    terminate(): void {
         this.controller.terminate();
     }
 
@@ -67,7 +67,7 @@ export default class MainThreadWorker {
      * @param [isTimeoutAndSuccess=false] 是否超时后通信成功
      * @param [timeWorkerReplyMessage=undefined] 收到 Worker 线程回复的时刻; undefined 则是通信失败, 没有回复
      */
-    reportWorkerStatus(isTimeoutAndSuccess: boolean = false, timeWorkerReplyMessage = undefined) {
+    reportWorkerStatus(isTimeoutAndSuccess = false, timeWorkerReplyMessage = undefined): void {
         // 场景: 首次通信已经触发超时上报, 之后才通信成功
         if (isTimeoutAndSuccess) {
             // TODO, 移除
@@ -98,14 +98,14 @@ export default class MainThreadWorker {
          * 第一条信息从发出到收到的时间间隔
          * 如果无法通信, 则默认为 NaN
          */
-        let workerReadyDuration: number = NaN;
+        let workerReadyDuration = NaN;
         if (canPostMessage) {
             workerReadyDuration = timeWorkerReplyMessage - this.controller.timeBeforeNewWorker;
         }
         /**
          * 主线程创建 Worker 的同步耗时, 正常为 1ms 就完成了
          */
-        let newWorkerDuration: number = NaN;
+        let newWorkerDuration = NaN;
         if (this.controller.timeAfterNewWorker && this.controller.timeBeforeNewWorker) {
             newWorkerDuration = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
         }
