@@ -1,4 +1,4 @@
-import { HeartBeatCheckInterVal, HeartBeatCheckTimeout } from './common/config';
+import { HeartBeatCheckInterVal, HeartBeatCheckTimeout } from './config';
 import MainThreadWorker from './main-thread/index';
 import workerReport, { WorkerMonitorId } from './common/worker-report';
 

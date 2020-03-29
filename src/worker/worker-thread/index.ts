@@ -6,6 +6,13 @@
  * Worker 线程是被动启动的线程. 多个 Worker 实例, 通过主线程多次实例化 AlloyWorker 实现.
  */
 
+/**
+ * Worker 线程名称的兼容
+ * 部分浏览器, 如 IE10, IE11 的 self.name 为 undefined, 无法区分不同 Worker 线程
+ */
+// @ts-ignore
+self.name = self.name || `worker_${Date.now().toString().slice(-6)}`;
+
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 

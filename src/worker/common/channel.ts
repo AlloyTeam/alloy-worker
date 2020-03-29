@@ -1,7 +1,8 @@
 import { IController, MessageType, IMessage } from '../type';
-import { CommunicationTimeout } from './config';
-import nanoid from './nanoid-no-secure';
+import { CommunicationTimeout, ShowChannelMessageDebugLog } from '../config';
 import workerReport from './worker-report';
+import nanoid from './utils/nanoid-no-secure';
+import { isInWorker, getDebugTimeStamp } from './utils/index';
 
 /**
  * 通信 Channel
@@ -44,6 +45,8 @@ export default class Channel {
         const { data: message } = event;
         const { messageType, sessionId } = message;
 
+        this.onmesssageDebugLog(message);
+
         // 接收到请求
         if (messageType === MessageType.REQUEST) {
             this.controller.actionHandler(message).then((actionResult) => {
@@ -68,7 +71,7 @@ export default class Channel {
     response(sessionId: string, payload: any): void {
         this.postMessage({
             messageType: MessageType.REPLY,
-            actionType: '',
+            actionType: undefined,
             payload,
             sessionId,
         });
@@ -81,6 +84,7 @@ export default class Channel {
      */
     private postMessage(message: IMessage): void {
         this.worker.postMessage(message);
+        this.postMessageDebugLog(message);
     }
 
     /**
@@ -205,7 +209,7 @@ export default class Channel {
             const requestDurationInfo = {
                 actionType,
                 duration: postMessageDuration,
-                inWorker: __WORKER__,
+                inWorker: isInWorker,
             };
 
             workerReport.weblog({
@@ -213,6 +217,42 @@ export default class Channel {
                 action: 'channel_long_time',
                 info: requestDurationInfo,
             });
+        }
+    }
+
+    /**
+     * 对接收到的会话消息进行 Debug Log 输出
+     *
+     * @private
+     * @param message 接收到的会话消息
+     */
+    private onmesssageDebugLog(message: IMessage): void {
+        if (isInWorker && ShowChannelMessageDebugLog) {
+            console.log([
+                getDebugTimeStamp(),
+                `${self.name} ►`,
+                message.sessionId,
+                message.actionType,
+                message.payload,
+            ]);
+        }
+    }
+
+    /**
+     * 对发送的会话消息进行 Debug Log 输出
+     *
+     * @private
+     * @param message 发送的会话消息
+     */
+    private postMessageDebugLog(message: IMessage): void {
+        if (isInWorker && ShowChannelMessageDebugLog) {
+            console.log([
+                getDebugTimeStamp(),
+                `️◄ ${self.name}`,
+                message.sessionId,
+                message.actionType,
+                message.payload,
+            ]);
         }
     }
 }

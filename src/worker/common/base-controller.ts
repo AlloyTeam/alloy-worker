@@ -1,5 +1,6 @@
 import { IController, IMessage } from '../type';
 import Channel from './channel';
+import { isPromise } from './utils/index';
 
 /**
  * 通信控制器
@@ -89,7 +90,7 @@ export default class BaseController implements IController {
                 const actionResult = this.actionHandlerMap[actionType](payload);
 
                 // 对于 Promise 形式的结果, 需要进行 Promise 错误捕获
-                if (this.isPromise(actionResult)) {
+                if (isPromise(actionResult)) {
                     return actionResult.catch((error) => {
                         // TODO 做错误上报
                         console.error('error:', error);
@@ -116,14 +117,5 @@ export default class BaseController implements IController {
      */
     protected hasActionHandler(actionType: string): boolean {
         return !!this.actionHandlerMap[actionType];
-    }
-
-    /**
-     * 判断是不是 promise
-     * @param obj 要判断的对象
-     * @returns {boolean} 判断结果
-     */
-    private isPromise(obj: any): obj is Promise<any> {
-        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
     }
 }
