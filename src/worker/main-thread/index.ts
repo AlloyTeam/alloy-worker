@@ -121,7 +121,7 @@ export default class MainThreadWorker {
         workerReport.weblog({
             module: 'worker',
             action: 'worker_status',
-            info: JSON.stringify(this.workerStatus),
+            info: this.workerStatus,
         });
 
         if (!canNewWorker) {

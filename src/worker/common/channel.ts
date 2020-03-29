@@ -204,13 +204,13 @@ export default class Channel {
             const requestDurationInfo = {
                 actionType,
                 duration: postMessageDuration,
-                isInWorker: __WORKER__,
+                inWorker: __WORKER__,
             };
 
             workerReport.weblog({
                 module: 'webworker',
                 action: 'channel_long_time',
-                info: JSON.stringify(requestDurationInfo),
+                info: requestDurationInfo,
             });
         }
     }
