@@ -99,15 +99,12 @@ export default class BaseController implements IController {
                 // 对于 Promise 形式的结果, 需要进行 Promise 错误捕获
                 if (isPromise(actionResult)) {
                     return actionResult.catch((error) => {
-                        // TODO 做错误上报
-                        console.error('worker action error:', error);
-
                         // 暴露 Promise 中的异常
                         // Promise 会将运行过程中的报错推入下一个 .catch 的微任务
                         // 通过 setTimeout 将报错抛到一个宏任务中, 暴露出去
                         // 参考: https://stackoverflow.com/questions/30715367/why-can-i-not-throw-inside-a-promise-catch-handler
                         setTimeout(() => {
-                            throw new Error(error);
+                            this.reportHandlerError(error);
                         }, 0);
                     });
                 }
@@ -115,9 +112,7 @@ export default class BaseController implements IController {
                 // 对数据结果, 包装为 Promise
                 return Promise.resolve(actionResult);
             } catch (error) {
-                // TODO 做错误上报
-                console.error('worker aciton error:', error);
-                throw new Error(error);
+                this.reportHandlerError(error);
             }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);
@@ -133,5 +128,26 @@ export default class BaseController implements IController {
      */
     protected hasActionHandler(actionType: string): boolean {
         return !!this.actionHandlerMap[actionType];
+    }
+
+    /**
+     * 上报事务处理器执行报错
+     *
+     * @param error 报错信息
+     */
+    private reportHandlerError(error: any) {
+        console.error('worker aciton error:', error);
+
+        // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
+        if (!__WORKER__) {
+            throw new Error(error);
+        }
+
+        // Worker 线程中, 如果有堆栈信息, 需要主动发送到主线程去上报
+        if (error && error.message && error.stack) {
+            // TODO 调用上报事务
+        } else {
+            throw new Error(error);
+        }
     }
 }
