@@ -1,9 +1,8 @@
-
-const enum WorkerAbilityTestActionType {
+export const enum WorkerAbilityTestActionType {
     CommunicationTest = 'CommunicationTest',
     HeartBeatTest = 'HeartBeatTest',
 }
 
-const enum CookieActionType {
+export const enum CookieActionType {
     Cookie = 'Cookie',
 }

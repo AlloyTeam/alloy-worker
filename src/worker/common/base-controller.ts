@@ -1,5 +1,6 @@
 import { IController, IMessage } from '../type';
 import Channel from './channel';
+import { isPromise } from './utils/index';
 
 /**
  * 通信控制器
@@ -7,7 +8,7 @@ import Channel from './channel';
  * @class BaseController
  */
 export default class BaseController implements IController {
-     /**
+    /**
      * 原生 worker, 在子类中实例化
      */
     protected worker: Worker;
@@ -21,6 +22,10 @@ export default class BaseController implements IController {
     protected actionHandlerMap: {
         [propsName: string]: Function;
     };
+    /**
+     * 是否调试模式, 默认为否
+     */
+    isDebugMode = false;
 
     constructor() {
         this.actionHandlerMap = {};
@@ -28,7 +33,7 @@ export default class BaseController implements IController {
 
     /**
      * 发送事务，不等待结果
-     * 
+     *
      * @param actionType 事务类型
      * @param payload 负载
      */
@@ -46,7 +51,7 @@ export default class BaseController implements IController {
      *
      * @param actionType 事务类型
      * @param payload 负载
-     * @param [timeout] 等待响应的
+     * @param [timeout] 响应的超时; Worker 通道是可靠的, 超时后只上报, 不阻止当前请求
      * @memberof BaseController
      */
     requestPromise(actionType: string, payload: any = '', timeout?: number): Promise<any> {
@@ -61,13 +66,16 @@ export default class BaseController implements IController {
 
     /**
      * 添加事务处理器, 不允许重复添加
-     * 
+     *
      * @param actionType 事务类型
      * @param handler 事务处理器
      */
     addActionHandler(actionType: string, handler: (payload: any) => any): void {
-        // TODO 修改为数据输出
-        // console.log(`%cactionType: ${actionType}`, 'color: orange');
+        // 调试模式使用
+        if (this.isDebugMode) {
+            console.log(`%cAdd actionType: ${actionType}`, 'color: orange');
+        }
+
         if (this.hasActionHandler(actionType)) {
             throw new Error(`已注册事务 \`${actionType}\` 的处理器, 不能重复注册`);
         }
@@ -89,18 +97,27 @@ export default class BaseController implements IController {
                 const actionResult = this.actionHandlerMap[actionType](payload);
 
                 // 对于 Promise 形式的结果, 需要进行 Promise 错误捕获
-                if (this.isPromise(actionResult)) {
-                    return actionResult.catch(error => {
+                if (isPromise(actionResult)) {
+                    return actionResult.catch((error) => {
                         // TODO 做错误上报
-                        console.error('error:', error);
+                        console.error('worker action error:', error);
+
+                        // 暴露 Promise 中的异常
+                        // Promise 会将运行过程中的报错推入下一个 .catch 的微任务
+                        // 通过 setTimeout 将报错抛到一个宏任务中, 暴露出去
+                        // 参考: https://stackoverflow.com/questions/30715367/why-can-i-not-throw-inside-a-promise-catch-handler
+                        setTimeout(() => {
+                            throw new Error(error);
+                        }, 0);
                     });
                 }
 
                 // 对数据结果, 包装为 Promise
                 return Promise.resolve(actionResult);
-            } catch(error) {
+            } catch (error) {
                 // TODO 做错误上报
-                console.error('error:', error);
+                console.error('worker aciton error:', error);
+                throw new Error(error);
             }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);
@@ -117,14 +134,4 @@ export default class BaseController implements IController {
     protected hasActionHandler(actionType: string): boolean {
         return !!this.actionHandlerMap[actionType];
     }
-
-    /**
-     * 判断是不是 promise
-     * @param obj 要判断的对象
-     * @returns {boolean} 判断结果
-     */
-    private isPromise(obj: any): obj is Promise<any> {
-        return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
-    }
-
 }

@@ -1,7 +1,6 @@
 import createAlloyWorker from '../worker/index';
 
 // console.log('test', __WORKER__);
-// document.writeln('test<br />');
 
 // 写入2个测试 cookie
 document.cookie = 'xsrf=alloy,token=worker';
@@ -19,7 +18,3 @@ const alloyWorker = createAlloyWorker({
 });
 
 console.log('alloyWorker', alloyWorker);
-
-// 测试是否可通信
-alloyWorker.workerAbilityTest.communicationTest()
-    .then(payload => console.log('worker ability test result:', payload));

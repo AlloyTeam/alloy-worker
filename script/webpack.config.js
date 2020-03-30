@@ -3,14 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReplaceWorkerFileNamePlaceholderPlugin = require('./replace-worker-file-name-placeholder-plugin');
 
-const {
-    isProduction,
-    outputPath,
-    projectDir,
-    workerFileName,
-    manifestFileForWorker,
-} = require('./project.config');
-
+const { isProduction, outputPath, projectDir, workerFileName, manifestFileForWorker } = require('./project.config');
 
 const sourceMap = isProduction ? 'source-map' : 'cheap-module-source-map';
 const pagePath = path.join(projectDir, './src/page');
@@ -24,7 +17,7 @@ const config = {
         path: outputPath,
     },
     resolve: {
-        extensions: ['.ts'],
+        extensions: ['.js', '.ts'],
         alias: {
             worker: path.resolve(projectDir, 'src/worker'),
         },
@@ -41,8 +34,11 @@ const config = {
         rules: [
             {
                 test: /\.ts$/,
-                use: 'ts-loader',
-            }
+                use: [
+                    'babel-loader',
+                    'ts-loader'
+                ],
+            },
         ],
     },
     plugins: [
@@ -59,6 +55,6 @@ const config = {
             manifestFileForWorkerPath: path.join(outputPath, manifestFileForWorker),
         }),
     ],
-}
+};
 
 module.exports = config;

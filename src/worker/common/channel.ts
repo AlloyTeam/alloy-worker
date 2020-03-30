@@ -1,5 +1,8 @@
 import { IController, MessageType, IMessage } from '../type';
-import nanoid from './nanoid-no-secure';
+import { CommunicationTimeout } from '../config';
+import workerReport from './worker-report';
+import nanoid from './utils/nanoid-no-secure';
+import { getDebugTimeStamp } from './utils/index';
 
 /**
  * 通信 Channel
@@ -38,13 +41,15 @@ export default class Channel {
      * 发现是响应，调用会话响应器
      * @param event
      */
-    private onmessage(event: { data: IMessage }) {
+    private onmessage(event: { data: IMessage }): void {
         const { data: message } = event;
         const { messageType, sessionId } = message;
 
+        this.onmesssageDebugLog(message);
+
         // 接收到请求
         if (messageType === MessageType.REQUEST) {
-            this.controller.actionHandler(message).then(actionResult => {
+            this.controller.actionHandler(message).then((actionResult) => {
                 this.response(sessionId, actionResult);
             });
         } else if (messageType === MessageType.REPLY) {
@@ -63,10 +68,10 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param payload 负载
      */
-    response(sessionId: string, payload: any) {
+    response(sessionId: string, payload: any): void {
         this.postMessage({
             messageType: MessageType.REPLY,
-            actionType: '',
+            actionType: undefined,
             payload,
             sessionId,
         });
@@ -74,11 +79,12 @@ export default class Channel {
 
     /**
      * 封装的 Worker 原生 postMessage 接口
-     * 
+     *
      * @param message 会话消息
      */
-    private postMessage(message: IMessage) {
+    private postMessage(message: IMessage): void {
         this.worker.postMessage(message);
+        this.postMessageDebugLog(message);
     }
 
     /**
@@ -102,10 +108,13 @@ export default class Channel {
      *
      * @param actionType 事务类型
      * @param payload 负载
-     * @param timeout 等待响应的超时时间
+     * @param timeout 响应超时
      * @returns {Promise<IMessage>}
      */
-    requestPromise(actionType: string, payload: any, timeout: number = 30000): Promise<any> {
+    requestPromise(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<any> {
+        // 发送请求的时刻
+        const timeRequestStart = Date.now();
+
         const sessionId = this.generateSessionId();
         const message = {
             messageType: MessageType.REQUEST,
@@ -115,9 +124,14 @@ export default class Channel {
         };
 
         // 请求封装为一个 Promise, 等待会话响应器进行 resolve
-        const PromiseFunction = (resolve: Function, reject: Function) => {
+        const PromiseFunction = (resolve: Function): any => {
             const sessionHandler: Function = (message: IMessage) => {
                 this.deleteSessionListener(message.sessionId);
+
+                // 请求时长上报
+                const requestDuration = Date.now() - timeRequestStart;
+                this.requestDurationReport(requestDuration, timeout, actionType);
+
                 resolve(message.payload);
             };
 
@@ -137,7 +151,7 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param handler 会话响应器
      */
-    private addSessionListener(sessionId: string, handler: Function) {
+    private addSessionListener(sessionId: string, handler: Function): void {
         if (!this.hasSessionHandler(sessionId)) {
             this.sessionHandlerMap[sessionId] = handler;
         } else {
@@ -149,10 +163,10 @@ export default class Channel {
      * 移除会话响应器
      *
      * @private
-     * @param {string} sessionId
+     * @param sessionId
      * @memberof Channel
      */
-    private deleteSessionListener(sessionId: string) {
+    private deleteSessionListener(sessionId: string): void {
         if (this.hasSessionHandler(sessionId)) {
             delete this.sessionHandlerMap[sessionId];
         }
@@ -167,7 +181,7 @@ export default class Channel {
     private generateSessionId(): string {
         // sessionId 长度为 16 位, 有效位数 14 位
         // 以 `w_` 开头, 避免 nanoid 生成时可能以数字开头, 无法作为 Map 的 key
-        const sessionId: string = `w_${nanoid(14)}`;
+        const sessionId = `w_${nanoid(14)}`;
         return sessionId;
     }
 
@@ -180,5 +194,79 @@ export default class Channel {
      */
     private hasSessionHandler(sessionId: string): boolean {
         return !!this.sessionHandlerMap[sessionId];
+    }
+
+    /**
+     * 请求时长上报
+     *
+     * @private
+     * @param postMessageDuration 请求时长
+     * @param number} timeout 超时时长
+     * @param actionType 事务类型
+     */
+    private requestDurationReport(postMessageDuration: number, timeout: number, actionType: string): void {
+        if (postMessageDuration > timeout) {
+            const requestDurationInfo = {
+                actionType,
+                duration: postMessageDuration,
+                inWorker: __WORKER__,
+            };
+
+            workerReport.weblog({
+                module: 'webworker',
+                action: 'channel_long_time',
+                info: requestDurationInfo,
+            });
+        }
+    }
+
+    /**
+     * 对接收到的会话消息进行 Debug Log 输出
+     *
+     * @private
+     * @param message 接收到的会话消息
+     */
+    private onmesssageDebugLog(message: IMessage): void {
+        // 主线程和 Worker 线程通信是对等的, 只在 Worker 线程中打 log, 就可以了
+        if (__WORKER__) {
+            // 根据调试标志位展示
+            if (this.controller.isDebugMode) {
+                /**
+                 * ["00:35.022", "alloyWorker--test ►", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+                 * `►` 表示 Worker 线程收到的信息
+                 */
+                console.log([
+                    getDebugTimeStamp(),
+                    `${self.name} ►`,
+                    message.sessionId,
+                    message.actionType,
+                    message.payload,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * 对发送的会话消息进行 Debug Log 输出
+     *
+     * @private
+     * @param message 发送的会话消息
+     */
+    private postMessageDebugLog(message: IMessage): void {
+        if (__WORKER__) {
+            if (this.controller.isDebugMode) {
+                /**
+                 * ["00:35.023", "️◄ alloyWorker--test", "w_2o-bRMLmGwXi5V", undefined, 1]
+                 * `◄` 表示 Worker 线程发出的信息
+                 */
+                console.log([
+                    getDebugTimeStamp(),
+                    `️◄ ${self.name}`,
+                    message.sessionId,
+                    message.actionType,
+                    message.payload,
+                ]);
+            }
+        }
     }
 }

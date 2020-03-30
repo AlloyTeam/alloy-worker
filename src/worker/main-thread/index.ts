@@ -4,7 +4,7 @@
 
 import { IAlloyWorkerOptions } from '../type';
 import Controller from './controller';
-import workerReport, { WorkerMonitorId, WorkerErrorSource } from '../common/worker-report';
+import workerReport, { WorkerMonitorId } from '../common/worker-report';
 import WorkerAbilityTest from './worker-ability-test';
 import Cookie from './cookie';
 
@@ -25,7 +25,17 @@ export default class MainThreadWorker {
     /**
      * Worker 状态上报标识
      */
-    private hasReportWorkerStatus: boolean = false;
+    private hasReportWorkerStatus = false;
+    /**
+     * Worker 状态信息
+     */
+    workerStatus: {
+        hasWorkerClass: boolean;
+        canNewWorker: boolean;
+        canPostMessage: boolean;
+        workerReadyDuration: number;
+        newWorkerDuration: number;
+    };
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
@@ -43,7 +53,7 @@ export default class MainThreadWorker {
     /**
      * 销毁 worker 实例
      */
-    terminate() {
+    terminate(): void {
         this.controller.terminate();
     }
 
@@ -60,7 +70,7 @@ export default class MainThreadWorker {
      * @param [isTimeoutAndSuccess=false] 是否超时后通信成功
      * @param [timeWorkerReplyMessage=undefined] 收到 Worker 线程回复的时刻; undefined 则是通信失败, 没有回复
      */
-    reportWorkerStatus(isTimeoutAndSuccess: boolean = false, timeWorkerReplyMessage = undefined) {
+    reportWorkerStatus(isTimeoutAndSuccess = false, timeWorkerReplyMessage = undefined): void {
         // 场景: 首次通信已经触发超时上报, 之后才通信成功
         if (isTimeoutAndSuccess) {
             // TODO, 移除
@@ -89,29 +99,32 @@ export default class MainThreadWorker {
         const canPostMessage = !!timeWorkerReplyMessage;
         /**
          * 第一条信息从发出到收到的时间间隔
-         * 如果无法通信, 则默认为 -1
+         * 如果无法通信, 则默认为 NaN
          */
-        let workerReadyDuration: number = -1;
+        let workerReadyDuration = NaN;
         if (canPostMessage) {
             workerReadyDuration = timeWorkerReplyMessage - this.controller.timeBeforeNewWorker;
         }
         /**
-         * 主线程创建 Worker 的同步耗时, 正常为 0
+         * 主线程创建 Worker 的同步耗时, 正常为 1ms 就完成了
          */
-        const newWorkerDurationMainThread = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
+        let newWorkerDuration = NaN;
+        if (this.controller.timeAfterNewWorker && this.controller.timeBeforeNewWorker) {
+            newWorkerDuration = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
+        }
 
-        const workerStatus = {
+        this.workerStatus = {
             hasWorkerClass,
             canNewWorker,
             canPostMessage,
             workerReadyDuration,
-            newWorkerDurationMainThread,
+            newWorkerDuration,
         };
 
         workerReport.weblog({
             module: 'worker',
             action: 'worker_status',
-            info: JSON.stringify(workerStatus),
+            info: this.workerStatus,
         });
 
         if (!canNewWorker) {

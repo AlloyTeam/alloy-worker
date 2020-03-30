@@ -1,7 +1,17 @@
+declare namespace WorkerPayload {
+    type Any = any;
 
-declare module WorkerPayload {
-    module WorkerAbilityTest {
-        type ICommunicationTest = number;
-        type IHeartBeatTest = number;
+    namespace WorkerAbilityTest {
+        type CommunicationTest = number;
+        type HeartBeatTest = number;
+    }
+}
+
+declare namespace WorkerReponse {
+    type Any = any;
+
+    namespace WorkerAbilityTest {
+        type CommunicationTest = number;
+        type HeartBeatTest = number;
     }
 }

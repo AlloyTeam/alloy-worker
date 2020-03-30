@@ -12,7 +12,7 @@ export default class Controller extends BaseController {
     /**
      * 浏览器是否实现了 HTML 规范的 Worker Class
      */
-    static hasWorkerClass: boolean = !!window.Worker;
+    static hasWorkerClass = !!window.Worker;
     /**
      * 是否支持 new Worker, 默认为 Wroker Class 是否实现
      */
@@ -38,14 +38,24 @@ export default class Controller extends BaseController {
 
             this.timeBeforeNewWorker = Date.now();
 
+            let workerUrl = options.workerUrl;
+            if (options.isDebugMode) {
+                this.isDebugMode = true;
+
+                // 通过 Worker url 传递调试参数到 Worker 线程中
+                const debugModeSearch = `debugWorker=true`;
+                workerUrl =
+                    workerUrl.indexOf('?') > 0 ? `${workerUrl}&${debugModeSearch}` : `${workerUrl}?${debugModeSearch}`;
+            }
+
             // 主线程通过 new Worker() 获取 Worker 实例
-            this.worker = new Worker(options.workerUrl, {
+            this.worker = new Worker(workerUrl, {
                 name: options.workerName,
             });
 
             // TODO 确认 url state 非 200 window.onerror 能否监控到
             // 监控和上报 worker 中的报错, window.onerror 中也能监控到
-            this.worker.onerror = (error) => {
+            this.worker.onerror = (error): void => {
                 console.error('worker onerror:', error);
                 workerReport.monitor(WorkerMonitorId.WorkerOnerror);
             };
@@ -67,7 +77,7 @@ export default class Controller extends BaseController {
     /**
      * 销毁 worker 实例
      */
-    terminate() {
+    terminate(): void {
         this.worker.terminate();
     }
 }
