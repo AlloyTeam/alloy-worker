@@ -104,11 +104,8 @@ export default class HeartBeatCheck {
      * @param heartBeatDuration 心跳时长
      */
     durationReport(heartBeatDuration: number): void {
-        // TODO
-        // console.log('Heart beat check, duration:', heartBeatDuration);
         // 心跳时长超过心跳检测间隔, 上报
         if (heartBeatDuration > HeartBeatCheckTimeout) {
-            // TODO 移除
             // worker 心跳包超时
             workerReport.monitor(WorkerMonitorId.HeartBeatTimeout);
             workerReport.weblog({
