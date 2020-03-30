@@ -2,7 +2,7 @@ import { IController, MessageType, IMessage } from '../type';
 import { CommunicationTimeout } from '../config';
 import workerReport from './worker-report';
 import nanoid from './utils/nanoid-no-secure';
-import { isInWorker, getDebugTimeStamp } from './utils/index';
+import { getDebugTimeStamp } from './utils/index';
 
 /**
  * 通信 Channel
@@ -209,7 +209,7 @@ export default class Channel {
             const requestDurationInfo = {
                 actionType,
                 duration: postMessageDuration,
-                inWorker: isInWorker,
+                inWorker: __WORKER__,
             };
 
             workerReport.weblog({
@@ -227,20 +227,22 @@ export default class Channel {
      * @param message 接收到的会话消息
      */
     private onmesssageDebugLog(message: IMessage): void {
-        // 根据调试标志位展示
         // 主线程和 Worker 线程通信是对等的, 只在 Worker 线程中打 log, 就可以了
-        if (this.controller.isDebugMode && isInWorker) {
-            /**
-             * ["00:35.022", "alloyWorker--test ►", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
-             * `►` 表示 Worker 线程收到的信息
-             */
-            console.log([
-                getDebugTimeStamp(),
-                `${self.name} ►`,
-                message.sessionId,
-                message.actionType,
-                message.payload,
-            ]);
+        if (__WORKER__) {
+            // 根据调试标志位展示
+            if (this.controller.isDebugMode) {
+                /**
+                 * ["00:35.022", "alloyWorker--test ►", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+                 * `►` 表示 Worker 线程收到的信息
+                 */
+                console.log([
+                    getDebugTimeStamp(),
+                    `${self.name} ►`,
+                    message.sessionId,
+                    message.actionType,
+                    message.payload,
+                ]);
+            }
         }
     }
 
@@ -251,18 +253,20 @@ export default class Channel {
      * @param message 发送的会话消息
      */
     private postMessageDebugLog(message: IMessage): void {
-        if (this.controller.isDebugMode && isInWorker) {
-            /**
-             * ["00:35.023", "️◄ alloyWorker--test", "w_2o-bRMLmGwXi5V", undefined, 1]
-             * `◄` 表示 Worker 线程发出的信息
-             */
-            console.log([
-                getDebugTimeStamp(),
-                `️◄ ${self.name}`,
-                message.sessionId,
-                message.actionType,
-                message.payload,
-            ]);
+        if (__WORKER__) {
+            if (this.controller.isDebugMode) {
+                /**
+                 * ["00:35.023", "️◄ alloyWorker--test", "w_2o-bRMLmGwXi5V", undefined, 1]
+                 * `◄` 表示 Worker 线程发出的信息
+                 */
+                console.log([
+                    getDebugTimeStamp(),
+                    `️◄ ${self.name}`,
+                    message.sessionId,
+                    message.actionType,
+                    message.payload,
+                ]);
+            }
         }
     }
 }
