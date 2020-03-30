@@ -93,7 +93,15 @@ export default class BaseController implements IController {
                 if (isPromise(actionResult)) {
                     return actionResult.catch((error) => {
                         // TODO 做错误上报
-                        console.error('error:', error);
+                        console.error('worker action error:', error);
+
+                        // 暴露 Promise 中的异常
+                        // Promise 会将运行过程中的报错推入下一个 .catch 的微任务
+                        // 通过 setTimeout 将报错抛到一个宏任务中, 暴露出去
+                        // 参考: https://stackoverflow.com/questions/30715367/why-can-i-not-throw-inside-a-promise-catch-handler
+                        setTimeout(() => {
+                            throw new Error(error);
+                        }, 0);
                     });
                 }
 
@@ -101,7 +109,8 @@ export default class BaseController implements IController {
                 return Promise.resolve(actionResult);
             } catch (error) {
                 // TODO 做错误上报
-                console.error('error:', error);
+                console.error('worker aciton error:', error);
+                throw new Error(error);
             }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);
