@@ -53,10 +53,16 @@ export default class Controller extends BaseController {
                 name: options.workerName,
             });
 
-            // TODO 确认 url state 非 200 window.onerror 能否监控到
-            // 监控和上报 worker 中的报错, window.onerror 中也能监控到
+            /**
+             * 监控和上报 worker 中的报错
+             * window.onerror 中也能监控到 worker.onerror( Worker 运行报错)
+             * 但是对于加载 js 资源 state 非 2xx, window.onerror 监控不到
+             */
             this.worker.onerror = (error): void => {
                 console.error('worker onerror:', error);
+
+                // 主动上报错误
+                workerReport.raven(WorkerErrorSource.WorkerOnerror, error);
                 workerReport.monitor(WorkerMonitorId.WorkerOnerror);
             };
 
