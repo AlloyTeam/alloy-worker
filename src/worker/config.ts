@@ -22,8 +22,3 @@ export const HeartBeatCheckTimeout = 30000;
  * 心跳检测延迟启动的时间间隔, 默认 10s
  */
 export const HeartBeatCheckStartDelay = 10000;
-
-/**
- * 是否在控制台输出通信数据, 用于调试
- */
-export const ShowChannelMessageDebugLog = true;

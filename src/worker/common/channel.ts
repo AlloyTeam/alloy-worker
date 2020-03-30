@@ -1,5 +1,5 @@
 import { IController, MessageType, IMessage } from '../type';
-import { CommunicationTimeout, ShowChannelMessageDebugLog } from '../config';
+import { CommunicationTimeout } from '../config';
 import workerReport from './worker-report';
 import nanoid from './utils/nanoid-no-secure';
 import { isInWorker, getDebugTimeStamp } from './utils/index';
@@ -227,7 +227,13 @@ export default class Channel {
      * @param message 接收到的会话消息
      */
     private onmesssageDebugLog(message: IMessage): void {
-        if (isInWorker && ShowChannelMessageDebugLog) {
+        // 根据调试标志位展示
+        // 主线程和 Worker 线程通信是对等的, 只在 Worker 线程中打 log, 就可以了
+        if (this.controller.isDebugMode && isInWorker) {
+            /**
+             * ["00:35.022", "alloyWorker--test ►", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+             * `►` 表示 Worker 线程收到的信息
+             */
             console.log([
                 getDebugTimeStamp(),
                 `${self.name} ►`,
@@ -245,7 +251,11 @@ export default class Channel {
      * @param message 发送的会话消息
      */
     private postMessageDebugLog(message: IMessage): void {
-        if (isInWorker && ShowChannelMessageDebugLog) {
+        if (this.controller.isDebugMode && isInWorker) {
+            /**
+             * ["00:35.023", "️◄ alloyWorker--test", "w_2o-bRMLmGwXi5V", undefined, 1]
+             * `◄` 表示 Worker 线程发出的信息
+             */
             console.log([
                 getDebugTimeStamp(),
                 `️◄ ${self.name}`,

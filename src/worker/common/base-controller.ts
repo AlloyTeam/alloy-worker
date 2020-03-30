@@ -22,6 +22,10 @@ export default class BaseController implements IController {
     protected actionHandlerMap: {
         [propsName: string]: Function;
     };
+    /**
+     * 是否调试模式, 默认为否
+     */
+    isDebugMode = false;
 
     constructor() {
         this.actionHandlerMap = {};
@@ -67,8 +71,11 @@ export default class BaseController implements IController {
      * @param handler 事务处理器
      */
     addActionHandler(actionType: string, handler: (payload: any) => any): void {
-        // TODO 修改为数据输出
-        // console.log(`%cactionType: ${actionType}`, 'color: orange');
+        // 调试模式使用
+        if (this.isDebugMode) {
+            console.log(`%cAdd actionType: ${actionType}`, 'color: orange');
+        }
+
         if (this.hasActionHandler(actionType)) {
             throw new Error(`已注册事务 \`${actionType}\` 的处理器, 不能重复注册`);
         }

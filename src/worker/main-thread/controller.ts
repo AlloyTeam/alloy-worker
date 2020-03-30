@@ -38,8 +38,18 @@ export default class Controller extends BaseController {
 
             this.timeBeforeNewWorker = Date.now();
 
+            let workerUrl = options.workerUrl;
+            if (options.isDebugMode) {
+                this.isDebugMode = true;
+
+                // 通过 Worker url 传递调试参数到 Worker 线程中
+                const debugModeSearch = `debugWorker=true`;
+                workerUrl =
+                    workerUrl.indexOf('?') > 0 ? `${workerUrl}&${debugModeSearch}` : `${workerUrl}?${debugModeSearch}`;
+            }
+
             // 主线程通过 new Worker() 获取 Worker 实例
-            this.worker = new Worker(options.workerUrl, {
+            this.worker = new Worker(workerUrl, {
                 name: options.workerName,
             });
 

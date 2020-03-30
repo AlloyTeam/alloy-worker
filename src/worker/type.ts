@@ -11,6 +11,10 @@ export interface IAlloyWorkerOptions {
      * worker 实例名称
      */
     workerName: string;
+    /**
+     * 是否调试模式, 默认否; 调试模式会有内部 log 输出
+     */
+    isDebugMode?: boolean;
 }
 
 /**
@@ -39,4 +43,5 @@ export interface IController {
      * 事务处理器
      */
     actionHandler: (message: IMessage) => Promise<any>;
+    isDebugMode: boolean;
 }

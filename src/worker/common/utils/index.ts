@@ -23,7 +23,7 @@ export function getDebugTimeStamp(): string {
     const seconds = `0${now.getSeconds()}`.slice(-2);
     const milliseconds = `000${now.getMilliseconds()}`.slice(-3);
 
-    return `${minutes}.${seconds}.${milliseconds}`;
+    return `${minutes}:${seconds}.${milliseconds}`;
 }
 
 /**
