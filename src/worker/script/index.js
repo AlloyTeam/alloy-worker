@@ -1,0 +1,41 @@
+/*
+ * 通过脚本生成新事务模板代码
+ * 使用方法举例:
+ * $ node path/to/script/index.js worker-action-demo
+ * 其中 `worker-action-demo` 表示事务文件名称
+ */
+
+const checkName = require('./check-name');
+const generateFile = require('./generate-file');
+const insertInfo = require('./insert-info');
+
+// 获取新增事务的参数
+const args = process.argv.slice(2);
+const [actionName] = args;
+
+console.log(`输入的事务名称: ${actionName}. \n`);
+
+// 事务名称检查
+if (!checkName(actionName)) {
+    return;
+} else {
+    console.log('开始新增事务', `${actionName}.`);
+}
+
+const pureActionName = actionName
+    .split(/[-_]/)
+    .map((part) => {
+        return part && `${part[0].toUpperCase()}${part.slice(1)}`;
+    })
+    .join('');
+console.log('事务字母名称:', `${pureActionName}.\n`);
+
+// 生成事务源码
+generateFile(actionName, pureActionName);
+
+// 添加事务引用
+insertInfo(pureActionName);
+
+console.log('\n新增事务模板代码完成.');
+console.log('请在主线程和 Worker 线程各自引用和实例化该事务.');
+console.log('再修改事务 action, payload 的声明, 并撰写业务逻辑.\n');
