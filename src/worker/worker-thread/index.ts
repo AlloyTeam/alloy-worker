@@ -15,6 +15,7 @@ self.name = self.name || `worker_${Date.now().toString().slice(-6)}`;
 
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
+import Raven from './raven';
 
 /**
  * Worker 线程的 Alloy Worker Class
@@ -26,12 +27,16 @@ class WorkerThreadWorker {
      * Worker 线程通信控制器
      */
     private controller: Controller;
+
+    // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
+    raven: Raven;
 
     constructor() {
         this.controller = new Controller();
 
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
+        this.raven = new Raven(this.controller);
     }
 }
 

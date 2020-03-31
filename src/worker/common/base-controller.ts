@@ -135,18 +135,11 @@ export default class BaseController implements IController {
      *
      * @param error 报错信息
      */
-    private reportHandlerError(error: any): void {
+    protected reportHandlerError(error: any): void {
         console.error('worker aciton error:', error);
 
         // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
         if (!__WORKER__) {
-            throw new Error(error);
-        }
-
-        // Worker 线程中, 如果有堆栈信息, 需要主动发送到主线程去上报
-        if (error && error.message && error.stack) {
-            // TODO 调用上报事务
-        } else {
             throw new Error(error);
         }
     }

@@ -101,6 +101,9 @@ export default class Channel {
             payload,
             sessionId,
         });
+
+        // 不等待结果, 还会收到响应, 添加个空的会话响应器
+        this.addSessionListener(sessionId, () => {});
     }
 
     /**
