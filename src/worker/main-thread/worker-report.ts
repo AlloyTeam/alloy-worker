@@ -1,9 +1,9 @@
 import BaseAction from '../common/base-action';
-import { RavenActionType } from '../common/action-type';
+import { WorkerReportActionType } from '../common/action-type';
 import Controller from './controller';
 
 /**
- * 渡鸦上报的事务
+ * Alloy Worker 内部上报的事务
  */
 export default class Raven extends BaseAction {
     constructor(controller: Controller) {
@@ -12,12 +12,12 @@ export default class Raven extends BaseAction {
 
     protected addActionHandler(): void {
         this.controller.addActionHandler(
-            RavenActionType.CaptureWorkerException,
+            WorkerReportActionType.CaptureWorkerException,
             this.captureWorkerExceptionHandler.bind(this)
         );
     }
 
-    captureWorkerExceptionHandler(payload: WorkerPayload.Raven.CaptureWorkerException): void {
+    captureWorkerExceptionHandler(payload: WorkerPayload.WorkerReport.CaptureWorkerException): void {
         const { message, stack } = payload;
         // 防御一下 error 实例修改属性, 一些浏览器内部抛出的错误无法修改 message 字段
         try {

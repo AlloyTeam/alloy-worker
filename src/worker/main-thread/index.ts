@@ -6,7 +6,7 @@ import { IAlloyWorkerOptions } from '../type';
 import workerReport, { WorkerMonitorId } from '../common/worker-report';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
-import Raven from './raven';
+import WorkerReport from './worker-report';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -39,7 +39,7 @@ export default class MainThreadWorker {
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
-    raven: Raven;
+    workerReport: WorkerReport;
 
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
@@ -47,7 +47,7 @@ export default class MainThreadWorker {
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
-        this.raven = new Raven(this.controller);
+        this.workerReport = new WorkerReport(this.controller);
     }
 
     /**

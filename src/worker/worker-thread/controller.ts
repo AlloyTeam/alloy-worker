@@ -26,7 +26,7 @@ export default class Controller extends BaseController {
 
         // Worker 线程中, 如果有堆栈信息, 主动发送到主线程去上报
         if (error && error.message && error.stack) {
-            WorkerThreadWorker.raven.captureWorkerException({
+            WorkerThreadWorker.workerReport.captureWorkerException({
                 message: error.message,
                 stack: error.stack,
             });
