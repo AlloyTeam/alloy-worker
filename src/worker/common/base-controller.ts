@@ -73,7 +73,7 @@ export default class BaseController implements IController {
     addActionHandler(actionType: string, handler: (payload: any) => any): void {
         // 调试模式使用
         if (this.isDebugMode) {
-            console.log(`%cAdd actionType: ${actionType}`, 'color: orange');
+            console.log(`%cAdd actionType \`${actionType}\``, 'color: orange');
         }
 
         if (this.hasActionHandler(actionType)) {

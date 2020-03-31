@@ -55,8 +55,7 @@ export default class HeartBeatCheck {
         this.isHeartBeatChecking = true;
 
         this.heartBeatNow += 1;
-        // TODO 移除吗?
-        // console.log(`${this.mainThreadWorker.name} heart beat now:`, this.heartBeatNow);
+
         const heartBeatStartTime = Date.now();
         this.mainThreadWorker.workerAbilityTest.heartBeatTest(this.heartBeatNow).then(() => {
             this.isHeartBeatChecking = false;

@@ -44,7 +44,7 @@ export enum WorkerErrorSource {
  * @param monitorId 监控点
  */
 function monitor(monitorId: WorkerMonitorId): void {
-    console.log('monitor 上报, id: ', monitorId);
+    console.log('Monitor 上报, id: ', monitorId);
 }
 
 function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void {
@@ -57,11 +57,11 @@ function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void 
         return;
     }
 
-    console.error('raven 上报, 报错信息:', errorSource, error);
+    console.error('Raven 上报, 报错信息:', errorSource, error);
 }
 
 function weblog(log: any): void {
-    console.log('weblog 上报, log:', log);
+    console.log('Weblog 上报, log:', log);
 }
 
 export default {

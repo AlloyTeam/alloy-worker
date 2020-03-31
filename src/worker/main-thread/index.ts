@@ -21,7 +21,7 @@ export default class MainThreadWorker {
     /**
      * 主线程通信控制器
      */
-    private controller: Controller;
+    controller: Controller;
     /**
      * Worker 状态上报标识
      */

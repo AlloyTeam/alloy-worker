@@ -34,15 +34,18 @@ export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThr
                 const timeWorkerReplyMessage = Date.now();
                 clearTimeout(firstCommunicationTimeoutHandle);
 
-                console.log('Worker get message duration:', workerGetMessageDuration);
+                if (mainThreadWorker.controller.isDebugMode) {
+                    console.log(`%cFirst comunication duration: ${workerGetMessageDuration}ms`, 'color: orange');
+                }
 
                 const isTimeout = workerGetMessageDuration > CommunicationTimeout;
                 mainThreadWorker.reportWorkerStatus(isTimeout, timeWorkerReplyMessage);
             })
             .catch((error) => {
-                // TODO 是不是可以去掉
-                // 首次通信 timeout 错误
-                console.log('First communication timeout:', error);
+                if (mainThreadWorker.controller.isDebugMode) {
+                    // 首次通信 timeout 错误
+                    console.error(`%cFirst communication timeout: ${error}`, 'color: orange');
+                }
             });
 
         // 等待通信超时后上报
