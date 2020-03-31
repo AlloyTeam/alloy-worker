@@ -4,7 +4,7 @@
  */
 
 /**
- * 通信超时时间, 默认 30
+ * 通信超时时间, 默认 30s
  */
 export const CommunicationTimeout = 30000;
 

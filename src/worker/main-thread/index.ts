@@ -3,9 +3,10 @@
  */
 
 import { IAlloyWorkerOptions } from '../type';
+import workerReport, { WorkerMonitorId } from '../common/worker-report';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
-import workerReport, { WorkerMonitorId } from '../common/worker-report';
+import Raven from './raven';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -38,6 +39,7 @@ export default class MainThreadWorker {
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
+    raven: Raven;
 
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
@@ -45,6 +47,7 @@ export default class MainThreadWorker {
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
+        this.raven = new Raven(this.controller);
     }
 
     /**
@@ -121,7 +124,7 @@ export default class MainThreadWorker {
         workerReport.weblog({
             module: 'worker',
             action: 'worker_status',
-            info: JSON.stringify(this.workerStatus),
+            info: this.workerStatus,
         });
 
         if (!canNewWorker) {

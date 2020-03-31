@@ -1,0 +1,41 @@
+import BaseAction from '../common/base-action';
+import { <%=WorkerActionName%>ActionType } from '../common/action-type';
+import Controller from './controller';
+
+/**
+ * 
+ */
+export default class <%=WorkerActionName%> extends BaseAction {
+    constructor(controller: Controller) {
+        super(controller);
+    }
+
+    protected addActionHandler(): void {
+        this.controller.addActionHandler(
+            <%=WorkerActionName%>ActionType._A_,
+            this.<%=WorkerActionName%>_A_Handler.bind(this)
+        );
+    }
+
+    <%=WorkerActionName%>_B_(payload: WorkerPayload.<%=WorkerActionName%>.__B = {
+        hello: -1,
+        world: +1,
+    }): Promise<WorkerReponse.<%=WorkerActionName%>.__B> {
+        return this.controller.requestPromise(<%=WorkerActionName%>ActionType._B_, payload);
+    }
+
+    async <%=WorkerActionName%>_A_Handler(
+        payload: WorkerPayload.<%=WorkerActionName%>.__A = '1'
+    ): Promise<WorkerReponse.<%=WorkerActionName%>.__A> {
+        // 通过 async await 实现异步逻辑
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, 1000);
+        });
+
+        // 1000ms 后再返回结果
+        const response = Number(payload);
+        return response;
+    }
+}

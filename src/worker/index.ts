@@ -3,7 +3,7 @@
  */
 
 import { IAlloyWorkerOptions } from './type';
-import { CommunicationTimeout, HeartBeatCheckStartDelay } from './common/config';
+import { CommunicationTimeout, HeartBeatCheckStartDelay } from './config';
 import MainThreadWorker from './main-thread/index';
 import HeartBeatCheck from './heart-beat-check';
 
@@ -25,7 +25,7 @@ export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThr
         // 上报
         mainThreadWorker.reportWorkerStatus();
     } else {
-        let firstCommunicationTimeoutHandle: number = null;
+        let firstCommunicationTimeoutHandle: number = undefined;
         // 默认 worker 才进行 worker 能力上报
         // 上报 worker 信息
         mainThreadWorker.workerAbilityTest

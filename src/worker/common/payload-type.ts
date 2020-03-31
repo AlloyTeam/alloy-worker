@@ -1,5 +1,10 @@
 declare namespace WorkerPayload {
-    type Any = any;
+    namespace Raven {
+        type CaptureWorkerException = {
+            message: string;
+            stack: string;
+        };
+    }
 
     namespace WorkerAbilityTest {
         type CommunicationTest = number;
@@ -8,8 +13,6 @@ declare namespace WorkerPayload {
 }
 
 declare namespace WorkerReponse {
-    type Any = any;
-
     namespace WorkerAbilityTest {
         type CommunicationTest = number;
         type HeartBeatTest = number;

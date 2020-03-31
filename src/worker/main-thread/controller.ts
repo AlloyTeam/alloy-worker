@@ -38,15 +38,31 @@ export default class Controller extends BaseController {
 
             this.timeBeforeNewWorker = Date.now();
 
+            let workerUrl = options.workerUrl;
+            if (options.isDebugMode) {
+                this.isDebugMode = true;
+
+                // 通过 Worker url 传递调试参数到 Worker 线程中
+                const debugModeSearch = `debugWorker=true`;
+                workerUrl =
+                    workerUrl.indexOf('?') > 0 ? `${workerUrl}&${debugModeSearch}` : `${workerUrl}?${debugModeSearch}`;
+            }
+
             // 主线程通过 new Worker() 获取 Worker 实例
-            this.worker = new Worker(options.workerUrl, {
+            this.worker = new Worker(workerUrl, {
                 name: options.workerName,
             });
 
-            // TODO 确认 url state 非 200 window.onerror 能否监控到
-            // 监控和上报 worker 中的报错, window.onerror 中也能监控到
+            /**
+             * 监控和上报 worker 中的报错
+             * window.onerror 中也能监控到 worker.onerror( Worker 运行报错)
+             * 但是对于加载 js 资源 state 非 2xx, window.onerror 监控不到
+             */
             this.worker.onerror = (error): void => {
                 console.error('worker onerror:', error);
+
+                // 主动上报错误
+                workerReport.raven(WorkerErrorSource.WorkerOnerror, error);
                 workerReport.monitor(WorkerMonitorId.WorkerOnerror);
             };
 
