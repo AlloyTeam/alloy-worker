@@ -3,7 +3,7 @@
  */
 
 import { IAlloyWorkerOptions } from '../type';
-import workerReport, { WorkerMonitorId } from '../common/worker-report';
+import ReportProxy, { WorkerMonitorId } from '../report-proxy';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
@@ -75,7 +75,7 @@ export default class MainThreadWorker {
         if (isTimeoutAndSuccess) {
             // TODO, 移除
             // 名称：worker首次通信超时后成功
-            workerReport.monitor(WorkerMonitorId.FirstCommunicationTimeoutAndSuccess);
+            ReportProxy.monitor(WorkerMonitorId.FirstCommunicationTimeoutAndSuccess);
         }
 
         // 已经上报过不再上报
@@ -121,7 +121,7 @@ export default class MainThreadWorker {
             newWorkerDuration,
         };
 
-        workerReport.weblog({
+        ReportProxy.weblog({
             module: 'worker',
             action: 'worker_status',
             info: this.workerStatus,
@@ -130,12 +130,12 @@ export default class MainThreadWorker {
         if (!canNewWorker) {
             // TODO 移除
             // 名称：worker没有实例化成功
-            workerReport.monitor(WorkerMonitorId.NoWorkerInstance);
+            ReportProxy.monitor(WorkerMonitorId.NoWorkerInstance);
         }
         if (!canPostMessage) {
             // TODO 移除
             // 名称：worker首次通信失败
-            workerReport.monitor(WorkerMonitorId.FirstCommunicationFail);
+            ReportProxy.monitor(WorkerMonitorId.FirstCommunicationFail);
         }
     }
 }

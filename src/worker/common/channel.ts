@@ -1,6 +1,6 @@
 import { IController, MessageType, IMessage } from '../type';
 import { CommunicationTimeout } from '../config';
-import workerReport from './worker-report';
+import ReportProxy from '../report-proxy';
 import nanoid from './utils/nanoid-no-secure';
 import { getDebugTimeStamp } from './utils/index';
 
@@ -215,7 +215,7 @@ export default class Channel {
                 inWorker: __WORKER__,
             };
 
-            workerReport.weblog({
+            ReportProxy.weblog({
                 module: 'webworker',
                 action: 'channel_long_time',
                 info: requestDurationInfo,

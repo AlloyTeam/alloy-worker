@@ -1,7 +1,7 @@
 import { IAlloyWorkerOptions } from '../type';
 import BaseController from '../common/base-controller';
 import Channel from '../common/channel';
-import workerReport, { WorkerMonitorId, WorkerErrorSource } from '../common/worker-report';
+import ReportProxy, { WorkerMonitorId, WorkerErrorSource } from '../report-proxy';
 
 /**
  * 主线程通信控制器
@@ -62,8 +62,8 @@ export default class Controller extends BaseController {
                 console.error('Worker onerror:', error);
 
                 // 主动上报错误
-                workerReport.raven(WorkerErrorSource.WorkerOnerror, error);
-                workerReport.monitor(WorkerMonitorId.WorkerOnerror);
+                ReportProxy.raven(WorkerErrorSource.WorkerOnerror, error);
+                ReportProxy.monitor(WorkerMonitorId.WorkerOnerror);
             };
 
             this.timeAfterNewWorker = Date.now();
@@ -76,7 +76,7 @@ export default class Controller extends BaseController {
             this.canNewWorker = false;
 
             // 主动上报错误
-            workerReport.raven(WorkerErrorSource.CreateWorkerError, error);
+            ReportProxy.raven(WorkerErrorSource.CreateWorkerError, error);
         }
     }
 
