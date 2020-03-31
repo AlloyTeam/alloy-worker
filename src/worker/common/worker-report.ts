@@ -2,35 +2,35 @@
  * Worker 可用性上报
  */
 
-export enum WorkerMonitorId {
+export const enum WorkerMonitorId {
     /**
      * 没有实例化成功
      */
-    NoWorkerInstance = 1,
+    NoWorkerInstance = 'NoWorkerInstance',
     /**
      * 首次通信失败
      */
-    FirstCommunicationFail,
+    FirstCommunicationFail = 'FirstCommunicationFail',
     /**
      * 首次通信超时后成功
      */
-    FirstCommunicationTimeoutAndSuccess,
+    FirstCommunicationTimeoutAndSuccess = 'FirstCommunicationTimeoutAndSuccess',
     /**
      * Worker 线程触发 onerror
      */
-    WorkerOnerror,
+    WorkerOnerror = 'WorkerOnerror',
     /**
      * Worker 心跳停止
      */
-    HeartBeatStop,
+    HeartBeatStop = 'HeartBeatStop',
     /**
      * Worker 心跳超时
      */
-    HeartBeatTimeout,
+    HeartBeatTimeout = 'HeartBeatTimeout',
     /**
      * 事务处理器逻辑报错
      */
-    ActionHandleError,
+    ActionHandleError = 'ActionHandleError',
 }
 
 export enum WorkerErrorSource {

@@ -36,7 +36,8 @@ export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThr
 
                 console.log('Worker get message duration:', workerGetMessageDuration);
 
-                mainThreadWorker.reportWorkerStatus(true, timeWorkerReplyMessage);
+                const isTimeout = workerGetMessageDuration > CommunicationTimeout;
+                mainThreadWorker.reportWorkerStatus(isTimeout, timeWorkerReplyMessage);
             })
             .catch((error) => {
                 // TODO 是不是可以去掉
