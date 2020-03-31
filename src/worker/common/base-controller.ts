@@ -136,7 +136,7 @@ export default class BaseController implements IController {
      * @param error 报错信息
      */
     protected reportHandlerError(error: any): void {
-        console.error('worker aciton error:', error);
+        console.error('Worker aciton error:', error);
 
         // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
         if (!__WORKER__) {

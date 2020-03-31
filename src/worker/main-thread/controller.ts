@@ -59,7 +59,7 @@ export default class Controller extends BaseController {
              * 但是对于加载 js 资源 state 非 2xx, window.onerror 监控不到
              */
             this.worker.onerror = (error): void => {
-                console.error('worker onerror:', error);
+                console.error('Worker onerror:', error);
 
                 // 主动上报错误
                 workerReport.raven(WorkerErrorSource.WorkerOnerror, error);
@@ -70,7 +70,7 @@ export default class Controller extends BaseController {
 
             this.channel = new Channel(this.worker, this);
         } catch (error) {
-            console.error('init worker fail:', error);
+            console.error('Init worker fail:', error);
 
             // 创建 worker 失败, 标识改为不支持
             this.canNewWorker = false;

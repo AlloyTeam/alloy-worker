@@ -22,7 +22,7 @@ export default class Controller extends BaseController {
     }
 
     protected reportHandlerError(error: any): void {
-        console.error('worker aciton error:', error);
+        console.error('Worker aciton error:', error);
 
         // Worker 线程中, 如果有堆栈信息, 主动发送到主线程去上报
         if (error && error.message && error.stack) {
