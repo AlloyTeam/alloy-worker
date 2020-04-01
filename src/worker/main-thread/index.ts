@@ -3,10 +3,10 @@
  */
 
 import { IAlloyWorkerOptions } from '../type';
-import workerReport, { WorkerMonitorId } from '../common/worker-report';
+import ReportProxy, { WorkerMonitorId } from '../report-proxy';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
-import Raven from './raven';
+import WorkerReport from './worker-report';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -21,7 +21,7 @@ export default class MainThreadWorker {
     /**
      * 主线程通信控制器
      */
-    private controller: Controller;
+    controller: Controller;
     /**
      * Worker 状态上报标识
      */
@@ -39,7 +39,7 @@ export default class MainThreadWorker {
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
-    raven: Raven;
+    workerReport: WorkerReport;
 
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
@@ -47,7 +47,7 @@ export default class MainThreadWorker {
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
-        this.raven = new Raven(this.controller);
+        this.workerReport = new WorkerReport(this.controller);
     }
 
     /**
@@ -75,7 +75,7 @@ export default class MainThreadWorker {
         if (isTimeoutAndSuccess) {
             // TODO, 移除
             // 名称：worker首次通信超时后成功
-            workerReport.monitor(WorkerMonitorId.FirstCommunicationTimeoutAndSuccess);
+            ReportProxy.monitor(WorkerMonitorId.FirstCommunicationTimeoutAndSuccess);
         }
 
         // 已经上报过不再上报
@@ -121,7 +121,7 @@ export default class MainThreadWorker {
             newWorkerDuration,
         };
 
-        workerReport.weblog({
+        ReportProxy.weblog({
             module: 'worker',
             action: 'worker_status',
             info: this.workerStatus,
@@ -130,12 +130,12 @@ export default class MainThreadWorker {
         if (!canNewWorker) {
             // TODO 移除
             // 名称：worker没有实例化成功
-            workerReport.monitor(WorkerMonitorId.NoWorkerInstance);
+            ReportProxy.monitor(WorkerMonitorId.NoWorkerInstance);
         }
         if (!canPostMessage) {
             // TODO 移除
             // 名称：worker首次通信失败
-            workerReport.monitor(WorkerMonitorId.FirstCommunicationFail);
+            ReportProxy.monitor(WorkerMonitorId.FirstCommunicationFail);
         }
     }
 }

@@ -1,9 +1,10 @@
 declare namespace WorkerPayload {
-    namespace Raven {
+    namespace WorkerReport {
         type CaptureWorkerException = {
             message: string;
             stack: string;
         };
+        type Weblog = any;
     }
 
     namespace WorkerAbilityTest {

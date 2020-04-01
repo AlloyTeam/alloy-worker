@@ -1,6 +1,5 @@
 import { IController, MessageType, IMessage } from '../type';
 import { CommunicationTimeout } from '../config';
-import workerReport from './worker-report';
 import nanoid from './utils/nanoid-no-secure';
 import { getDebugTimeStamp } from './utils/index';
 
@@ -215,8 +214,9 @@ export default class Channel {
                 inWorker: __WORKER__,
             };
 
-            workerReport.weblog({
-                module: 'webworker',
+            // 通过通信控制器进行上报
+            this.controller.weblog({
+                module: 'worker',
                 action: 'channel_long_time',
                 info: requestDurationInfo,
             });
@@ -236,6 +236,7 @@ export default class Channel {
             if (this.controller.isDebugMode) {
                 /**
                  * ["00:35.022", "alloyWorker--test ►", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+                 * [时间戳, 线程名称, 会话 Id, 事务类型, 事务负载]
                  * `►` 表示 Worker 线程收到的信息
                  */
                 console.log([

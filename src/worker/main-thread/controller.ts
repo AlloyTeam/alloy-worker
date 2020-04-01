@@ -1,7 +1,7 @@
 import { IAlloyWorkerOptions } from '../type';
 import BaseController from '../common/base-controller';
 import Channel from '../common/channel';
-import workerReport, { WorkerMonitorId, WorkerErrorSource } from '../common/worker-report';
+import ReportProxy, { WorkerMonitorId, WorkerErrorSource } from '../report-proxy';
 
 /**
  * 主线程通信控制器
@@ -59,24 +59,24 @@ export default class Controller extends BaseController {
              * 但是对于加载 js 资源 state 非 2xx, window.onerror 监控不到
              */
             this.worker.onerror = (error): void => {
-                console.error('worker onerror:', error);
+                console.error('Worker onerror:', error);
 
                 // 主动上报错误
-                workerReport.raven(WorkerErrorSource.WorkerOnerror, error);
-                workerReport.monitor(WorkerMonitorId.WorkerOnerror);
+                ReportProxy.raven(WorkerErrorSource.WorkerOnerror, error);
+                ReportProxy.monitor(WorkerMonitorId.WorkerOnerror);
             };
 
             this.timeAfterNewWorker = Date.now();
 
             this.channel = new Channel(this.worker, this);
         } catch (error) {
-            console.error('init worker fail:', error);
+            console.error('Init worker fail:', error);
 
             // 创建 worker 失败, 标识改为不支持
             this.canNewWorker = false;
 
             // 主动上报错误
-            workerReport.raven(WorkerErrorSource.CreateWorkerError, error);
+            ReportProxy.raven(WorkerErrorSource.CreateWorkerError, error);
         }
     }
 
@@ -85,5 +85,16 @@ export default class Controller extends BaseController {
      */
     terminate(): void {
         this.worker.terminate();
+    }
+
+    weblog(log: any): void {
+        ReportProxy.weblog(log);
+    }
+
+    protected reportActionHandlerError(error: any): void {
+        console.error('Worker aciton error:', error);
+
+        // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
+        throw new Error(error);
     }
 }

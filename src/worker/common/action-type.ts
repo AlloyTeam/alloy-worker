@@ -3,6 +3,7 @@ export const enum WorkerAbilityTestActionType {
     HeartBeatTest = 'HeartBeatTest',
 }
 
-export const enum RavenActionType {
+export const enum WorkerReportActionType {
     CaptureWorkerException = 'CaptureWorkerException',
+    Weblog = 'Weblog',
 }
