@@ -1,6 +1,6 @@
 import BaseAction from '../common/base-action';
 import { WorkerReportActionType } from '../common/action-type';
-import ReportProxy, { WorkerErrorSource } from '../report-proxy';
+import ReportProxy, { WorkerErrorSource, WorkerMonitorId } from '../report-proxy';
 import Controller from './controller';
 
 /**
@@ -17,6 +17,7 @@ export default class Raven extends BaseAction {
             this.captureWorkerExceptionHandler.bind(this)
         );
         this.controller.addActionHandler(WorkerReportActionType.Weblog, this.weblogHandler.bind(this));
+        this.controller.addActionHandler(WorkerReportActionType.Monitor, this.monitorHandler.bind(this));
     }
 
     /**
@@ -47,5 +48,14 @@ export default class Raven extends BaseAction {
      */
     weblogHandler(payload: WorkerPayload.WorkerReport.Weblog): void {
         ReportProxy.weblog(payload);
+    }
+
+    /**
+     * 接收 Worker 线程的 monitor 并上报
+     *
+     * @param payload 日志信息
+     */
+    monitorHandler(payload: WorkerPayload.WorkerReport.Monitor): void {
+        ReportProxy.monitor(payload as WorkerMonitorId);
     }
 }
