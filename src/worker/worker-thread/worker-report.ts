@@ -20,4 +20,13 @@ export default class Raven extends BaseAction {
     captureWorkerException(payload: WorkerPayload.WorkerReport.CaptureWorkerException): void {
         return this.controller.request(WorkerReportActionType.CaptureWorkerException, payload);
     }
+
+    /**
+     * 将 Worker 线程的 weblog 发到主线程进行上报
+     *
+     * @param payload 日志信息
+     */
+    weblog(payload: WorkerPayload.WorkerReport.Weblog): void {
+        return this.controller.request(WorkerReportActionType.Weblog, payload);
+    }
 }

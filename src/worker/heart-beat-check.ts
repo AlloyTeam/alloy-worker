@@ -108,7 +108,7 @@ export default class HeartBeatCheck {
             // worker 心跳包超时
             ReportProxy.monitor(WorkerMonitorId.HeartBeatTimeout);
             ReportProxy.weblog({
-                module: 'webworker',
+                module: 'worker',
                 action: 'worker_heartbeat_duration',
                 info: heartBeatDuration,
             });
@@ -123,7 +123,7 @@ export default class HeartBeatCheck {
         //  worker 心跳停止上报
         ReportProxy.monitor(WorkerMonitorId.HeartBeatStop);
         ReportProxy.weblog({
-            module: 'web_worker',
+            module: 'worker',
             action: 'worker_heartbeat_dead',
             // 上报最后一次心跳计数
             info: this.sickHeartBeats[this.sickHeartBeats.length - 1],

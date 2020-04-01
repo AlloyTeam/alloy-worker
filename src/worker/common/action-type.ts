@@ -5,4 +5,5 @@ export const enum WorkerAbilityTestActionType {
 
 export const enum WorkerReportActionType {
     CaptureWorkerException = 'CaptureWorkerException',
+    Weblog = 'Weblog',
 }

@@ -34,8 +34,18 @@ export const enum WorkerMonitorId {
 }
 
 export enum WorkerErrorSource {
+    /**
+     * 来源为创建 Worker (new Worker)
+     */
     CreateWorkerError = 'CreateWorkerError',
+    /**
+     * 来源为 Worker.onerrror 监听
+     */
     WorkerOnerror = 'WorkerOnerror',
+    /**
+     * 来源为 Worker 线程主动抛出的错误
+     */
+    WorkerThreadError = 'WorkerThreadError',
 }
 
 /**
@@ -57,7 +67,7 @@ function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void 
         return;
     }
 
-    console.error('Raven 上报报错信息:', errorSource, error);
+    console.error('Raven 上报错误:', errorSource, error);
 }
 
 function weblog(log: any): void {

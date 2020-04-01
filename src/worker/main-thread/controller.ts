@@ -86,4 +86,15 @@ export default class Controller extends BaseController {
     terminate(): void {
         this.worker.terminate();
     }
+
+    weblog(log: any): void {
+        ReportProxy.weblog(log);
+    }
+
+    protected reportActionHandlerError(error: any): void {
+        console.error('Worker aciton error:', error);
+
+        // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
+        throw new Error(error);
+    }
 }

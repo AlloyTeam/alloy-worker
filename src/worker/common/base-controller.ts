@@ -104,7 +104,7 @@ export default class BaseController implements IController {
                         // 通过 setTimeout 将报错抛到一个宏任务中, 暴露出去
                         // 参考: https://stackoverflow.com/questions/30715367/why-can-i-not-throw-inside-a-promise-catch-handler
                         setTimeout(() => {
-                            this.reportHandlerError(error);
+                            this.reportActionHandlerError(error);
                         }, 0);
                     });
                 }
@@ -112,7 +112,7 @@ export default class BaseController implements IController {
                 // 对数据结果, 包装为 Promise
                 return Promise.resolve(actionResult);
             } catch (error) {
-                this.reportHandlerError(error);
+                this.reportActionHandlerError(error);
             }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);
@@ -131,16 +131,20 @@ export default class BaseController implements IController {
     }
 
     /**
+     * Weblog 上报
+     * @description
+     * 在各线程 Controller 中 override
+     *
+     * @param log 上报信息
+     */
+    weblog(log: any): void {}
+
+    /**
      * 上报事务处理器执行报错
+     * @description
+     * 在各线程 Controller 中 override
      *
      * @param error 报错信息
      */
-    protected reportHandlerError(error: any): void {
-        console.error('Worker aciton error:', error);
-
-        // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
-        if (!__WORKER__) {
-            throw new Error(error);
-        }
-    }
+    protected reportActionHandlerError(error: any): void {}
 }

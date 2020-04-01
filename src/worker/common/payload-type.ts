@@ -4,6 +4,7 @@ declare namespace WorkerPayload {
             message: string;
             stack: string;
         };
+        type Weblog = any;
     }
 
     namespace WorkerAbilityTest {
