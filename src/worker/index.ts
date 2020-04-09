@@ -7,18 +7,26 @@ import { CommunicationTimeout, HeartBeatCheckStartDelay } from './config';
 import MainThreadWorker from './main-thread/index';
 import HeartBeatCheck from './heart-beat-check';
 
+/** worker url 会在构建时替换掉
+ * 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker-51497b48.js'
+ */
+const workerUrl = './WORKER_FILE_NAME_PLACEHOLDER';
+
 /**
  * 创建 Alloy Worker 的工厂函数
  *
  * @param options 工厂函数参数
  * @returns {MainThreadWorker} Alloy Worker 实例
  */
-export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThreadWorker {
+export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'workerUrl'>): MainThreadWorker {
     // TODO 移除判断
     // 主线程才去上报
     // if (!__WORKER__) {
 
-    const mainThreadWorker = new MainThreadWorker(options);
+    const mainThreadWorker = new MainThreadWorker({
+        ...options,
+        workerUrl: workerUrl,
+    });
 
     // 无法实例化 Worker, 不能再去检测 Worker 能力了, 会报错
     if (!mainThreadWorker.canNewWorker) {

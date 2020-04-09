@@ -49,7 +49,7 @@ const config = {
             template: path.join(pagePath, '/index.html'),
         }),
         new ReplaceWorkerFileNamePlaceholderPlugin({
-            test: [/\.html$/],
+            test: [/\.js$/],
             workerFileName: `${workerFileName}.js`,
             workerFileNamePlaceholder: 'WORKER_FILE_NAME_PLACEHOLDER',
             manifestFileForWorkerPath: path.join(outputPath, manifestFileForWorker),
