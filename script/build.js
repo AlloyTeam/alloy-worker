@@ -1,10 +1,10 @@
 const webpack = require('webpack');
 const execSync = require('child_process').execSync;
 
-const workerConfig = require('./worker.webpack.config');
+const workerConfig = require('../worker-script/worker.webpack.config');
 const config = require('./webpack.config');
 
-const { isProduction, outputPath } = require('./project.config');
+const { isProduction, outputPath } = require('../worker-script/project.config');
 
 function getBuildFinishTime() {
     function addZero(num) {
