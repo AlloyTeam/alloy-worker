@@ -5,6 +5,7 @@ declare namespace WorkerPayload {
             stack: string;
         };
         type Weblog = any;
+        type Monitor = string;
     }
 
     namespace WorkerAbilityTest {

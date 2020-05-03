@@ -29,4 +29,13 @@ export default class Raven extends BaseAction {
     weblog(payload: WorkerPayload.WorkerReport.Weblog): void {
         return this.controller.request(WorkerReportActionType.Weblog, payload);
     }
+
+    /**
+     * 将 Worker 线程的 monitor 发到主线程进行上报
+     *
+     * @param payload monitor 信息
+     */
+    monitor(payload: WorkerPayload.WorkerReport.Monitor): void {
+        return this.controller.request(WorkerReportActionType.Monitor, payload);
+    }
 }

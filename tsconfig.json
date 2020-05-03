@@ -1,11 +1,29 @@
 {
     "compilerOptions": {
-        "outDir": "./dist",
-        "allowJs": true,
         "target": "es6",
+        "module": "es6",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "declaration": false,
+        "outDir": "dist",
+        "sourceMap": true,
+        "removeComments": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "baseUrl": "./"
     },
     "include": [
-        "./src/**/*",
+        "./src/**/*"
     ],
     "exclude": [
         "node_modules"

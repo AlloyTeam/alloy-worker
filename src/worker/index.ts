@@ -7,25 +7,33 @@ import { CommunicationTimeout, HeartBeatCheckStartDelay } from './config';
 import MainThreadWorker from './main-thread/index';
 import HeartBeatCheck from './heart-beat-check';
 
+/** worker url 会在构建时替换掉
+ * 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker-51497b48.js'
+ */
+const workerUrl = './WORKER_FILE_NAME_PLACEHOLDER';
+
 /**
  * 创建 Alloy Worker 的工厂函数
  *
  * @param options 工厂函数参数
  * @returns {MainThreadWorker} Alloy Worker 实例
  */
-export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThreadWorker {
+export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'workerUrl'>): MainThreadWorker {
     // TODO 移除判断
     // 主线程才去上报
     // if (!__WORKER__) {
 
-    const mainThreadWorker = new MainThreadWorker(options);
+    const mainThreadWorker = new MainThreadWorker({
+        ...options,
+        workerUrl: workerUrl,
+    });
 
     // 无法实例化 Worker, 不能再去检测 Worker 能力了, 会报错
     if (!mainThreadWorker.canNewWorker) {
         // 上报
         mainThreadWorker.reportWorkerStatus();
     } else {
-        let firstCommunicationTimeoutHandle: number = undefined;
+        let firstCommunicationTimeoutHandle = -1;
         // 默认 worker 才进行 worker 能力上报
         // 上报 worker 信息
         mainThreadWorker.workerAbilityTest
@@ -51,7 +59,7 @@ export default function createAlloyWorker(options: IAlloyWorkerOptions): MainThr
         // 等待通信超时后上报
         // 为了可用性, 通信超时后并不会结束等待, 而是打点上报
         // 正常不会走到事务的 .catch 逻辑, 所以需要独立设置超时上报
-        firstCommunicationTimeoutHandle = setTimeout(() => {
+        firstCommunicationTimeoutHandle = window.setTimeout(() => {
             mainThreadWorker.reportWorkerStatus();
         }, CommunicationTimeout);
 

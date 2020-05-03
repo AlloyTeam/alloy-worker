@@ -28,7 +28,7 @@ export const enum WorkerMonitorId {
      */
     HeartBeatTimeout = 'HeartBeatTimeout',
     /**
-     * 事务处理器逻辑报错
+     * 事务处理器逻辑错误
      */
     ActionHandleError = 'ActionHandleError',
 }

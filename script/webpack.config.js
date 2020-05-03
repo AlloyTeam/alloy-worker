@@ -1,9 +1,8 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ReplaceWorkerFileNamePlaceholderPlugin = require('./replace-worker-file-name-placeholder-plugin');
 
-const { isProduction, outputPath, projectDir, workerFileName, manifestFileForWorker } = require('./project.config');
+const { isProduction, outputPath, projectDir } = require('../worker-script/project.config');
+const PluginForMainThreadBuild = require('../worker-script/plugin-for-main-thread-build');
 
 const sourceMap = isProduction ? 'source-map' : 'cheap-module-source-map';
 const pagePath = path.join(projectDir, './src/page');
@@ -26,6 +25,7 @@ const config = {
         'worker/worker-thread': 'worker.WorkerThreadWorker',
         'worker/worker-thread/index': 'worker.WorkerThreadWorker',
     },
+    mode: isProduction ? 'production': 'development',
     devtool: sourceMap,
     optimization: {
         minimize: isProduction,
@@ -42,17 +42,9 @@ const config = {
         ],
     },
     plugins: [
-        new webpack.DefinePlugin({
-            __WORKER__: false,
-        }),
+        ...PluginForMainThreadBuild,
         new HtmlWebpackPlugin({
             template: path.join(pagePath, '/index.html'),
-        }),
-        new ReplaceWorkerFileNamePlaceholderPlugin({
-            test: [/\.html$/],
-            workerFileName: `${workerFileName}.js`,
-            workerFileNamePlaceholder: 'WORKER_FILE_NAME_PLACEHOLDER',
-            manifestFileForWorkerPath: path.join(outputPath, manifestFileForWorker),
         }),
     ],
 };

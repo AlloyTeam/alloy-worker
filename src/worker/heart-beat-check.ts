@@ -32,7 +32,7 @@ export default class HeartBeatCheck {
      */
     start(): void {
         // 定时检查
-        this.checkInterValHandle = setInterval(() => {
+        this.checkInterValHandle = window.setInterval(() => {
             this.checkOne();
         }, HeartBeatCheckInterVal);
     }
@@ -66,7 +66,7 @@ export default class HeartBeatCheck {
             this.durationReport(heartBeatDuration);
         });
 
-        this.checkTimeoutHandle = setTimeout(() => {
+        this.checkTimeoutHandle = window.setTimeout(() => {
             this.isHeartBeatChecking = false;
             clearTimeout(this.checkTimeoutHandle);
 
@@ -105,7 +105,7 @@ export default class HeartBeatCheck {
     durationReport(heartBeatDuration: number): void {
         // 心跳时长超过心跳检测间隔, 上报
         if (heartBeatDuration > HeartBeatCheckTimeout) {
-            // worker 心跳包超时
+            // Worker 心跳包超时上报
             ReportProxy.monitor(WorkerMonitorId.HeartBeatTimeout);
             ReportProxy.weblog({
                 module: 'worker',
@@ -119,8 +119,7 @@ export default class HeartBeatCheck {
      * Worker 线程死亡的上报
      */
     deadReport(): void {
-        // TODO 移除
-        //  worker 心跳停止上报
+        // Worker 心跳停止上报
         ReportProxy.monitor(WorkerMonitorId.HeartBeatStop);
         ReportProxy.weblog({
             module: 'worker',

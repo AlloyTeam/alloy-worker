@@ -94,6 +94,9 @@ export default class Controller extends BaseController {
     protected reportActionHandlerError(error: any): void {
         console.error('Worker aciton error:', error);
 
+        // 事务处理器逻辑错误上报
+        ReportProxy.monitor(WorkerMonitorId.ActionHandleError);
+
         // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
         throw new Error(error);
     }
