@@ -15,16 +15,18 @@ console.log('alloyWorker', alloyWorker);
 
 // 轮循 alloyWorker 的状态, 并渲染到页面上
 const testIntervalHandle = setInterval(() => {
-    const workerStatus = alloyWorker.workerStatus;
+    type TWorkerStatus = typeof alloyWorker.workerStatus;
+    type TWorkerStatusKey = keyof typeof alloyWorker.workerStatus;
+
+    const workerStatus: any = alloyWorker.workerStatus;
 
     if (!workerStatus) {
         return;
     }
     clearInterval(testIntervalHandle);
 
-    type TWorkerStatus = typeof alloyWorker.workerStatus;
     const workerStatusTip: {
-        [key in keyof TWorkerStatus]: string;
+        [key in TWorkerStatusKey]: string;
     } = {
         hasWorkerClass: '是否实现了 HTML 规范的 Worker Class',
         canNewWorker: '是否支持 new Worker',
@@ -50,7 +52,7 @@ const testIntervalHandle = setInterval(() => {
                     ${status}
                 </div>
                 <div class="worker-status-tip">
-                    > ${workerStatusTip[key]}
+                    > ${workerStatusTip[key as TWorkerStatusKey]}
                 <div>
             </li>`;
         })
@@ -62,5 +64,5 @@ const testIntervalHandle = setInterval(() => {
         </ul>
         `;
 
-    document.getElementById('test-result').innerHTML = workerStatusHtml;
+    document.getElementById('test-result')!.innerHTML = workerStatusHtml;
 }, 500);
