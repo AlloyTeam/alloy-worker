@@ -22,68 +22,12 @@
 * Worker 图像处理 Demo
 > https://todo.com
 
-## 接入方式
+## 代码示例
 
-### 让 Alloy Worker 融为项目源码
 
-Web Worker 需要打包为独立文件, 并且你的业务代码也会打包进去; 所以 Alloy Worker **并不是一个 npm 安装包**. 它要你手动将它融合到你的项目源码里; 好在手动也并不复杂, 而且它不会入侵你的现有业务.
-
-Alloy Worker 本身是对原始 Web Worker 能力的 RPC 封装, 并在使用方式上给出约定. 接入其实是完成一件单纯的事情: **帮你初始化项目中的 Worker 源码**. 初始化源码后, Web Worker 就是项目的一项基础能力, 你可以自由地去使用和修改它.
-
-我们使用一个已有项目 - [template](https://github.com/CntChen/template) - 为例子来了解如何手动融合 Alloy Worker.
-
-### 下载源码
-将 template 和 alloy-worker clone 到同级目录
-
-```sh
-$ cd /path/to/test
-$ git clone https://github.com/CntChen/template.git
-$ git clone https://github.com/CntChen/alloy-worker.git
-```
-
-### 复制需要的源码
-
-template 中需要的 alloy-worker 源码在 alloy-worker 的 `src/worker` 目录, 复制到 template 的对应目录.
-
-```sh
-$ cd /path/to/test
-$ cp -r ./alloy-worker/src/worker ./template/src
-```
-
-### 添加 Worker 的独立构建脚本
-
-我们知道 Web Worker 需要打包为独立的 js 资源, alloy-worker 已经提供了打包脚本, 迁移过去.
-
-```sh
-$ cd /path/to/test
-$ cp -rf alloy-worker/worker-script ./template
-```
-
-我们需要看下 `pipeline-template/scirpt/project.config.js`, 其中定义了一些构建的配置. alloy-worker 的默认输出目录 `outputPath = ./dist`, 如果 pipeline-template 不是, 需要对齐 pipeline-template.
-
-然后在 `` 中可以看到 Web Worker 构建的 webpack 配置: `script/worker.webpack.config.js`.
-
-### 把 Web Worker 构建配置纳入构建流程
-
-// TODO
-```diff
-+ const workerConfig = require('../worker-script/worker.webpack.config');
-const pcConfig = ...
-const mobileConfig = ...
-
--const compiler = webpack([pcConfig, mobileConfig].filter(c => !!c));
-+const compiler = webpack([workerConfig, pcConfig, mobileConfig].filter(c => !!c));
-```
-
-### 跑构建
-
-webpackv4.
-
-安装一些可能之前没有的依赖.
-```sh
-$ npm i webpack-manifest-plugin -D
-
-```
+## 使用
+* 接入方式
+* 用法
 
 
 ## 业界方案对比
@@ -96,11 +40,14 @@ $ npm i webpack-manifest-plugin -D
 | **Alloy-worker** | 面向事务, 高可以用的 Worker 通信框架 | 通信️控制器 | 同名函数, TypeScirpt 声明 | 完整监控指标, 全周期错误监控 | 命名空间 |
 
 ## 贡献源码
-
+> [参考开发](./CONTRIBUTING.md).
 
 ## 相关文档
 
-* Alloy Worker 接入指南
+* Alloy Worker 接入教程
+> https://todo.com
+
+* Alloy Worker 使用方式
 > https://todo.com
 
 * Alloy Worker 技术细节
@@ -116,4 +63,4 @@ $ npm i webpack-manifest-plugin -D
 * 代码中的 TODO 清理
 * __WORKER__ 判断与 isWorker
 
-##　EOF
+## EOF
