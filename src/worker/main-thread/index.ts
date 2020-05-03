@@ -98,9 +98,9 @@ export default class MainThreadWorker {
         const canPostMessage = !!timeWorkerReplyMessage;
         /**
          * 第一条信息从发出到收到的时间间隔
-         * 如果无法通信, 则默认为 NaN
+         * 如果无法通信, 则默认为 -1
          */
-        let workerReadyDuration = NaN;
+        let workerReadyDuration = -1;
         if (canPostMessage) {
             workerReadyDuration = timeWorkerReplyMessage! - this.controller.timeBeforeNewWorker;
         }
