@@ -42,14 +42,14 @@ export default class Channel {
      */
     private onmessage(event: { data: IMessage }): void {
         const { data: message } = event;
-        const { messageType, sessionId } = message;
+        const { messageType, sessionId, actionType } = message;
 
         this.onmesssageDebugLog(message);
 
         // 接收到请求
         if (messageType === MessageType.REQUEST) {
             this.controller.actionHandler(message).then((actionResult) => {
-                this.response(sessionId, actionResult);
+                this.response(sessionId, actionType, actionResult);
             });
         } else if (messageType === MessageType.REPLY) {
             // 接收到响应
@@ -67,10 +67,10 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param payload 负载
      */
-    response(sessionId: string, payload: any): void {
+    response(sessionId: string, actionType: string, payload: any): void {
         this.postMessage({
             messageType: MessageType.REPLY,
-            actionType: '', // 响应通过 sessionId 标识, actionType 无需回传
+            actionType,
             payload,
             sessionId,
         });
