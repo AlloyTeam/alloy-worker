@@ -113,6 +113,7 @@ export default class BaseController implements IController {
                 return Promise.resolve(actionResult);
             } catch (error) {
                 this.reportActionHandlerError(error);
+                return Promise.reject('catch action handler exception.');
             }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);

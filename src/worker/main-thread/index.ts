@@ -68,9 +68,9 @@ export default class MainThreadWorker {
      * Worker 状态上报
      *
      * @param [isTimeoutAndSuccess=false] 是否超时后通信成功
-     * @param [timeWorkerReplyMessage=undefined] 收到 Worker 线程回复的时刻; undefined 则是通信失败, 没有回复
+     * @param {number} [timeWorkerReplyMessage] 收到 Worker 线程回复的时刻; undefined 则是通信失败, 没有回复
      */
-    reportWorkerStatus(isTimeoutAndSuccess = false, timeWorkerReplyMessage = undefined): void {
+    reportWorkerStatus(isTimeoutAndSuccess = false, timeWorkerReplyMessage?: number): void {
         // 场景: 首次通信已经触发超时上报, 之后才通信成功
         if (isTimeoutAndSuccess) {
             // Worker 首次通信超时后成功上报
@@ -102,7 +102,7 @@ export default class MainThreadWorker {
          */
         let workerReadyDuration = NaN;
         if (canPostMessage) {
-            workerReadyDuration = timeWorkerReplyMessage - this.controller.timeBeforeNewWorker;
+            workerReadyDuration = timeWorkerReplyMessage! - this.controller.timeBeforeNewWorker;
         }
         /**
          * 主线程创建 Worker 的同步耗时, 正常为 1ms 就完成了

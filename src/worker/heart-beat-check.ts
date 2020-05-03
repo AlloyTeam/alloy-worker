@@ -32,7 +32,7 @@ export default class HeartBeatCheck {
      */
     start(): void {
         // 定时检查
-        this.checkInterValHandle = setInterval(() => {
+        this.checkInterValHandle = window.setInterval(() => {
             this.checkOne();
         }, HeartBeatCheckInterVal);
     }
@@ -66,7 +66,7 @@ export default class HeartBeatCheck {
             this.durationReport(heartBeatDuration);
         });
 
-        this.checkTimeoutHandle = setTimeout(() => {
+        this.checkTimeoutHandle = window.setTimeout(() => {
             this.isHeartBeatChecking = false;
             clearTimeout(this.checkTimeoutHandle);
 

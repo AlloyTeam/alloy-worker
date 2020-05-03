@@ -70,7 +70,7 @@ export default class Channel {
     response(sessionId: string, payload: any): void {
         this.postMessage({
             messageType: MessageType.REPLY,
-            actionType: undefined,
+            actionType: '', // 响应通过 sessionId 标识, actionType 无需回传
             payload,
             sessionId,
         });

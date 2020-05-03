@@ -33,7 +33,7 @@ export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'wo
         // 上报
         mainThreadWorker.reportWorkerStatus();
     } else {
-        let firstCommunicationTimeoutHandle: number = undefined;
+        let firstCommunicationTimeoutHandle = -1;
         // 默认 worker 才进行 worker 能力上报
         // 上报 worker 信息
         mainThreadWorker.workerAbilityTest
@@ -59,7 +59,7 @@ export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'wo
         // 等待通信超时后上报
         // 为了可用性, 通信超时后并不会结束等待, 而是打点上报
         // 正常不会走到事务的 .catch 逻辑, 所以需要独立设置超时上报
-        firstCommunicationTimeoutHandle = setTimeout(() => {
+        firstCommunicationTimeoutHandle = window.setTimeout(() => {
             mainThreadWorker.reportWorkerStatus();
         }, CommunicationTimeout);
 
