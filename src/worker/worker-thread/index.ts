@@ -42,7 +42,7 @@ class WorkerThreadWorker {
         this.cookie = new Cookie(this.controller);
 
         this.cookie.getCookie().then((payload) => {
-            console.warn('Get document cookie from main thread:', payload);
+            console.log('Get document cookie from main thread:', payload);
         });
     }
 }
