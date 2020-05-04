@@ -9,9 +9,10 @@ export default class Cookie extends BaseAction {
 
     protected addActionHandler() {}
 
+    /**
+     * 到主线程获取 cookie
+     */
     getCookie() {
-        this.controller.requestPromise(CookieActionType.Cookie).then((payload) => {
-            console.log('document cookie:', payload);
-        });
+        return this.controller.requestPromise(CookieActionType.Cookie);
     }
 }

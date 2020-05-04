@@ -40,6 +40,10 @@ class WorkerThreadWorker {
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
         this.workerReport = new WorkerReport(this.controller);
         this.cookie = new Cookie(this.controller);
+
+        this.cookie.getCookie().then((payload) => {
+            console.warn('Get document cookie from main thread:', payload);
+        });
     }
 }
 

@@ -11,6 +11,9 @@ export default class Cookie extends BaseAction {
         this.controller.addActionHandler(CookieActionType.Cookie, this.getCookie.bind(this));
     }
 
+    /**
+     * 获取 cookie 处理器
+     */
     getCookie() {
         const cookie = document.cookie;
         return cookie;
