@@ -27,7 +27,7 @@ const statFunc = (cb) => {
                     chunks: true,
                     errors: true,
                     errorDetails: false,
-                    warnings: false,
+                    warnings: true,
                     timings: false,
                     colors: true,
                 })

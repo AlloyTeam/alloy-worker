@@ -1,6 +1,6 @@
 import { HeartBeatCheckInterVal, HeartBeatCheckTimeout } from './config';
 import MainThreadWorker from './main-thread/index';
-import workerReport, { WorkerMonitorId } from './common/worker-report';
+import ReportProxy, { WorkerMonitorId } from './report-proxy';
 
 /**
  * 对 Worker 线程进行心跳检测
@@ -32,7 +32,7 @@ export default class HeartBeatCheck {
      */
     start(): void {
         // 定时检查
-        this.checkInterValHandle = setInterval(() => {
+        this.checkInterValHandle = window.setInterval(() => {
             this.checkOne();
         }, HeartBeatCheckInterVal);
     }
@@ -55,8 +55,7 @@ export default class HeartBeatCheck {
         this.isHeartBeatChecking = true;
 
         this.heartBeatNow += 1;
-        // TODO 移除吗?
-        // console.log(`${this.mainThreadWorker.name} heart beat now:`, this.heartBeatNow);
+
         const heartBeatStartTime = Date.now();
         this.mainThreadWorker.workerAbilityTest.heartBeatTest(this.heartBeatNow).then(() => {
             this.isHeartBeatChecking = false;
@@ -67,7 +66,7 @@ export default class HeartBeatCheck {
             this.durationReport(heartBeatDuration);
         });
 
-        this.checkTimeoutHandle = setTimeout(() => {
+        this.checkTimeoutHandle = window.setTimeout(() => {
             this.isHeartBeatChecking = false;
             clearTimeout(this.checkTimeoutHandle);
 
@@ -106,10 +105,10 @@ export default class HeartBeatCheck {
     durationReport(heartBeatDuration: number): void {
         // 心跳时长超过心跳检测间隔, 上报
         if (heartBeatDuration > HeartBeatCheckTimeout) {
-            // worker 心跳包超时
-            workerReport.monitor(WorkerMonitorId.HeartBeatTimeout);
-            workerReport.weblog({
-                module: 'webworker',
+            // Worker 心跳包超时上报
+            ReportProxy.monitor(WorkerMonitorId.HeartBeatTimeout);
+            ReportProxy.weblog({
+                module: 'worker',
                 action: 'worker_heartbeat_duration',
                 info: heartBeatDuration,
             });
@@ -120,11 +119,10 @@ export default class HeartBeatCheck {
      * Worker 线程死亡的上报
      */
     deadReport(): void {
-        // TODO 移除
-        //  worker 心跳停止上报
-        workerReport.monitor(WorkerMonitorId.HeartBeatStop);
-        workerReport.weblog({
-            module: 'web_worker',
+        // Worker 心跳停止上报
+        ReportProxy.monitor(WorkerMonitorId.HeartBeatStop);
+        ReportProxy.weblog({
+            module: 'worker',
             action: 'worker_heartbeat_dead',
             // 上报最后一次心跳计数
             info: this.sickHeartBeats[this.sickHeartBeats.length - 1],

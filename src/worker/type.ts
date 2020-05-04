@@ -43,5 +43,9 @@ export interface IController {
      * 事务处理器
      */
     actionHandler: (message: IMessage) => Promise<any>;
+    /**
+     * Weblog 上报
+     */
+    weblog: (log: any) => void;
     isDebugMode: boolean;
 }

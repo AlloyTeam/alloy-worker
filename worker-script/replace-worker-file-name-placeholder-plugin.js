@@ -54,7 +54,7 @@ class ReplaceWorkerFileNamePlaceholderPlugin {
     }
 
     apply(compiler) {
-        compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
+        compiler.hooks.afterEmit.tap('afterCompile', (compilation) => {
             const dir = this.options.dir || compilation.outputOptions.path;
 
             // 获取带 hash 的 worker 资源文件名

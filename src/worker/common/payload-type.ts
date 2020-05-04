@@ -1,5 +1,12 @@
 declare namespace WorkerPayload {
-    type Any = any;
+    namespace WorkerReport {
+        type CaptureWorkerException = {
+            message: string;
+            stack: string;
+        };
+        type Weblog = any;
+        type Monitor = string;
+    }
 
     namespace WorkerAbilityTest {
         type CommunicationTest = number;
@@ -8,8 +15,6 @@ declare namespace WorkerPayload {
 }
 
 declare namespace WorkerReponse {
-    type Any = any;
-
     namespace WorkerAbilityTest {
         type CommunicationTest = number;
         type HeartBeatTest = number;

@@ -1,6 +1,5 @@
 import { IController, MessageType, IMessage } from '../type';
 import { CommunicationTimeout } from '../config';
-import workerReport from './worker-report';
 import nanoid from './utils/nanoid-no-secure';
 import { getDebugTimeStamp } from './utils/index';
 
@@ -43,14 +42,14 @@ export default class Channel {
      */
     private onmessage(event: { data: IMessage }): void {
         const { data: message } = event;
-        const { messageType, sessionId } = message;
+        const { messageType, sessionId, actionType } = message;
 
         this.onmesssageDebugLog(message);
 
         // 接收到请求
         if (messageType === MessageType.REQUEST) {
             this.controller.actionHandler(message).then((actionResult) => {
-                this.response(sessionId, actionResult);
+                this.response(sessionId, actionType, actionResult);
             });
         } else if (messageType === MessageType.REPLY) {
             // 接收到响应
@@ -68,10 +67,10 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param payload 负载
      */
-    response(sessionId: string, payload: any): void {
+    response(sessionId: string, actionType: string, payload: any): void {
         this.postMessage({
             messageType: MessageType.REPLY,
-            actionType: undefined,
+            actionType,
             payload,
             sessionId,
         });
@@ -101,6 +100,9 @@ export default class Channel {
             payload,
             sessionId,
         });
+
+        // 不等待结果, 还会收到响应, 添加个空的会话响应器
+        this.addSessionListener(sessionId, () => {});
     }
 
     /**
@@ -212,8 +214,9 @@ export default class Channel {
                 inWorker: __WORKER__,
             };
 
-            workerReport.weblog({
-                module: 'webworker',
+            // 通过通信控制器进行上报
+            this.controller.weblog({
+                module: 'worker',
                 action: 'channel_long_time',
                 info: requestDurationInfo,
             });
@@ -233,6 +236,7 @@ export default class Channel {
             if (this.controller.isDebugMode) {
                 /**
                  * ["00:35.022", "alloyWorker--test ►", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+                 * [时间戳, 线程名称, 会话 Id, 事务类型, 事务负载]
                  * `►` 表示 Worker 线程收到的信息
                  */
                 console.log([

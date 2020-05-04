@@ -2,40 +2,50 @@
  * Worker 可用性上报
  */
 
-export enum WorkerMonitorId {
+export const enum WorkerMonitorId {
     /**
      * 没有实例化成功
      */
-    NoWorkerInstance = 1,
+    NoWorkerInstance = 'NoWorkerInstance',
     /**
      * 首次通信失败
      */
-    FirstCommunicationFail,
+    FirstCommunicationFail = 'FirstCommunicationFail',
     /**
      * 首次通信超时后成功
      */
-    FirstCommunicationTimeoutAndSuccess,
+    FirstCommunicationTimeoutAndSuccess = 'FirstCommunicationTimeoutAndSuccess',
     /**
      * Worker 线程触发 onerror
      */
-    WorkerOnerror,
+    WorkerOnerror = 'WorkerOnerror',
     /**
      * Worker 心跳停止
      */
-    HeartBeatStop,
+    HeartBeatStop = 'HeartBeatStop',
     /**
      * Worker 心跳超时
      */
-    HeartBeatTimeout,
+    HeartBeatTimeout = 'HeartBeatTimeout',
     /**
-     * 事务处理器逻辑报错
+     * 事务处理器逻辑错误
      */
-    ActionHandleError,
+    ActionHandleError = 'ActionHandleError',
 }
 
 export enum WorkerErrorSource {
+    /**
+     * 来源为创建 Worker (new Worker)
+     */
     CreateWorkerError = 'CreateWorkerError',
+    /**
+     * 来源为 Worker.onerrror 监听
+     */
     WorkerOnerror = 'WorkerOnerror',
+    /**
+     * 来源为 Worker 线程主动抛出的错误
+     */
+    WorkerThreadError = 'WorkerThreadError',
 }
 
 /**
@@ -44,7 +54,7 @@ export enum WorkerErrorSource {
  * @param monitorId 监控点
  */
 function monitor(monitorId: WorkerMonitorId): void {
-    console.log('monitor 上报, id: ', monitorId);
+    console.log('%cMonitor 上报 id:', 'color: orange', monitorId);
 }
 
 function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void {
@@ -57,11 +67,11 @@ function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void 
         return;
     }
 
-    console.error('raven 上报, 报错信息:', errorSource, error);
+    console.error('Raven 上报错误:', errorSource, error);
 }
 
 function weblog(log: any): void {
-    console.log('weblog 上报, log:', log);
+    console.log('%cWeblog 上报 log:', 'color: orange', log);
 }
 
 export default {
