@@ -1,6 +1,6 @@
 import createAlloyWorker from '../worker/index';
 
-// 写入2个测试 cookie
+// 写入测试 cookie
 document.cookie = 'xsrf=alloy,token=worker';
 
 // 初始化 AlloyWorker

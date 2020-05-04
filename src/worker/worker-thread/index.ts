@@ -41,9 +41,9 @@ class WorkerThreadWorker {
         this.workerReport = new WorkerReport(this.controller);
         this.cookie = new Cookie(this.controller);
 
-        this.cookie.getCookie().then((payload) => {
-            console.log('Get document cookie from main thread:', payload);
-        });
+        // this.cookie.getCookie().then((payload) => {
+        //     console.log('Get document cookie from main thread:', payload);
+        // });
     }
 }
 
