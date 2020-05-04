@@ -16,9 +16,9 @@ const checkName = (actionName) => {
     const isNameVeridate = nameVeridate(actionName);
 
     if (!isNameVeridate) {
-        console.error('需要添加正确的事务名称作为参数.');
-        console.error('事务名称为字母, `_`, `-` 的组合.');
-        console.error('事务名称示例: `worker-ability-test`, `cookie` 等.');
+        console.error('请使用合法的事务名称作为参数.');
+        console.error('合法名称为: 字母, `_`, `-` 的组合.');
+        console.error('如: `worker-ability-test`, `cookie` 等.');
         return false;
     }
 
@@ -26,9 +26,10 @@ const checkName = (actionName) => {
     const actionExist = (actionName) => {
         const existedActionsName = fs.readdirSync(config.mainThreadTargetDir, 'utf-8');
         return existedActionsName.some((name) => {
+            const nameWithoutSuffix = name.toLowerCase().replace(/\.ts$/, '');
             return (
-                `${actionName.toLowerCase()}.ts` === name.toLowerCase() ||
-                `${actionName.toLowerCase().replace(/[_-]/g, '')}.ts` === name.toLowerCase().replace(/[_-]/g, '')
+                actionName.toLowerCase() === nameWithoutSuffix ||
+                actionName.toLowerCase().replace(/[_-]/g, '') === nameWithoutSuffix.replace(/[_-]/g, '')
             );
         });
     };

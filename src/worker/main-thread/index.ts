@@ -7,6 +7,7 @@ import ReportProxy, { WorkerMonitorId } from '../report-proxy';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
+import Cookie from './cookie';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -40,6 +41,7 @@ export default class MainThreadWorker {
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
     workerReport: WorkerReport;
+    cookie: Cookie;
 
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
@@ -48,6 +50,7 @@ export default class MainThreadWorker {
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
         this.workerReport = new WorkerReport(this.controller);
+        this.cookie = new Cookie(this.controller);
     }
 
     /**
@@ -98,9 +101,9 @@ export default class MainThreadWorker {
         const canPostMessage = !!timeWorkerReplyMessage;
         /**
          * 第一条信息从发出到收到的时间间隔
-         * 如果无法通信, 则默认为 NaN
+         * 如果无法通信, 则默认为 -1
          */
-        let workerReadyDuration = NaN;
+        let workerReadyDuration = -1;
         if (canPostMessage) {
             workerReadyDuration = timeWorkerReplyMessage! - this.controller.timeBeforeNewWorker;
         }

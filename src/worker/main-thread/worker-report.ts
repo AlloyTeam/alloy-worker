@@ -14,10 +14,10 @@ export default class Raven extends BaseAction {
     protected addActionHandler(): void {
         this.controller.addActionHandler(
             WorkerReportActionType.CaptureWorkerException,
-            this.captureWorkerExceptionHandler.bind(this)
+            this.captureWorkerException.bind(this)
         );
-        this.controller.addActionHandler(WorkerReportActionType.Weblog, this.weblogHandler.bind(this));
-        this.controller.addActionHandler(WorkerReportActionType.Monitor, this.monitorHandler.bind(this));
+        this.controller.addActionHandler(WorkerReportActionType.Weblog, this.weblog.bind(this));
+        this.controller.addActionHandler(WorkerReportActionType.Monitor, this.monitor.bind(this));
     }
 
     /**
@@ -25,7 +25,7 @@ export default class Raven extends BaseAction {
      *
      * @param payload 报错信息
      */
-    captureWorkerExceptionHandler(payload: WorkerPayload.WorkerReport.CaptureWorkerException): void {
+    captureWorkerException(payload: WorkerPayload.WorkerReport.CaptureWorkerException): void {
         const { message, stack } = payload;
         // 防御一下 error 实例修改属性, 一些浏览器内部抛出的错误无法修改 message 字段
         try {
@@ -46,7 +46,7 @@ export default class Raven extends BaseAction {
      *
      * @param payload 日志信息
      */
-    weblogHandler(payload: WorkerPayload.WorkerReport.Weblog): void {
+    weblog(payload: WorkerPayload.WorkerReport.Weblog): void {
         ReportProxy.weblog(payload);
     }
 
@@ -55,7 +55,7 @@ export default class Raven extends BaseAction {
      *
      * @param payload 日志信息
      */
-    monitorHandler(payload: WorkerPayload.WorkerReport.Monitor): void {
+    monitor(payload: WorkerPayload.WorkerReport.Monitor): void {
         ReportProxy.monitor(payload as WorkerMonitorId);
     }
 }

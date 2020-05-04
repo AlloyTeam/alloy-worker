@@ -8,3 +8,7 @@ export const enum WorkerReportActionType {
     Weblog = 'Weblog',
     Monitor = 'Monitor',
 }
+
+export const enum CookieActionType {
+    Cookie = 'Cookie',
+}

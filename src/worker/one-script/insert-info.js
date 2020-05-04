@@ -5,8 +5,8 @@ const insertInfo = (pureActionName) => {
     // 添加新事务的 aciton type
     const actionTypeFileStr = fs.readFileSync(config.actionTypeFilePath, 'utf-8').toString();
     const appendActionTypeStr = `\nexport const enum ${pureActionName}ActionType {
-    _A_ = '_A_',
-    _B_ = '_B_',
+    __MainCallWorker__ = '__MainCallWorker__',
+    __WorkerCallMain__ = '__WorkerCallMain__',
 }\n`;
     fs.writeFileSync(config.actionTypeFilePath, `${actionTypeFileStr}${appendActionTypeStr}`, 'utf-8');
     console.log('done: 添加新事务的 aciton type.');
@@ -17,8 +17,8 @@ const insertInfo = (pureActionName) => {
     // 请求类型
     const appendPayloadTypeStr = `
     namespace ${pureActionName} {
-        type __A = string;
-        type __B = {
+        type __MainCallWorker__ = string;
+        type __WorkerCallMain__ = {
             hello: number;
             world: number;
         };
@@ -28,8 +28,8 @@ const insertInfo = (pureActionName) => {
     // 响应类型
     const appendResponseTypeStr = `
     namespace ${pureActionName} {
-        type __A = number;
-        type __B = {
+        type __MainCallWorker__ = number;
+        type __WorkerCallMain__ = {
             alloy: string;
             worker: string;
         };
