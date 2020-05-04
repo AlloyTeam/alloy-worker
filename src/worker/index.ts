@@ -21,9 +21,9 @@ const workerUrl = './WORKER_FILE_NAME_PLACEHOLDER';
  */
 export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'workerUrl'>): MainThreadWorker {
     /**
-     * 主线程代码和 Worker 线程代码可以在同一个文件/函数中调用(即代码同构)
-     * 在 Worker 线程中引入主线程代码, createAlloyWorker 在该 Worker 线程新建一个 Worker 线程
-     * 新的 Worker 线程再次新建, 导致"循环调用"
+     * 主线程代码和 Worker 线程代码可以在同一个文件/函数中调用(即同构)
+     * 在 Worker 线程中引入主线程代码, 在该 Worker 线程 createAlloyWorker 会新建一个 Worker 线程
+     * 新的 Worker 线程会再次新建, 导致"循环调用"
      */
     // 主线程才去实例化 Worker, Worker 线程直接返回
     if (__WORKER__) {
