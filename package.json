@@ -12,7 +12,7 @@
         "dist:worker": "cross-env NODE_ENV=production node ./worker-script/build-worker.js",
         "ts-check": "tsc --noEmit",
         "commit": "git-cz",
-        "prettier": "prettier --write 'src/**/*.{js}'",
+        "prettier": "prettier --write 'src/**/*.{js,ts}'",
         "eslint": "eslint 'src/**/*.{js,ts}'"
     },
     "keywords": [
