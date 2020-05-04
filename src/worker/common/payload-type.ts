@@ -19,4 +19,8 @@ declare namespace WorkerReponse {
         type CommunicationTest = number;
         type HeartBeatTest = number;
     }
+
+    namespace Cookie {
+        type Cookie = string;
+    }
 }

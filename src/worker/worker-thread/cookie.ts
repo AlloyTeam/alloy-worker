@@ -12,7 +12,7 @@ export default class Cookie extends BaseAction {
     /**
      * 到主线程获取 cookie
      */
-    getCookie() {
+    getCookie(): Promise<WorkerReponse.Cookie.Cookie> {
         return this.controller.requestPromise(CookieActionType.Cookie);
     }
 }
