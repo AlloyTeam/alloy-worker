@@ -8,7 +8,8 @@ import MainThreadWorker from './main-thread/index';
 import HeartBeatCheck from './heart-beat-check';
 
 /** worker url 会在构建时替换掉
- * 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker-51497b48.js'
+ * dev: 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker.js'
+ * dist: 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker-51497b48.js'
  */
 const workerUrl = './WORKER_FILE_NAME_PLACEHOLDER';
 
