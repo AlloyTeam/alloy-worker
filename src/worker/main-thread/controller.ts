@@ -30,7 +30,6 @@ export default class Controller extends BaseController {
         super();
 
         try {
-            // TODO 这里需要加 !__WORKER__ 的判断吗?
             if (!this.canNewWorker) {
                 // 都没有 Worker Class, 没法继续了
                 return;
