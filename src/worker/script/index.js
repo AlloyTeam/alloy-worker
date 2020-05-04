@@ -19,7 +19,7 @@ console.log(`输入的事务名称: ${actionName}. \n`);
 if (!checkName(actionName)) {
     return;
 } else {
-    console.log('开始新增事务', `${actionName}.`);
+    console.log('新增的事务名称: ', `${actionName}.`);
 }
 
 const pureActionName = actionName
@@ -28,7 +28,7 @@ const pureActionName = actionName
         return part && `${part[0].toUpperCase()}${part.slice(1)}`;
     })
     .join('');
-console.log('事务字母名称:', `${pureActionName}.\n`);
+console.log('事务的纯字母名称:', `${pureActionName}.\n`);
 
 // 生成事务源码
 generateFile(actionName, pureActionName);
@@ -38,4 +38,4 @@ insertInfo(pureActionName);
 
 console.log('\n新增事务模板代码完成.');
 console.log('请在主线程和 Worker 线程各自引用和实例化该事务.');
-console.log('再修改事务 action, payload 的声明, 并撰写业务逻辑.\n');
+console.log('然后修改事务的 action, payload 类型声明, 并编写业务逻辑.\n');

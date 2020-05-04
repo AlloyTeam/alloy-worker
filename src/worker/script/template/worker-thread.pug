@@ -3,7 +3,7 @@ import { <%=WorkerActionName%>ActionType } from '../common/action-type';
 import Controller from './controller';
 
 /**
- * 
+ *
  */
 export default class <%=WorkerActionName%> extends BaseAction {
     constructor(controller: Controller) {
@@ -11,22 +11,15 @@ export default class <%=WorkerActionName%> extends BaseAction {
     }
 
     protected addActionHandler(): void {
-        this.controller.addActionHandler(
-            <%=WorkerActionName%>ActionType._A_,
-            this.<%=WorkerActionName%>_A_Handler.bind(this)
-        );
+        this.controller.addActionHandler(<%=WorkerActionName%>ActionType.__MainCallWorker__, this.__MainCallWorker__.bind(this));
     }
 
-    <%=WorkerActionName%>_B_(payload: WorkerPayload.<%=WorkerActionName%>.__B = {
-        hello: -1,
-        world: +1,
-    }): Promise<WorkerReponse.<%=WorkerActionName%>.__B> {
-        return this.controller.requestPromise(<%=WorkerActionName%>ActionType._B_, payload);
-    }
-
-    async <%=WorkerActionName%>_A_Handler(
-        payload: WorkerPayload.<%=WorkerActionName%>.__A = '1'
-    ): Promise<WorkerReponse.<%=WorkerActionName%>.__A> {
+    /**
+     * 响应主线程的处理器
+     */
+    async __MainCallWorker__(
+        payload: WorkerPayload.<%=WorkerActionName%>.__MainCallWorker__ = '1024'
+    ): Promise<WorkerReponse.<%=WorkerActionName%>.__MainCallWorker__> {
         // 通过 async await 实现异步逻辑
         await new Promise((resolve) => {
             setTimeout(() => {
@@ -37,5 +30,17 @@ export default class <%=WorkerActionName%> extends BaseAction {
         // 1000ms 后再返回结果
         const response = Number(payload);
         return response;
+    }
+
+    /**
+     * Worker 线程去调用主线程
+     */
+    __WorkerCallMain__(
+        payload: WorkerPayload.<%=WorkerActionName%>.__WorkerCallMain__ = {
+            hello: -1,
+            world: +1,
+        }
+    ): Promise<WorkerReponse.<%=WorkerActionName%>.__WorkerCallMain__> {
+        return this.controller.requestPromise(<%=WorkerActionName%>ActionType.__WorkerCallMain__, payload);
     }
 }

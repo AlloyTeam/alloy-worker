@@ -3,7 +3,7 @@ import { <%=WorkerActionName%>ActionType } from '../common/action-type';
 import Controller from './controller';
 
 /**
- * 
+ *
  */
 export default class <%=WorkerActionName%> extends BaseAction {
     constructor(controller: Controller) {
@@ -11,19 +11,24 @@ export default class <%=WorkerActionName%> extends BaseAction {
     }
 
     protected addActionHandler(): void {
-        this.controller.addActionHandler(
-            <%=WorkerActionName%>ActionType._B_,
-            this.<%=WorkerActionName%>_B_Handler.bind(this)
-        );
+        this.controller.addActionHandler(<%=WorkerActionName%>ActionType.__WorkerCallMain__, this.__WorkerCallMain__.bind(this));
     }
 
-    <%=WorkerActionName%>_A_(payload: WorkerPayload.<%=WorkerActionName%>.__A): Promise<WorkerReponse.<%=WorkerActionName%>.__A> {
-        return this.controller.requestPromise(<%=WorkerActionName%>ActionType._A_, payload);
+    /**
+     * 主线程去调用 Worker 线程
+     */
+    __MainCallWorker__(
+        payload: WorkerPayload.<%=WorkerActionName%>.__MainCallWorker__
+    ): Promise<WorkerReponse.<%=WorkerActionName%>.__MainCallWorker__> {
+        return this.controller.requestPromise(<%=WorkerActionName%>ActionType.__MainCallWorker__, payload);
     }
 
-    <%=WorkerActionName%>_B_Handler(
-        payload: WorkerPayload.<%=WorkerActionName%>.__B
-    ): WorkerReponse.<%=WorkerActionName%>.__B {
+    /**
+     * 响应 Worker 线程的处理器
+     */
+    __WorkerCallMain__(
+        payload: WorkerPayload.<%=WorkerActionName%>.__WorkerCallMain__
+    ): WorkerReponse.<%=WorkerActionName%>.__WorkerCallMain__ {
         const response = {
             alloy: payload.hello.toString(),
             worker: payload.world.toString(),
