@@ -95,16 +95,13 @@ Alloy-worker 是对原始 Web Worker 能力的 RPC 封装, 也是 **Worker 代�
 ## 相关文档
 
 [alloy-worker 接入教程]: https://github.com/CntChen/alloy-worker/blob/master/docs/alloy-worker%20%E6%8E%A5%E5%85%A5%E6%95%99%E7%A8%8B.md
-* Alloy-worker 接入教程
-> https://github.com/CntChen/alloy-worker/blob/master/docs/alloy-worker%20%E6%8E%A5%E5%85%A5%E6%95%99%E7%A8%8B.md
+* [alloy-worker 接入教程][alloy-worker 接入教程]
 
 [alloy-worker 使用教程]: https://github.com/CntChen/alloy-worker/blob/master/docs/alloy-worker%20%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md
-* Alloy-worker 使用教程
-> https://github.com/CntChen/alloy-worker/blob/master/docs/alloy-worker%20%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md
+* [alloy-worker 使用教程][alloy-worker 使用教程]
 
 [alloy-worker 技术细节]: https://github.com/CntChen/alloy-worker/blob/master/docs/alloy-worker%20%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82.md
-* Alloy-worker 技术细节
-> https://github.com/CntChen/alloy-worker/blob/master/docs/alloy-worker%20%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82.md
+* [alloy-worker 技术细节][alloy-worker 技术细节]
 
 * Web Worker 文献综述 2020
 > https://todo.com
