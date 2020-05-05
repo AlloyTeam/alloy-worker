@@ -12,4 +12,6 @@ const alloyWorker = createAlloyWorker({
 // @ts-ignore
 window.alloyWorker = alloyWorker;
 
+alloyWorker.workerAbilityTest.communicationTest().then((res) => console.log(`worker test result: ${res}`));
+
 console.log('alloyWorker', alloyWorker);
