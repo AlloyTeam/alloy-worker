@@ -13,6 +13,8 @@ const alloyWorker = createAlloyWorker({
 // @ts-ignore
 window.alloyWorker = alloyWorker;
 
+alloyWorker.workerAbilityTest.communicationTest().then((res) => console.log(`worker test result: ${res}`));
+
 console.log('alloyWorker', alloyWorker);
 
 // 轮循 alloyWorker 的状态, 并渲染到页面上
