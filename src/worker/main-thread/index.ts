@@ -4,6 +4,7 @@
 
 import { IAlloyWorkerOptions } from '../type';
 import ReportProxy, { WorkerMonitorId } from '../report-proxy';
+import HeartBeatCheck from '../heart-beat-check';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
@@ -16,6 +17,10 @@ import Cookie from './cookie';
  */
 export default class MainThreadWorker {
     /**
+     * Worker 状态上报标识
+     */
+    static hasReportWorkerStatus = false;
+    /**
      * Alloy Worker 名称
      */
     name: string;
@@ -23,10 +28,6 @@ export default class MainThreadWorker {
      * 主线程通信控制器
      */
     controller: Controller;
-    /**
-     * Worker 状态上报标识
-     */
-    private hasReportWorkerStatus = false;
     /**
      * Worker 状态信息
      */
@@ -37,6 +38,10 @@ export default class MainThreadWorker {
         workerReadyDuration: number;
         newWorkerDuration: number;
     };
+    /**
+     * 心跳检测
+     */
+    heartBeatCheck: HeartBeatCheck;
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
@@ -46,6 +51,7 @@ export default class MainThreadWorker {
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
         this.controller = new Controller(options);
+        this.heartBeatCheck = new HeartBeatCheck(this);
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
@@ -54,9 +60,17 @@ export default class MainThreadWorker {
     }
 
     /**
+     * 开始进行心跳检测
+     */
+    startHeartBeatCheck() {
+        this.heartBeatCheck.start();
+    }
+
+    /**
      * 销毁 worker 实例
      */
     terminate(): void {
+        this.heartBeatCheck.stop();
         this.controller.terminate();
     }
 
@@ -81,10 +95,10 @@ export default class MainThreadWorker {
         }
 
         // 已经上报过不再上报
-        if (this.hasReportWorkerStatus === true) {
+        if (MainThreadWorker.hasReportWorkerStatus === true) {
             return;
         }
-        this.hasReportWorkerStatus = true;
+        MainThreadWorker.hasReportWorkerStatus = true;
 
         // TODO 注释对齐
         /**
