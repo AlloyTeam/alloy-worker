@@ -17,6 +17,10 @@ import Cookie from './cookie';
  */
 export default class MainThreadWorker {
     /**
+     * Worker 状态上报标识
+     */
+    static hasReportWorkerStatus = false;
+    /**
      * Alloy Worker 名称
      */
     name: string;
@@ -24,10 +28,6 @@ export default class MainThreadWorker {
      * 主线程通信控制器
      */
     controller: Controller;
-    /**
-     * Worker 状态上报标识
-     */
-    private hasReportWorkerStatus = false;
     /**
      * Worker 状态信息
      */
@@ -95,10 +95,10 @@ export default class MainThreadWorker {
         }
 
         // 已经上报过不再上报
-        if (this.hasReportWorkerStatus === true) {
+        if (MainThreadWorker.hasReportWorkerStatus === true) {
             return;
         }
-        this.hasReportWorkerStatus = true;
+        MainThreadWorker.hasReportWorkerStatus = true;
 
         // TODO 注释对齐
         /**
