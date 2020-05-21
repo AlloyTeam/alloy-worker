@@ -18,12 +18,13 @@
 
 ## 业界方案对比
 
-| 项目 | 简介 | 底层API封装 | 事务声明 | 可用性监控 | 易拓展性 |
-| - | - | :-: | :-: | :-: | :-: |
-| [Worker-loader](https://github.com/webpack-contrib/worker-loader) | Webpack 官方,源码打包能力 | ✘ | ✘ | ✘ | ✘ |
-| [Promise-worker](https://github.com/nolanlawson/promise-worker) | 封装基本 API 为 Promise 化通信 | ✔️ | ✘ | ✘ | ✘ |
-| [Comlink](https://github.com/GoogleChromeLabs/comlink) | Chrome 团队开源, worker 打包 plugin | ✔️ | 跨线程同名函数 | ✘ | ✘ |
-| **Alloy-worker** | 面向事务, 高可以用的 Worker 通信框架 | 通信️控制器 | 同名函数, TypeScirpt 声明 | 完整监控指标, 全周期错误监控 | 命名空间 |
+| 项目 | 简介 | 构建打包 | 底层API封装 | 跨线程调用申明 | 可用性监控 | 易拓展性 |
+| - | - | :-: | :-: | :-: | :-: | :-: |
+| [Worker-loader](https://github.com/webpack-contrib/worker-loader) | Webpack 官方,源码打包能力 | ✔️ | ✘ | ✘ | ✘ | ✘ |
+| [Promise-worker](https://github.com/nolanlawson/promise-worker) | 封装基本 API 为 Promise 化通信 | ✘ | ✔️ | ✘ | ✘ | ✘ |
+| [Comlink](https://github.com/GoogleChromeLabs/comlink) | Chrome 团队, 通信 RPC 封装 | ✘ | ✔️ | 同名函数(基于Proxy) | ✘ | ✘ |
+| [workerize-loader](https://github.com/developit/workerize-loader) | 社区目前比较完整的方案 | ✔️ | ✔️ | 同名函数(AST生成) | ✘ | ✘ |
+| **Alloy-worker** | 面向事务, 高可用的 Worker 通信框架 | 提供构建脚本 | 通信️控制器 | 同名函数(基于约定), TS 声明 | 完整监控指标, 全周期错误监控 | 命名空间 |
 
 # Demo
 * Web Worker 能力测试
