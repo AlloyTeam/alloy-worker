@@ -33,7 +33,7 @@ const testIntervalHandle = setInterval(() => {
         [key in TWorkerStatusKey]: string;
     } = {
         hasWorkerClass: '是否实现了 HTML 规范的 Worker Class',
-        canNewWorker: '是否支持 new Worker',
+        canNewWorker: '能否创建 Worker 线程',
         canPostMessage: 'Worker 实例有无通讯能力(脚本加载失败认为无)',
         workerReadyDuration: '第一条信息从发出到收到的时间间隔',
         newWorkerDuration: '主线程创建 Worker 的同步耗时',
