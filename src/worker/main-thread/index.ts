@@ -4,6 +4,7 @@
 
 import { IAlloyWorkerOptions } from '../type';
 import ReportProxy, { WorkerMonitorId } from '../report-proxy';
+import HeartBeatCheck from '../heart-beat-check';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
@@ -37,6 +38,10 @@ export default class MainThreadWorker {
         workerReadyDuration: number;
         newWorkerDuration: number;
     };
+    /**
+     * 心跳检测
+     */
+    heartBeatCheck: HeartBeatCheck;
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
@@ -46,6 +51,7 @@ export default class MainThreadWorker {
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
         this.controller = new Controller(options);
+        this.heartBeatCheck = new HeartBeatCheck(this);
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
@@ -54,9 +60,17 @@ export default class MainThreadWorker {
     }
 
     /**
+     * 开始进行心跳检测
+     */
+    startHeartBeatCheck() {
+        this.heartBeatCheck.start();
+    }
+
+    /**
      * 销毁 worker 实例
      */
     terminate(): void {
+        this.heartBeatCheck.stop();
         this.controller.terminate();
     }
 
