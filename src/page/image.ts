@@ -24,7 +24,7 @@ function getImageData(image: HTMLImageElement) {
 }
 
 async function thresholdImage(pixelData: ImageData) {
-    const thresholdLevel = 100; // 0-255
+    const thresholdLevel = Math.floor(Math.random() * 256); // 0-255
     const tstart = new Date().getTime();
 
     // const newImageDataObj = threshold({
@@ -72,7 +72,7 @@ function addEvent() {
         tempCanvas.height = image.height;
         // tempCtx.drawImage(image, 0, 0, image.width, image.height);
         tempCtx.putImageData(results.newImageData as any, 0, 0);
-        document.getElementById('container')?.append(tempCanvas);
+        document.getElementById('container')?.firstChild?.before(tempCanvas);
     });
 }
 
