@@ -1,26 +1,5 @@
 import createAlloyWorker from '../worker/index';
-
-const Filters: {
-    threshold: Function;
-} = {
-    threshold: () => {},
-};
-Filters.threshold = function (
-    pixels: {
-        data: number[];
-    },
-    threshold = 128
-) {
-    const d = pixels.data;
-    for (let i = 0; i < d.length; i += 4) {
-        const r = d[i];
-        const g = d[i + 1];
-        const b = d[i + 2];
-        const v = 0.2126 * r + 0.7152 * g + 0.0722 * b >= threshold ? 255 : 0;
-        d[i] = d[i + 1] = d[i + 2] = v;
-    }
-    return pixels;
-};
+import { threshold } from '../lib/image-filter';
 
 const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
 
@@ -38,7 +17,7 @@ function thresholdImage(pixelData: ImageData) {
     const thresholdLevel = 100; // 0-255
     const tstart = new Date().getTime();
 
-    const newImageDataObj = Filters.threshold(pixelData, thresholdLevel);
+    const newImageDataObj = threshold(pixelData as any, thresholdLevel);
     const duration = new Date().getTime() - tstart;
 
     console.log('Filter image: %d msec', duration);
@@ -75,7 +54,7 @@ function addEvent() {
         tempCanvas.width = image.width;
         tempCanvas.height = image.height;
         // tempCtx.drawImage(image, 0, 0, image.width, image.height);
-        tempCtx.putImageData(results.newImageData, 0, 0);
+        tempCtx.putImageData(results.newImageData as any, 0, 0);
         document.getElementById('container')?.append(tempCanvas);
     });
 }
