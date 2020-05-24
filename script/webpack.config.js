@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const { isProduction, outputPath, projectDir } = require('../worker-script/project.config');
 const PluginForMainThreadBuild = require('../worker-script/plugin-for-main-thread-build');
@@ -10,6 +11,7 @@ const pagePath = path.join(projectDir, './src/page');
 const config = {
     entry: {
         index: path.join(pagePath, '/index.ts'),
+        image: path.join(pagePath, '/image.ts'),
     },
     output: {
         filename: isProduction ? '[name]-[hash:8].js' : '[name].js',
@@ -45,7 +47,20 @@ const config = {
         ...PluginForMainThreadBuild,
         new HtmlWebpackPlugin({
             template: path.join(pagePath, '/index.html'),
+            filename: 'index.html',
+            chunks: [ 'index' ],
         }),
+        new HtmlWebpackPlugin({
+            template: path.join(pagePath, '/image.html'),
+            filename: 'image.html',
+            chunks: [ 'image' ],
+        }),
+        new CopyPlugin([
+            {
+                from: path.join(pagePath, 'img'),
+                to: path.join(outputPath, 'img'),
+            },
+        ]),
     ],
 };
 
