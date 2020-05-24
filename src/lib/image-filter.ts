@@ -9,12 +9,15 @@
  * @param pixels
  * @param threshold 0-255
  */
-export const threshold = (
+export const threshold = ({
+    pixels,
+    threshold = 128,
+}: {
     pixels: {
         data: number[];
-    },
-    threshold = 128
-) => {
+    };
+    threshold?: number;
+}) => {
     const d = pixels.data;
     for (let i = 0; i < d.length; i += 4) {
         const r = d[i];

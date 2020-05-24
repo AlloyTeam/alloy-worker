@@ -17,6 +17,7 @@ import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
 import Cookie from './cookie';
+import Image from './image';
 
 /**
  * Worker 线程的 Alloy Worker Class
@@ -33,6 +34,7 @@ class WorkerThreadWorker {
     workerAbilityTest: WorkerAbilityTest;
     workerReport: WorkerReport;
     cookie: Cookie;
+    image: Image;
 
     constructor() {
         this.controller = new Controller();
@@ -40,6 +42,7 @@ class WorkerThreadWorker {
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
         this.workerReport = new WorkerReport(this.controller);
         this.cookie = new Cookie(this.controller);
+        this.image = new Image(this.controller);
 
         // this.cookie.getCookie().then((payload) => {
         //     console.log('Get document cookie from main thread:', payload);

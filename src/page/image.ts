@@ -1,23 +1,40 @@
 import createAlloyWorker from '../worker/index';
 import { threshold } from '../lib/image-filter';
 
+const alloyWorker = createAlloyWorker({
+    workerName: 'alloyWorker--test',
+});
+
 const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
 
+let _imageDataObj: ImageData;
 function getImageData(image: HTMLImageElement) {
+    if (_imageDataObj) {
+        return _imageDataObj;
+    }
+
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d')!;
     tempCanvas.width = image.width;
     tempCanvas.height = image.height;
     tempCtx.drawImage(image, 0, 0, image.width, image.height);
     const imageDataObj = tempCtx.getImageData(0, 0, image.width, image.height);
+    _imageDataObj = imageDataObj;
     return imageDataObj;
 }
 
-function thresholdImage(pixelData: ImageData) {
+async function thresholdImage(pixelData: ImageData) {
     const thresholdLevel = 100; // 0-255
     const tstart = new Date().getTime();
 
-    const newImageDataObj = threshold(pixelData as any, thresholdLevel);
+    // const newImageDataObj = threshold({
+    //      pixels: (pixelData as any),
+    //      threshold: thresholdLevel
+    // });
+    const newImageDataObj = await alloyWorker.image.Threshold({
+        pixels: pixelData as any,
+        threshold: thresholdLevel,
+    });
     const duration = new Date().getTime() - tstart;
 
     console.log('Filter image: %d msec', duration);
@@ -44,9 +61,9 @@ function getImage() {
 
 function addEvent() {
     const addCanvas = document.getElementById('add-canvas');
-    addCanvas?.addEventListener('click', () => {
+    addCanvas?.addEventListener('click', async () => {
         const imageDataObj = getImageData(image);
-        const results = thresholdImage(imageDataObj);
+        const results = await thresholdImage(imageDataObj);
 
         const tempCanvas = document.createElement('canvas');
         tempCanvas.className = 'img-canvas';
@@ -68,7 +85,3 @@ if (image.complete) {
         addEvent();
     };
 }
-
-const alloyWorker = createAlloyWorker({
-    workerName: 'alloyWorker--test',
-});

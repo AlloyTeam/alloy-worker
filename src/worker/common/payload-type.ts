@@ -1,4 +1,13 @@
 declare namespace WorkerPayload {
+    namespace Image {
+        type Threshold = {
+            pixels: {
+                data: number[];
+            };
+            threshold?: number;
+        };
+    }
+
     namespace WorkerReport {
         type CaptureWorkerException = {
             message: string;
@@ -15,6 +24,12 @@ declare namespace WorkerPayload {
 }
 
 declare namespace WorkerReponse {
+    namespace Image {
+        type Threshold = {
+            data: number[];
+        };
+    }
+
     namespace WorkerAbilityTest {
         type CommunicationTest = number;
         type HeartBeatTest = number;
