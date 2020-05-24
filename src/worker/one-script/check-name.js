@@ -6,6 +6,11 @@ const fs = require('fs');
 const config = require('./config');
 
 const checkName = (actionName) => {
+    if (!actionName) {
+        console.error('事务名称不能为空.');
+        return false;
+    }
+
     // 事务名称规范检查
     const nameVeridate = (actionName) => {
         if (/^[-_a-zA-Z]*$/.test(actionName)) {
