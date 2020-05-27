@@ -24,3 +24,7 @@ declare namespace WorkerReponse {
         type Cookie = string;
     }
 }
+
+type Transfer = {
+    transferProps?: string[];
+};
