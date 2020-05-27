@@ -41,5 +41,8 @@ declare namespace WorkerReponse {
 }
 
 type Transfer = {
+    /**
+     * 转换为 transfer 传输的属性列表
+     */
     transferProps?: string[];
 };
