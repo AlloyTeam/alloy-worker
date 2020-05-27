@@ -82,7 +82,33 @@ export default class Channel {
      * @param message 会话消息
      */
     private postMessage(message: IMessage): void {
-        this.worker.postMessage(message);
+        const { payload } = message;
+
+        /**
+         * 设置为 transfer 传输的 payload 属性, 获取属性 buffer, 组成列表作为 postMessage 的第二个参数.
+         * 对不支持 transfer 的浏览器(实测 IE10 不支持, 但 IE11 支持),
+         * 需在上层生成 payload 前做判断, 设置 transferProps 为空数组, 退化为数据 clone 的传输方式.
+         */
+        const transferList: any[] = [];
+        if (payload.transferProps) {
+            payload.transferProps.forEach((prop: string) => {
+                if (!Object.prototype.hasOwnProperty.call(payload, prop)) {
+                    console.error('Payload without porps');
+                }
+
+                /**
+                 * transfer 支持 ArrayBuffer, MessagePort, ImageBitmap 等数据类型
+                 * 但是 IE 和 safari 不支持 ImageBitmap; MessagePort 不常用
+                 * 所以 alloy-worker 只支持 ArrayBuffer 类型
+                 */
+                if (payload[prop] instanceof ArrayBuffer) {
+                    transferList.push(payload[prop]);
+                }
+                transferList.push(payload[prop].buffer);
+            });
+        }
+
+        this.worker.postMessage(message, transferList);
         this.postMessageDebugLog(message);
     }
 
