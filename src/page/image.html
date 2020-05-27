@@ -5,43 +5,43 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>Alloy Worker</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'PingFang SC', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
+            }
+
+            #add-canvas {
+                margin: 10px 10px;
+                border: 1px solid lightblue;
+                border-radius: 4px;
+            }
+
+            #container {
+                position: absolute;
+                margin: 10px 10px;
+                padding-top: 100px;
+                transform: scale(0.04);
+                /* transform: scale(0.2); */
+                transform-origin: top left;
+            }
+
+            #original {
+                margin: 20px;
+                /* width: 400px;
+                height: 400px; */
+                width: 23680px;
+                height: 2144px;
+            }
+
+            .img-canvas {
+                margin: 20px;
+                border: 1px solid;
+            }
+        </style>
     </head>
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'PingFang SC', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
-        }
-
-        #add-canvas {
-            margin: 10px 10px;
-            border: 1px solid lightblue;
-            border-radius: 4px;
-        }
-
-        #container {
-            position: absolute;
-            margin: 10px 10px;
-            padding-top: 100px;
-            transform: scale(0.04);
-            /* transform: scale(0.2); */
-            transform-origin: top left;
-        }
-
-        #original {
-            margin: 20px;
-            /* width: 400px;
-            height: 400px; */
-            width: 23680px;
-            height: 2144px;
-        }
-
-        .img-canvas {
-            margin: 20px;
-            border: 1px solid;
-        }
-    </style>
     <body>
         <button id="add-canvas">Add Canvas</button>
         <div id="container">
