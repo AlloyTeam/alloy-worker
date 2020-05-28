@@ -41,21 +41,18 @@ function getImageData(image: HTMLImageElement) {
 
 async function thresholdImage(pixelData: ImageData) {
     const thresholdLevel = Math.floor(Math.random() * 256); // 0-255
-    const tstart = new Date().getTime();
 
-    // const newImageDataObj = threshold({
+    // const newImageData = threshold({
     //      pixels: (pixelData as any),
-    //      threshold: thresholdLevel
+    //      threshold: thresholdLevel,
     // });
-    const newImageDataObj = await alloyWorker.image.Threshold({
+    const newImageData = await alloyWorker.image.Threshold({
         transferProps: isIE10 ? [] : ['data'],
         data: pixelData.data as any,
         threshold: thresholdLevel,
     });
-    const duration = new Date().getTime() - tstart;
 
-    console.log('Total threshold time: %d ms', duration);
-    return { newImageData: newImageDataObj, duration: duration };
+    return newImageData;
 }
 
 function drawImageToCanvas({ data }: { data: Uint8ClampedArray }) {
@@ -97,9 +94,20 @@ function getImage() {
 function addEvent() {
     const addCanvas = document.getElementById('add-canvas');
     addCanvas?.addEventListener('click', async () => {
+        const startTime = Date.now();
         const imageDataObj = getImageData(image);
-        const results = await thresholdImage(imageDataObj);
-        drawImageToCanvas(results.newImageData);
+
+        const startTimeForThreshold = Date.now();
+        const newImageData = await thresholdImage(imageDataObj);
+
+        const startTimeForDrawImage = Date.now();
+        drawImageToCanvas(newImageData);
+
+        console.log('====');
+        console.log('GetImageData time: %d ms', startTimeForThreshold - startTime);
+        console.log('Threshold time: %d ms', startTimeForDrawImage - startTimeForThreshold);
+        console.log('DrawImage time: %d ms', Date.now() - startTimeForDrawImage);
+        console.log('AddCanvas time: %d ms', Date.now() - startTime);
     });
 }
 
