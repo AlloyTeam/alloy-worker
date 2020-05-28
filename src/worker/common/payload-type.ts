@@ -1,11 +1,9 @@
 declare namespace WorkerPayload {
     namespace Image {
         type Threshold = {
-            pixels: {
-                data: number[];
-            };
+            data: Uint8ClampedArray;
             threshold?: number;
-        };
+        } & Transfer;
     }
 
     namespace WorkerReport {
@@ -26,8 +24,8 @@ declare namespace WorkerPayload {
 declare namespace WorkerReponse {
     namespace Image {
         type Threshold = {
-            data: number[];
-        };
+            data: Uint8ClampedArray;
+        } & Transfer;
     }
 
     namespace WorkerAbilityTest {

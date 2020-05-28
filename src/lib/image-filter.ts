@@ -14,7 +14,7 @@ export const threshold = ({
     threshold = 128,
 }: {
     pixels: {
-        data: number[];
+        data: Uint8ClampedArray;
     };
     threshold?: number;
 }) => {

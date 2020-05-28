@@ -2,6 +2,7 @@ import BaseAction from '../common/base-action';
 import { ImageActionType } from '../common/action-type';
 import Controller from './controller';
 import { threshold } from '../../lib/image-filter';
+import { isIE10 } from '../../lib/utils';
 
 /**
  *
@@ -12,14 +13,26 @@ export default class Image extends BaseAction {
     }
 
     protected addActionHandler(): void {
-        this.controller.addActionHandler(ImageActionType.Threshold, this.__MainCallWorker__.bind(this));
+        this.controller.addActionHandler(ImageActionType.Threshold, this.Threshold.bind(this));
     }
 
     /**
      * 响应主线程的处理器
      */
-    __MainCallWorker__(payload: WorkerPayload.Image.Threshold): WorkerReponse.Image.Threshold {
-        const response = threshold(payload);
-        return response;
+    Threshold(payload: WorkerPayload.Image.Threshold): WorkerReponse.Image.Threshold {
+        const startTime = Date.now();
+
+        const response = threshold({
+            pixels: {
+                data: payload.data,
+            },
+            threshold: payload.threshold,
+        });
+
+        console.log('worker run threshold time: ', Date.now() - startTime, 'ms');
+        return {
+            transferProps: isIE10 ? [] : ['data'],
+            data: response.data as any,
+        };
     }
 }

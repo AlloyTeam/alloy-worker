@@ -1,25 +1,41 @@
 import createAlloyWorker from '../worker/index';
 import { threshold } from '../lib/image-filter';
+import { isIE10, isIE11 } from '../lib/utils';
 
+// https://stackoverflow.com/questions/22062313/imagedata-set-in-internetexplorer
+// imgData.data.set polyfill for IE10
+if (isIE10) {
+    // @ts-ignore
+    if (window.CanvasPixelArray) {
+        // @ts-ignore
+        CanvasPixelArray.prototype.set = function (arr) {
+            const l = this.length;
+            let i = 0;
+
+            for (; i < l; i++) {
+                this[i] = arr[i];
+            }
+        };
+    }
+}
+
+const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
 const alloyWorker = createAlloyWorker({
     workerName: 'alloyWorker--test',
 });
 
-const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
-
-let _imageDataObj: ImageData;
+let imageHiddenCanvas: HTMLCanvasElement;
 function getImageData(image: HTMLImageElement) {
-    if (_imageDataObj) {
-        return _imageDataObj;
+    if (!imageHiddenCanvas) {
+        imageHiddenCanvas = document.createElement('canvas');
+        const tempCtx = imageHiddenCanvas.getContext('2d')!;
+        imageHiddenCanvas.width = image.width;
+        imageHiddenCanvas.height = image.height;
+        tempCtx.drawImage(image, 0, 0, image.width, image.height);
     }
 
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d')!;
-    tempCanvas.width = image.width;
-    tempCanvas.height = image.height;
-    tempCtx.drawImage(image, 0, 0, image.width, image.height);
+    const tempCtx = imageHiddenCanvas.getContext('2d')!;
     const imageDataObj = tempCtx.getImageData(0, 0, image.width, image.height);
-    _imageDataObj = imageDataObj;
     return imageDataObj;
 }
 
@@ -32,21 +48,40 @@ async function thresholdImage(pixelData: ImageData) {
     //      threshold: thresholdLevel
     // });
     const newImageDataObj = await alloyWorker.image.Threshold({
-        pixels: pixelData as any,
+        transferProps: isIE10 ? [] : ['data'],
+        data: pixelData.data as any,
         threshold: thresholdLevel,
     });
     const duration = new Date().getTime() - tstart;
 
-    console.log('Filter image: %d msec', duration);
+    console.log('Total threshold time: %d ms', duration);
     return { newImageData: newImageDataObj, duration: duration };
+}
+
+function drawImageToCanvas({ data }: { data: Uint8ClampedArray }) {
+    const imageHiddenCanvas = document.createElement('canvas');
+    imageHiddenCanvas.className = 'img-canvas';
+    const tempCtx = imageHiddenCanvas.getContext('2d')!;
+    imageHiddenCanvas.width = image.width;
+    imageHiddenCanvas.height = image.height;
+
+    if (isIE10 || isIE11) {
+        // IE10, IE11 不支持 new ImageData()
+        const newImageData = tempCtx.createImageData(image.width, image.height);
+        newImageData.data.set(data);
+        tempCtx.putImageData(newImageData, 0, 0);
+    } else {
+        const newImageData = new ImageData(data, image.width, image.height);
+        tempCtx.putImageData(newImageData, 0, 0);
+    }
+
+    document.getElementById('container')?.appendChild(imageHiddenCanvas);
 }
 
 function getImage() {
     console.log('Original Image: %s, %d x %d', image.src, image.width, image.height);
 
     // Extract data from the image object
-    // imageDataObj: {data (Uint8ClampedArray), width, height}
-    // const imageDataObj = Filters.getPixels(image);
     const imageDataObj = getImageData(image);
 
     console.log(
@@ -55,7 +90,7 @@ function getImage() {
         imageDataObj.data.length,
         imageDataObj.width,
         imageDataObj.height,
-        imageDataObj.data.slice(0, 10).toString()
+        Array.prototype.slice.call(imageDataObj.data, 0, 10).toString()
     );
 }
 
@@ -64,15 +99,7 @@ function addEvent() {
     addCanvas?.addEventListener('click', async () => {
         const imageDataObj = getImageData(image);
         const results = await thresholdImage(imageDataObj);
-
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.className = 'img-canvas';
-        const tempCtx = tempCanvas.getContext('2d')!;
-        tempCanvas.width = image.width;
-        tempCanvas.height = image.height;
-        // tempCtx.drawImage(image, 0, 0, image.width, image.height);
-        tempCtx.putImageData(results.newImageData as any, 0, 0);
-        document.getElementById('container')?.firstChild?.before(tempCanvas);
+        drawImageToCanvas(results.newImageData);
     });
 }
 
