@@ -42,7 +42,7 @@ function getImageData(image: HTMLImageElement) {
 
 async function thresholdImage(pixelData: ImageData) {
     // const newImageData = threshold({
-    //      pixels: (pixelData as any),
+    //      data: pixelData.data,
     //      threshold: thresholdLevel,
     // });
     const newImageData = await alloyWorker.image.Threshold({
@@ -50,6 +50,9 @@ async function thresholdImage(pixelData: ImageData) {
         data: pixelData.data as any,
         threshold: thresholdLevel,
     });
+    // const newImageData = {
+    //     data: Sobel(pixelData),
+    // };
 
     return newImageData;
 }

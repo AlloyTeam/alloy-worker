@@ -23,9 +23,7 @@ export default class Image extends BaseAction {
         const startTime = Date.now();
 
         const response = threshold({
-            pixels: {
-                data: payload.data,
-            },
+            data: payload.data,
             threshold: payload.threshold,
         });
 

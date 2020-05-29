@@ -9,16 +9,8 @@
  * @param pixels
  * @param threshold 0-255
  */
-export const threshold = ({
-    pixels,
-    threshold = 128,
-}: {
-    pixels: {
-        data: Uint8ClampedArray;
-    };
-    threshold?: number;
-}) => {
-    const d = pixels.data;
+export const threshold = ({ data, threshold = 128 }: { data: Uint8ClampedArray; threshold?: number }) => {
+    const d = data;
     for (let i = 0; i < d.length; i += 4) {
         const r = d[i];
         const g = d[i + 1];
@@ -26,5 +18,7 @@ export const threshold = ({
         const v = 0.2126 * r + 0.7152 * g + 0.0722 * b >= threshold ? 255 : 0;
         d[i] = d[i + 1] = d[i + 2] = v;
     }
-    return pixels;
+    return {
+        data,
+    };
 };
