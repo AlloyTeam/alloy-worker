@@ -15,7 +15,11 @@ export default class Image extends BaseAction {
     /**
      * 主线程去调用 Worker 线程
      */
-    Threshold(payload: WorkerPayload.Image.Threshold): Promise<WorkerReponse.Image.Threshold> {
+    threshold(payload: WorkerPayload.Image.Threshold): Promise<WorkerReponse.Image.Threshold> {
         return this.controller.requestPromise(ImageActionType.Threshold, payload);
+    }
+
+    baseBlur(payload: WorkerPayload.Image.BaseBlur): Promise<WorkerReponse.Image.BaseBlur> {
+        return this.controller.requestPromise(ImageActionType.BaseBlur, payload);
     }
 }

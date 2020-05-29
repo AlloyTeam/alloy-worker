@@ -2,7 +2,16 @@ declare namespace WorkerPayload {
     namespace Image {
         type Threshold = {
             data: Uint8ClampedArray;
+            width: number;
+            height: number;
             threshold?: number;
+        } & Transfer;
+
+        type BaseBlur = {
+            data: Uint8ClampedArray;
+            width: number;
+            height: number;
+            radius: number;
         } & Transfer;
     }
 
@@ -24,6 +33,10 @@ declare namespace WorkerPayload {
 declare namespace WorkerReponse {
     namespace Image {
         type Threshold = {
+            data: Uint8ClampedArray;
+        } & Transfer;
+
+        type BaseBlur = {
             data: Uint8ClampedArray;
         } & Transfer;
     }

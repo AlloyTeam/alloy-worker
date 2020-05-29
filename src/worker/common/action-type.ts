@@ -15,4 +15,5 @@ export const enum CookieActionType {
 
 export const enum ImageActionType {
     Threshold = 'Threshold',
+    BaseBlur = 'BaseBlur',
 }
