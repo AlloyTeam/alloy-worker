@@ -20,6 +20,7 @@ if (isIE10) {
 }
 
 const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
+let thresholdLevel = 128; // 0-255
 const alloyWorker = createAlloyWorker({
     workerName: 'alloyWorker--test',
 });
@@ -40,8 +41,6 @@ function getImageData(image: HTMLImageElement) {
 }
 
 async function thresholdImage(pixelData: ImageData) {
-    const thresholdLevel = Math.floor(Math.random() * 256); // 0-255
-
     // const newImageData = threshold({
     //      pixels: (pixelData as any),
     //      threshold: thresholdLevel,
@@ -56,11 +55,14 @@ async function thresholdImage(pixelData: ImageData) {
 }
 
 function drawImageToCanvas({ data }: { data: Uint8ClampedArray }) {
-    const imageHiddenCanvas = document.createElement('canvas');
-    imageHiddenCanvas.className = 'img-canvas';
+    let imageHiddenCanvas: HTMLCanvasElement = document.getElementsByClassName('img-canvas')[0] as any;
+    if (!imageHiddenCanvas) {
+        imageHiddenCanvas = document.createElement('canvas');
+        imageHiddenCanvas.className = 'img-canvas';
+        imageHiddenCanvas.width = image.width;
+        imageHiddenCanvas.height = image.height;
+    }
     const tempCtx = imageHiddenCanvas.getContext('2d')!;
-    imageHiddenCanvas.width = image.width;
-    imageHiddenCanvas.height = image.height;
 
     if (isIE10 || isIE11) {
         // IE10, IE11 不支持 new ImageData()
@@ -91,23 +93,38 @@ function getImage() {
     );
 }
 
+async function addCanvasElement() {
+    const startTime = Date.now();
+    const imageDataObj = getImageData(image);
+
+    const startTimeForThreshold = Date.now();
+    const newImageData = await thresholdImage(imageDataObj);
+
+    const startTimeForDrawImage = Date.now();
+    drawImageToCanvas(newImageData);
+
+    console.log('====');
+    console.log('GetImageData time: %d ms', startTimeForThreshold - startTime);
+    console.log('Threshold time: %d ms', startTimeForDrawImage - startTimeForThreshold);
+    console.log('DrawImage time: %d ms', Date.now() - startTimeForDrawImage);
+    console.log('AddCanvas time: %d ms', Date.now() - startTime);
+}
+
 function addEvent() {
     const addCanvas = document.getElementById('add-canvas');
-    addCanvas?.addEventListener('click', async () => {
-        const startTime = Date.now();
-        const imageDataObj = getImageData(image);
+    addCanvas?.addEventListener('click', () => {
+        thresholdLevel = Math.floor(Math.random() * 256); // 0-255
+        addCanvasElement();
+    });
 
-        const startTimeForThreshold = Date.now();
-        const newImageData = await thresholdImage(imageDataObj);
-
-        const startTimeForDrawImage = Date.now();
-        drawImageToCanvas(newImageData);
-
-        console.log('====');
-        console.log('GetImageData time: %d ms', startTimeForThreshold - startTime);
-        console.log('Threshold time: %d ms', startTimeForDrawImage - startTimeForThreshold);
-        console.log('DrawImage time: %d ms', Date.now() - startTimeForDrawImage);
-        console.log('AddCanvas time: %d ms', Date.now() - startTime);
+    const rangeInput = document.getElementById('range-input');
+    rangeInput?.addEventListener('mousemove', (event) => {
+        const newValue = Number((event.target as HTMLInputElement).value);
+        // @ts-ignore
+        if (thresholdLevel !== newValue) {
+            thresholdLevel = newValue;
+            addCanvasElement();
+        }
     });
 }
 
