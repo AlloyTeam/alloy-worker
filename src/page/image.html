@@ -13,31 +13,46 @@
                 font-family: 'PingFang SC', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
             }
 
-            #add-canvas {
+            #operation {
+                display: flex;
+                flex-direction: row;
+            }
+
+            #start-image-process {
                 margin: 10px 10px;
                 border: 1px solid lightblue;
                 border-radius: 4px;
+                font-size: 20px;
             }
 
-            #range-input {
+            #operation-info {
+                color: green;
+                font-size: 20px;
+            }
+
+            /* #range-input {
                 width: 510px;
-            }
+            } */
 
-            #container {
-                position: absolute;
-                margin: 10px 10px;
-                padding-top: 100px;
-                transform: scale(0.04);
-                /* transform: scale(0.2); */
-                transform-origin: top left;
+            #original-container {
+                margin: 10px 0 0 20px;
+                width: 140px;
+                height: 140px;
             }
 
             #original {
-                margin: 20px;
-                /* width: 400px;
-                height: 400px; */
-                width: 23680px;
-                height: 2144px;
+                width: 512px;
+                height: 512px;
+                transform: scale(0.2);
+                transform-origin: top left;
+            }
+
+            #container {
+                display: flex;
+                position: absolute;
+                transform-origin: top left;
+                transform: scale(0.4);
+                margin: 10px 10px;
             }
 
             .img-canvas {
@@ -47,10 +62,28 @@
         </style>
     </head>
     <body>
-        <button id="add-canvas">Add Canvas</button>
-        <input id="range-input" type="range" max="255" step="5"/>
-        <div id="container">
-            <img id="original" src="./img/test.jpg" crossorigin="anonymous">
+        <div id="operation">
+            <div id="original-container">
+                <span id="original-info"></span>
+                <img id="original" src="./img/lena.gif" crossorigin="anonymous">
+            </div>
+            <div>
+                <div>
+                    <button id="start-image-process">Start Image Process</button>
+                    <span id="operation-info"></span>
+                </div>
+                <div>
+                    <input type="radio" id="use-default" name="how" value="default" checked>
+                    <label for="use-default">Default</label><br>
+                    <input type="radio" id="use-settimeout" name="how" value="UseSetTimeout">
+                    <label for="use-settimeout">UseSetTimeout</label><br>
+                    <input type="radio" id="use-worker" name="how" value="UseWorker">
+                    <label for="use-worker">UseWorker</label><br>
+                </div>
+            </div>
         </div>
+        <div id="container">
+        </div>
+        <!-- <input id="range-input" type="range" max="255" step="5"/> -->
     </body>
 </html>

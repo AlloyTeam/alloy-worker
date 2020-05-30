@@ -1,5 +1,5 @@
 import createAlloyWorker from '../worker/index';
-import { threshold } from '../lib/image-filter';
+import { threshold, baseBlur } from '../lib/image-filter';
 import { isIE10, isIE11 } from '../lib/utils';
 
 // https://stackoverflow.com/questions/22062313/imagedata-set-in-internetexplorer
@@ -20,10 +20,7 @@ if (isIE10) {
 }
 
 const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
-let thresholdLevel = 128; // 0-255
-const alloyWorker = createAlloyWorker({
-    workerName: 'alloyWorker--test',
-});
+let processRangeValue: number;
 
 let imageHiddenCanvas: HTMLCanvasElement;
 function getImageData(image: HTMLImageElement) {
@@ -40,16 +37,45 @@ function getImageData(image: HTMLImageElement) {
     return imageDataObj;
 }
 
-async function thresholdImage(pixelData: ImageData) {
+async function processImage(pixelData: ImageData, isUseWorker: boolean) {
+    let newImageData: {
+        data: Uint8ClampedArray;
+    };
+
+    if (isUseWorker) {
+        const alloyWorker = createAlloyWorker({
+            workerName: 'alloyWorker--test',
+        });
+
+        newImageData = await alloyWorker.image.baseBlur({
+            transferProps: isIE10 ? [] : ['data'],
+            data: pixelData.data,
+            width: pixelData.width,
+            height: pixelData.height,
+            radius: processRangeValue,
+        });
+        alloyWorker.terminate();
+    } else {
+        newImageData = baseBlur({
+            data: pixelData.data,
+            width: pixelData.width,
+            height: pixelData.height,
+            radius: processRangeValue,
+        });
+    }
+
     // const newImageData = threshold({
     //      data: pixelData.data,
-    //      threshold: thresholdLevel,
+    //      threshold: processRangeValue,
     // });
-    const newImageData = await alloyWorker.image.Threshold({
-        transferProps: isIE10 ? [] : ['data'],
-        data: pixelData.data as any,
-        threshold: thresholdLevel,
-    });
+
+    // const newImageData = await alloyWorker.image.Threshold({
+    //     transferProps: isIE10 ? [] : ['data'],
+    //     data: pixelData.data as any,
+    //     witdh: pixelData.width,
+    //     height: pixelData.height,
+    //     threshold: processRangeValue,
+    // });
     // const newImageData = {
     //     data: Sobel(pixelData),
     // };
@@ -59,12 +85,12 @@ async function thresholdImage(pixelData: ImageData) {
 
 function drawImageToCanvas({ data }: { data: Uint8ClampedArray }) {
     let imageHiddenCanvas: HTMLCanvasElement = document.getElementsByClassName('img-canvas')[0] as any;
-    if (!imageHiddenCanvas) {
-        imageHiddenCanvas = document.createElement('canvas');
-        imageHiddenCanvas.className = 'img-canvas';
-        imageHiddenCanvas.width = image.width;
-        imageHiddenCanvas.height = image.height;
-    }
+    // if (!imageHiddenCanvas) {
+    imageHiddenCanvas = document.createElement('canvas');
+    imageHiddenCanvas.className = 'img-canvas';
+    imageHiddenCanvas.width = image.width;
+    imageHiddenCanvas.height = image.height;
+    // }
     const tempCtx = imageHiddenCanvas.getContext('2d')!;
 
     if (isIE10 || isIE11) {
@@ -96,12 +122,14 @@ function getImage() {
     );
 }
 
-async function addCanvasElement() {
+let addCanvasElementCount = 0;
+async function addCanvasElement(isUseWorker: boolean) {
+    addCanvasElementCount++;
     const startTime = Date.now();
     const imageDataObj = getImageData(image);
 
     const startTimeForThreshold = Date.now();
-    const newImageData = await thresholdImage(imageDataObj);
+    const newImageData = await processImage(imageDataObj, isUseWorker);
 
     const startTimeForDrawImage = Date.now();
     drawImageToCanvas(newImageData);
@@ -114,21 +142,68 @@ async function addCanvasElement() {
 }
 
 function addEvent() {
-    const addCanvas = document.getElementById('add-canvas');
-    addCanvas?.addEventListener('click', () => {
-        thresholdLevel = Math.floor(Math.random() * 256); // 0-255
-        addCanvasElement();
-    });
-
-    const rangeInput = document.getElementById('range-input');
-    rangeInput?.addEventListener('mousemove', (event) => {
-        const newValue = Number((event.target as HTMLInputElement).value);
-        // @ts-ignore
-        if (thresholdLevel !== newValue) {
-            thresholdLevel = newValue;
-            addCanvasElement();
+    image.addEventListener('click', () => {
+        if (document.getElementById('original-info')!.innerText.length) {
+            document.getElementById('original-info')!.innerHTML = '';
+        } else {
+            document.getElementById('original-info')!.innerHTML += '*************';
         }
     });
+
+    const startImageProcess = document.getElementById('start-image-process');
+    startImageProcess?.addEventListener('click', () => {
+        document.getElementById('container')!.innerHTML = '';
+        document.getElementById('operation-info')!.innerHTML = '';
+
+        // 2 次 requestAnimationFrame 确保上面的 DOM 修改可以渲染
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const isMainThreadSetTimeout: boolean = (document.getElementById('use-settimeout') as HTMLInputElement)
+                    .checked;
+                const isUseWorker: boolean = (document.getElementById('use-worker') as HTMLInputElement).checked;
+
+                const startTime = Date.now();
+                const taskPromiseArray = [5, 10, 15, 20, 25].map((redius) => {
+                    return new Promise((resolve) => {
+                        if (isMainThreadSetTimeout) {
+                            setTimeout(async () => {
+                                processRangeValue = redius;
+                                addCanvasElement(isUseWorker).then(() => {
+                                    resolve();
+                                });
+                            }, 0);
+                        } else {
+                            processRangeValue = redius;
+                            addCanvasElement(isUseWorker).then(() => {
+                                resolve();
+                            });
+                        }
+                    });
+                });
+
+                Promise.all(taskPromiseArray).then(() => {
+                    const processTime = Date.now() - startTime;
+                    console.log('Time', processTime);
+                    document.getElementById('operation-info')!.innerHTML = `${processTime} ms`;
+                });
+            });
+        });
+    });
+
+    // const rangeInput = document.getElementById('range-input');
+    // rangeInput?.addEventListener('mousemove', (event) => {
+    //     const newValue = Number((event.target as HTMLInputElement).value);
+
+    //     if (!processRangeValue) {
+    //         processRangeValue = newValue;
+    //         return;
+    //     }
+    //     // @ts-ignore
+    //     if (processRangeValue !== newValue) {
+    //         processRangeValue = newValue;
+    //         addCanvasElement();
+    //     }
+    // });
 }
 
 if (image.complete) {
