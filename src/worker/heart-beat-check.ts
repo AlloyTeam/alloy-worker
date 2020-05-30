@@ -42,6 +42,7 @@ export default class HeartBeatCheck {
      */
     stop(): void {
         clearInterval(this.checkInterValHandle);
+        clearTimeout(this.checkTimeoutHandle);
     }
 
     /**
