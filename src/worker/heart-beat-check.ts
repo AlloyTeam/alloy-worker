@@ -50,7 +50,7 @@ export default class HeartBeatCheck {
      */
     checkOne(): void {
         // 上一次检测未完成, 直接返回
-        if (this.isHeartBeatChecking === true) {
+        if (this.isHeartBeatChecking) {
             return;
         }
         this.isHeartBeatChecking = true;
