@@ -2,6 +2,8 @@ import createAlloyWorker from '../worker/index';
 import { threshold, baseBlur } from '../lib/image-filter';
 import { isIE10, isIE11 } from '../lib/utils';
 
+console.log(isIE10, isIE11);
+
 // https://stackoverflow.com/questions/22062313/imagedata-set-in-internetexplorer
 // imgData.data.set polyfill for IE10
 if (isIE10) {
@@ -84,7 +86,7 @@ async function processImage(pixelData: ImageData, isUseWorker: boolean) {
 }
 
 function drawImageToCanvas({ data }: { data: Uint8ClampedArray }) {
-    let imageHiddenCanvas: HTMLCanvasElement = document.getElementsByClassName('img-canvas')[0] as any;
+    // let imageHiddenCanvas: HTMLCanvasElement = document.getElementsByClassName('img-canvas')[0] as any;
     // if (!imageHiddenCanvas) {
     imageHiddenCanvas = document.createElement('canvas');
     imageHiddenCanvas.className = 'img-canvas';

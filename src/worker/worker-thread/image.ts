@@ -45,7 +45,7 @@ export default class Image extends BaseAction {
             radius: payload.radius,
         });
 
-        console.log('worker run threshold time: ', Date.now() - startTime, 'ms');
+        console.log('worker run baseBlur time: ', Date.now() - startTime, 'ms');
         return {
             transferProps: isIE10 ? [] : ['data'],
             data: response.data as any,
