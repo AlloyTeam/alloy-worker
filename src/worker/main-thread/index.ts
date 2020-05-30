@@ -43,6 +43,10 @@ export default class MainThreadWorker {
      * 心跳检测
      */
     heartBeatCheck: HeartBeatCheck;
+    /**
+     * 是否已经终止掉 Worker
+     */
+    isTerminated = false;
 
     // 各种业务的实例
     workerAbilityTest: WorkerAbilityTest;
@@ -66,6 +70,11 @@ export default class MainThreadWorker {
      * 开始进行心跳检测
      */
     startHeartBeatCheck() {
+        // 心跳检测一般会延迟启动, 可能这时 Worker 已经终止掉了
+        // 终止的 Worker 不需要检测
+        if (this.isTerminated) {
+            return;
+        }
         this.heartBeatCheck.start();
     }
 
@@ -75,6 +84,8 @@ export default class MainThreadWorker {
     terminate(): void {
         this.heartBeatCheck.stop();
         this.controller.terminate();
+        // 设置终止标志位
+        this.isTerminated = true;
     }
 
     /**
