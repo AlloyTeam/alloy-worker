@@ -1,8 +1,10 @@
+const ua = navigator.userAgent.toLowerCase();
+
 // https://stackoverflow.com/questions/16135814/check-for-ie-10
 export const isIE10 = (() => {
-    return navigator.userAgent.toLowerCase().indexOf('MSIE 10') !== -1 ? true : false;
+    return ua.match(/(msie\s10)|(trident\/6\.0)/) ? true : false;
 })();
 
 export const isIE11 = (() => {
-    return navigator.userAgent.toLowerCase().indexOf('rv:11') !== -1 ? true : false;
+    return ua.match(/(rv\:11)|(trident\/7\.0)/) ? true : false;
 })();
