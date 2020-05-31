@@ -2,8 +2,6 @@ import createAlloyWorker from '../worker/index';
 import { threshold, baseBlur } from '../lib/image-filter';
 import { isIE10, isIE11 } from '../lib/utils';
 
-console.log(isIE10, isIE11);
-
 // https://stackoverflow.com/questions/22062313/imagedata-set-in-internetexplorer
 // imgData.data.set polyfill for IE10
 if (isIE10) {
@@ -22,24 +20,22 @@ if (isIE10) {
 }
 
 const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
-let processRangeValue: number;
 
 let imageHiddenCanvas: HTMLCanvasElement;
 function getImageData(image: HTMLImageElement) {
     if (!imageHiddenCanvas) {
         imageHiddenCanvas = document.createElement('canvas');
-        const tempCtx = imageHiddenCanvas.getContext('2d')!;
-        imageHiddenCanvas.width = image.width;
-        imageHiddenCanvas.height = image.height;
-        tempCtx.drawImage(image, 0, 0, image.width, image.height);
     }
-
     const tempCtx = imageHiddenCanvas.getContext('2d')!;
+    imageHiddenCanvas.width = image.width;
+    imageHiddenCanvas.height = image.height;
+    tempCtx.drawImage(image, 0, 0, image.width, image.height);
+
     const imageDataObj = tempCtx.getImageData(0, 0, image.width, image.height);
     return imageDataObj;
 }
 
-async function processImage(pixelData: ImageData, isUseWorker: boolean) {
+async function processImage(pixelData: ImageData, processRangeValue: number, isUseWorker: boolean) {
     let newImageData: {
         data: Uint8ClampedArray;
     };
@@ -86,14 +82,14 @@ async function processImage(pixelData: ImageData, isUseWorker: boolean) {
 }
 
 function drawImageToCanvas({ data }: { data: Uint8ClampedArray }) {
-    // let imageHiddenCanvas: HTMLCanvasElement = document.getElementsByClassName('img-canvas')[0] as any;
-    // if (!imageHiddenCanvas) {
-    imageHiddenCanvas = document.createElement('canvas');
-    imageHiddenCanvas.className = 'img-canvas';
-    imageHiddenCanvas.width = image.width;
-    imageHiddenCanvas.height = image.height;
+    // let imageCanvas : HTMLCanvasElement = document.getElementsByClassName('img-canvas')[0] as any;
+    // if (!imageCanvas) {
+    const imageCanvas = document.createElement('canvas');
+    imageCanvas.className = 'img-canvas';
+    imageCanvas.width = image.width;
+    imageCanvas.height = image.height;
     // }
-    const tempCtx = imageHiddenCanvas.getContext('2d')!;
+    const tempCtx = imageCanvas.getContext('2d')!;
 
     if (isIE10 || isIE11) {
         // IE10, IE11 不支持 new ImageData()
@@ -105,7 +101,7 @@ function drawImageToCanvas({ data }: { data: Uint8ClampedArray }) {
         tempCtx.putImageData(newImageData, 0, 0);
     }
 
-    document.getElementById('container')?.appendChild(imageHiddenCanvas);
+    document.getElementById('container')?.appendChild(imageCanvas);
 }
 
 function getImage() {
@@ -122,16 +118,18 @@ function getImage() {
         imageDataObj.height,
         Array.prototype.slice.call(imageDataObj.data, 0, 10).toString()
     );
+
+    document.getElementById('range-info')!.innerText = `${image.width}`;
 }
 
 let addCanvasElementCount = 0;
-async function addCanvasElement(isUseWorker: boolean) {
+async function addCanvasElement(processRangeValue: number, isUseWorker: boolean) {
     addCanvasElementCount++;
     const startTime = Date.now();
     const imageDataObj = getImageData(image);
 
     const startTimeForThreshold = Date.now();
-    const newImageData = await processImage(imageDataObj, isUseWorker);
+    const newImageData = await processImage(imageDataObj, processRangeValue, isUseWorker);
 
     const startTimeForDrawImage = Date.now();
     drawImageToCanvas(newImageData);
@@ -148,7 +146,7 @@ function addEvent() {
         if (document.getElementById('original-info')!.innerText.length) {
             document.getElementById('original-info')!.innerHTML = '';
         } else {
-            document.getElementById('original-info')!.innerHTML += '*************';
+            document.getElementById('original-info')!.innerHTML += '**************';
         }
     });
 
@@ -167,16 +165,18 @@ function addEvent() {
                 const startTime = Date.now();
                 const taskPromiseArray = [5, 10, 15, 20, 25].map((redius) => {
                     return new Promise((resolve) => {
-                        if (isMainThreadSetTimeout) {
-                            setTimeout(async () => {
-                                processRangeValue = redius;
-                                addCanvasElement(isUseWorker).then(() => {
+                        if (isUseWorker) {
+                            addCanvasElement(redius, true).then(() => {
+                                resolve();
+                            });
+                        } else if (isMainThreadSetTimeout) {
+                            setTimeout(() => {
+                                addCanvasElement(redius, false).then(() => {
                                     resolve();
                                 });
                             }, 0);
                         } else {
-                            processRangeValue = redius;
-                            addCanvasElement(isUseWorker).then(() => {
+                            addCanvasElement(redius, false).then(() => {
                                 resolve();
                             });
                         }
@@ -192,20 +192,19 @@ function addEvent() {
         });
     });
 
-    // const rangeInput = document.getElementById('range-input');
-    // rangeInput?.addEventListener('mousemove', (event) => {
-    //     const newValue = Number((event.target as HTMLInputElement).value);
+    const rangeInput = document.getElementById('range-input');
+    let imageWidthValue = Number(image.style.width);
+    rangeInput?.addEventListener('mousemove', (event) => {
+        const newValue = Number((event.target as HTMLInputElement).value);
 
-    //     if (!processRangeValue) {
-    //         processRangeValue = newValue;
-    //         return;
-    //     }
-    //     // @ts-ignore
-    //     if (processRangeValue !== newValue) {
-    //         processRangeValue = newValue;
-    //         addCanvasElement();
-    //     }
-    // });
+        // @ts-ignore
+        if (imageWidthValue !== newValue) {
+            imageWidthValue = newValue;
+            image.style.width = `${imageWidthValue}px`;
+            image.style.height = `${imageWidthValue}px`;
+            document.getElementById('range-info')!.innerText = `${image.width}`;
+        }
+    });
 }
 
 if (image.complete) {

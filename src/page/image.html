@@ -36,14 +36,14 @@
 
             #original-container {
                 margin: 10px 0 0 20px;
-                width: 140px;
-                height: 140px;
+                width: 170px;
+                height: 186px;
             }
 
             #original {
                 width: 512px;
                 height: 512px;
-                transform: scale(0.2);
+                transform: scale(0.3);
                 transform-origin: top left;
             }
 
@@ -65,6 +65,10 @@
         <div id="operation">
             <div id="original-container">
                 <span id="original-info"></span>
+                <div style="display: flex;">
+                    <input id="range-input" type="range" min="32" max="512" value="512" step="32"/>
+                    <span id="range-info"></span>
+                </div>
                 <img id="original" src="./img/lena.gif" crossorigin="anonymous">
             </div>
             <div>
@@ -84,6 +88,5 @@
         </div>
         <div id="container">
         </div>
-        <!-- <input id="range-input" type="range" max="255" step="5"/> -->
     </body>
 </html>
