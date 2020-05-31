@@ -163,7 +163,7 @@ function addEvent() {
                 const isUseWorker: boolean = (document.getElementById('use-worker') as HTMLInputElement).checked;
 
                 const startTime = Date.now();
-                const taskPromiseArray = [5, 10, 15, 20, 25].map((redius) => {
+                const taskPromiseArray = [2, 5, 10, 15, 20, 25].map((redius) => {
                     return new Promise((resolve) => {
                         if (isUseWorker) {
                             addCanvasElement(redius, true).then(() => {
