@@ -1,4 +1,20 @@
 declare namespace WorkerPayload {
+    namespace Image {
+        type Threshold = {
+            data: Uint8ClampedArray;
+            width: number;
+            height: number;
+            threshold?: number;
+        } & Transfer;
+
+        type BaseBlur = {
+            data: Uint8ClampedArray;
+            width: number;
+            height: number;
+            radius: number;
+        } & Transfer;
+    }
+
     namespace WorkerReport {
         type CaptureWorkerException = {
             message: string;
@@ -15,6 +31,16 @@ declare namespace WorkerPayload {
 }
 
 declare namespace WorkerReponse {
+    namespace Image {
+        type Threshold = {
+            data: Uint8ClampedArray;
+        } & Transfer;
+
+        type BaseBlur = {
+            data: Uint8ClampedArray;
+        } & Transfer;
+    }
+
     namespace WorkerAbilityTest {
         type CommunicationTest = number;
         type HeartBeatTest = number;

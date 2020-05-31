@@ -5,43 +5,88 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>Alloy Worker</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'PingFang SC', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
+            }
+
+            #operation {
+                display: flex;
+                flex-direction: row;
+            }
+
+            #start-image-process {
+                margin: 10px 10px;
+                border: 1px solid lightblue;
+                border-radius: 4px;
+                font-size: 20px;
+            }
+
+            #operation-info {
+                color: green;
+                font-size: 20px;
+            }
+
+            /* #range-input {
+                width: 510px;
+            } */
+
+            #original-container {
+                margin: 10px 0 0 20px;
+                width: 170px;
+                height: 186px;
+            }
+
+            #original {
+                width: 512px;
+                height: 512px;
+                transform: scale(0.3);
+                transform-origin: top left;
+            }
+
+            #container {
+                display: flex;
+                position: absolute;
+                transform-origin: top left;
+                transform: scale(0.4);
+                margin: 10px 10px;
+            }
+
+            .img-canvas {
+                margin: 20px;
+                border: 1px solid;
+            }
+        </style>
     </head>
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'PingFang SC', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
-        }
-
-        #add-canvas {
-            margin: 10px 10px;
-            border: 1px solid lightblue;
-            border-radius: 4px;
-        }
-
-        #container {
-            position: absolute;
-            margin: 10px 10px;
-            padding-top: 100px;
-            transform: scale(0.04);
-            transform-origin: top left;
-        }
-
-        #original {
-            width: 23680px;
-            height: 2144px;
-        }
-
-        .img-canvas {
-            margin-top: 100px;
-            border: 1px solid;
-        }
-    </style>
     <body>
-        <button id="add-canvas">Add Canvas</button>
+        <div id="operation">
+            <div id="original-container">
+                <span id="original-info"></span>
+                <div style="display: flex;">
+                    <input id="range-input" type="range" min="32" max="512" value="512" step="32"/>
+                    <span id="range-info"></span>
+                </div>
+                <img id="original" src="./img/lena.gif" crossorigin="anonymous">
+            </div>
+            <div>
+                <div>
+                    <button id="start-image-process">Start Image Process</button>
+                    <span id="operation-info"></span>
+                </div>
+                <div>
+                    <input type="radio" id="use-default" name="how" value="default" checked>
+                    <label for="use-default">Default</label><br>
+                    <input type="radio" id="use-settimeout" name="how" value="UseSetTimeout">
+                    <label for="use-settimeout">UseSetTimeout</label><br>
+                    <input type="radio" id="use-worker" name="how" value="UseWorker">
+                    <label for="use-worker">UseWorker</label><br>
+                </div>
+            </div>
+        </div>
         <div id="container">
-            <img id="original" src="./img/test.jpg" crossorigin="anonymous">
         </div>
     </body>
 </html>

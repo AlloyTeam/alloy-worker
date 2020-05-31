@@ -9,6 +9,7 @@ import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
 import Cookie from './cookie';
+import Image from './image';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -51,6 +52,7 @@ export default class MainThreadWorker {
     workerAbilityTest: WorkerAbilityTest;
     workerReport: WorkerReport;
     cookie: Cookie;
+    image: Image;
 
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
@@ -61,6 +63,7 @@ export default class MainThreadWorker {
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
         this.workerReport = new WorkerReport(this.controller);
         this.cookie = new Cookie(this.controller);
+        this.image = new Image(this.controller);
     }
 
     /**

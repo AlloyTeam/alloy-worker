@@ -12,3 +12,8 @@ export const enum WorkerReportActionType {
 export const enum CookieActionType {
     Cookie = 'Cookie',
 }
+
+export const enum ImageActionType {
+    Threshold = 'Threshold',
+    BaseBlur = 'BaseBlur',
+}
