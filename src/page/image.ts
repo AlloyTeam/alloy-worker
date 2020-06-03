@@ -194,6 +194,7 @@ function addEvent() {
 
     const rangeInput = document.getElementById('range-input');
     let imageWidthValue = Number(image.style.width);
+    console.log(rangeInput);
     rangeInput?.addEventListener('mousemove', (event) => {
         const newValue = Number((event.target as HTMLInputElement).value);
 

@@ -15,6 +15,8 @@
 
             #operation {
                 display: flex;
+                /* IE10 兼容 */
+                display: -ms-flexbox;
                 flex-direction: row;
             }
 
@@ -30,9 +32,9 @@
                 font-size: 20px;
             }
 
-            /* #range-input {
-                width: 510px;
-            } */
+            #range-input {
+                width: 128px;
+            }
 
             #original-container {
                 margin: 10px 0 0 20px;
@@ -48,6 +50,7 @@
             }
 
             #container {
+                width: 250%;
                 display: flex;
                 position: absolute;
                 transform-origin: top left;
