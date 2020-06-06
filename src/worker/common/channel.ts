@@ -262,13 +262,12 @@ export default class Channel {
             // 根据调试标志位展示
             if (this.controller.isDebugMode) {
                 /**
-                 * ["00:35.022", "alloyWorker--test ►", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
-                 * [时间戳, 线程名称, 会话 Id, 事务类型, 事务负载]
-                 * `►` 表示 Worker 线程收到的信息
+                 * ⬇alloyWorker--test, ["00:35.022", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+                 * 线程名称, [时间戳, 会话 Id, 事务类型, 事务负载]
+                 * `⬇` 表示 Worker 线程收到的信息
                  */
-                console.log([
+                console.log(`%c ⬇${self.name}`, 'background: #80FF80; font-size: 15px', [
                     getDebugTimeStamp(),
-                    `${self.name} ►`,
                     message.sessionId,
                     message.actionType,
                     message.payload,
@@ -287,12 +286,12 @@ export default class Channel {
         if (__WORKER__) {
             if (this.controller.isDebugMode) {
                 /**
-                 * ["00:35.023", "️◄ alloyWorker--test", "w_2o-bRMLmGwXi5V", undefined, 1]
-                 * `◄` 表示 Worker 线程发出的信息
+                 * ⬆ alloyWorker--test, ["00:35.023", "w_2o-bRMLmGwXi5V", undefined, 1]
+                 * 线程名称, [时间戳, 会话 Id, 事务类型, 事务负载]
+                 * `⬆` 表示 Worker 线程发出的信息
                  */
-                console.log([
+                console.log(`%c⬆ ${self.name}`, 'background: #FF8080; font-size: 15px', [
                     getDebugTimeStamp(),
-                    `️◄ ${self.name}`,
                     message.sessionId,
                     message.actionType,
                     message.payload,
