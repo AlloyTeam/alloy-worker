@@ -8,7 +8,7 @@
 
 * 面向事务及命名空间的通信封装, 支持大规模业务的场景.
 * Promise 化调用代替跨线程事件监听, 无缝支持 async/await.
-* 完整的 Worker 可用性监控指标; 全链路 Worker 错误监控.
+* 完整的 Worker 可用性监控指标; 全周期 Worker 错误监控.
 * 源码全 TypeScript, 跨线程数据类型一致性校验.
 * 跨线程请求和响应的数据流调试.
 * 良好支持 IE10+ 浏览器.
@@ -20,15 +20,14 @@
 
 | 项目 | 简介 | 构建打包 | 底层API封装 | 跨线程调用申明 | 可用性监控 | 易拓展性 |
 | - | - | :-: | :-: | :-: | :-: | :-: |
-| [Worker-loader](https://github.com/webpack-contrib/worker-loader) | Webpack 官方,源码打包能力 | ✔️ | ✘ | ✘ | ✘ | ✘ |
-| [Promise-worker](https://github.com/nolanlawson/promise-worker) | 封装基本 API 为 Promise 化通信 | ✘ | ✔️ | ✘ | ✘ | ✘ |
-| [Comlink](https://github.com/GoogleChromeLabs/comlink) | Chrome 团队, 通信 RPC 封装 | ✘ | ✔️ | 同名函数(基于Proxy) | ✘ | ✘ |
+| [worker-loader](https://github.com/webpack-contrib/worker-loader) | Webpack 官方,源码打包能力 | ✔️ | ✘ | ✘ | ✘ | ✘ |
+| [promise-worker](https://github.com/nolanlawson/promise-worker) | 封装基本 API 为 Promise 化通信 | ✘ | ✔️ | ✘ | ✘ | ✘ |
+| [comlink](https://github.com/GoogleChromeLabs/comlink) | Chrome 团队, 通信 RPC 封装 | ✘ | ✔️ | 同名函数(基于Proxy) | ✘ | ✘ |
 | [workerize-loader](https://github.com/developit/workerize-loader) | 社区目前比较完整的方案 | ✔️ | ✔️ | 同名函数(基于AST生成) | ✘ | ✘ |
-| **Alloy-worker** | 面向事务的高可用 Worker 通信框架 | 提供构建脚本 | 通信️控制器 | 同名函数(基于约定), TS 声明 | 完整监控指标, 全周期错误监控 | 命名空间, 生成新事务脚本 |
+| **alloy-worker** | 面向事务的高可用 Worker 通信框架 | 提供构建脚本 | 通信️控制器 | 同名函数(基于约定), TS 声明 | 完整监控指标, 全周期错误监控 | 命名空间, 事务生成脚本 |
 
 ## Demo
 * Web Worker 能力测试
-> https://todo.com
 
 ![](./docs/img/worker-ability-test.gif)
 
@@ -40,12 +39,14 @@
 * 主线程实例化 alloy-worker.
 
 ```js
-// 代码示例: src/index.ts
+// src/index.ts
 
 import createAlloyWorker from '../worker/index';
 
 // 实例化
-const alloyWorker = createAlloyWorker({ workerName: 'alloyWorker--test' });
+const alloyWorker = createAlloyWorker({
+    workerName: 'alloyWorker--test',
+});
 // 跨线程 Promise 调用
 alloyWorker.workerAbilityTest.communicationTest().then(console.log);
 ```
@@ -53,12 +54,12 @@ alloyWorker.workerAbilityTest.communicationTest().then(console.log);
 * 主线程发起跨线程调用.
 
 ```js
-// 代码示例: src/worker/main-thread/worker-ability-test.ts
+// src/worker/main-thread/worker-ability-test.ts
 
 export default class WorkerAbilityTest {
     communicationTest() {
         const mainThreadPostTime: = Date.now();
-        // this.controller 是 alloy-worker 的通信控制器
+        // this.controller 为通信控制器
         return this.controller.requestPromise(
             WorkerAbilityTestActionType.CommunicationTest,
             mainThreadPostTime);
@@ -69,7 +70,7 @@ export default class WorkerAbilityTest {
 * Worker 线程收到请求并返回结果.
 
 ```js
-// 代码示例: src/worker/worker-thread/worker-ability-test.ts
+// src/worker/worker-thread/worker-ability-test.ts
 
 export default class WorkerAbilityTest {
     CommunicationTest(payload) {
@@ -85,19 +86,19 @@ export default class WorkerAbilityTest {
 
 ### 接入
 
-Alloy-worker **并不是一个 npm 包**. 你需要手动将它融合到你的项目里, 并成为项目源码的一部分. 好在手动也并不复杂, 而且接入不会影响你的现有业务.
+Alloy-worker **并不是一个 npm 包**. 你需要手动将它融合到你的项目里, 并成为项目源码的一部分. 好在手动也并不复杂, 而且不会影响现有业务.
 
-具体接入步骤, [请查看这里][alloy-worker 接入教程].
+接入步骤, [请查看这里][alloy-worker 接入教程].
 
 ### 使用
 
-Alloy-worker 对原始 Web Worker 能力进行 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需按照 alloy-worker 的约定来编写代码.
+Alloy-worker 对原始 Web Worker 能力进行 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 alloy-worker 的约定.
 
 约定不复杂, [请查看这里][alloy-worker 使用教程].
 
 ## 使用反馈
 
-如果你的项目使用 alloy-Worker 并觉得它不错, 请到[这里](https://todo.com)告诉我们.
+如果你的项目使用 alloy-worker 并觉得它不错, 请到[这里](https://github.com/AlloyTeam/alloy-worker/issues/1) 告诉我们.
 
 ## 贡献源码
 
@@ -121,6 +122,7 @@ Alloy-worker 对原始 Web Worker 能力进行 RPC 封装, **约定了 Worker �
 > https://todo.com
 
 ## TODO
-* 代码中的 TODO 清理
+* 兼容 webpack5 构建
+* 解决纯 worker 侧代码更新的 hash 问题
 
 ## EOF
