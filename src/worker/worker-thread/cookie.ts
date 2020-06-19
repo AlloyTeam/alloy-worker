@@ -7,7 +7,7 @@ export default class Cookie extends BaseAction {
         super(controller);
     }
 
-    protected addActionHandler() {}
+    protected addActionHandler(): void {}
 
     /**
      * 到主线程获取 cookie
