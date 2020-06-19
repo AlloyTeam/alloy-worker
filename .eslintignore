@@ -1,1 +1,2 @@
-src/worker/script/*
+# 生成模板代码脚本
+src/worker/one-script/*

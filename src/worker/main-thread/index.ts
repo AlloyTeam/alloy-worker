@@ -69,7 +69,7 @@ export default class MainThreadWorker {
     /**
      * 开始进行心跳检测
      */
-    startHeartBeatCheck() {
+    startHeartBeatCheck(): void {
         // 心跳检测一般会延迟启动, 可能这时 Worker 已经终止掉了
         // 终止的 Worker 不需要检测
         if (this.isTerminated) {
@@ -132,8 +132,8 @@ export default class MainThreadWorker {
          * 如果无法通信, 则默认为 -1
          */
         let workerReadyDuration = -1;
-        if (canPostMessage) {
-            workerReadyDuration = timeWorkerReplyMessage! - this.controller.timeBeforeNewWorker;
+        if (canPostMessage && timeWorkerReplyMessage) {
+            workerReadyDuration = timeWorkerReplyMessage - this.controller.timeBeforeNewWorker;
         }
         /**
          * 主线程创建 Worker 的同步耗时, 正常为 1ms 就完成了

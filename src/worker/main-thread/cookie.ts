@@ -7,7 +7,7 @@ export default class Cookie extends BaseAction {
         super(controller);
     }
 
-    protected addActionHandler() {
+    protected addActionHandler(): void {
         this.controller.addActionHandler(CookieActionType.Cookie, this.getCookie.bind(this));
     }
 

@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "one": "node ./src/worker/script/index.js",
+        "one": "node ./src/worker/one-script/index.js",
         "dev": "cross-env NODE_ENV=development node ./script/build.js",
         "dist": "cross-env NODE_ENV=production node ./script/build.js",
         "dev:worker": "cross-env NODE_ENV=development node ./worker-script/build-worker.js",
@@ -21,7 +21,7 @@
         "Channel",
         "Message"
     ],
-    "author": "CntChen",
+    "author": "AlloyTeam",
     "license": "MIT",
     "devDependencies": {
         "@babel/core": "^7.9.0",

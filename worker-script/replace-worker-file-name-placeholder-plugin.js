@@ -13,11 +13,11 @@ const fs = require('fs');
  * 遍历目录获取文件数组
  */
 function getAllFiles(root) {
-    var res = [],
-        files = fs.readdirSync(root);
+    let res = [];
+    const files = fs.readdirSync(root);
     files.forEach(function (file) {
-        var pathname = root + '/' + file,
-            stat = fs.lstatSync(pathname);
+        const pathname = root + '/' + file;
+        const stat = fs.lstatSync(pathname);
 
         if (!stat.isDirectory()) {
             res.push(pathname);
@@ -77,8 +77,8 @@ class ReplaceWorkerFileNamePlaceholderPlugin {
             // console.log('匹配到的文件: ', targetFiles);
 
             targetFiles.forEach((file) => {
-                let fileStr = fs.readFileSync(file).toString();
-                let newFileStr = fileStr.replace(
+                const fileStr = fs.readFileSync(file).toString();
+                const newFileStr = fileStr.replace(
                     new RegExp(this.options.workerFileNamePlaceholder, 'g'),
                     workerFileNameWithHash
                 );
