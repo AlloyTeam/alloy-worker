@@ -111,7 +111,6 @@ export default class MainThreadWorker {
         }
         MainThreadWorker.hasReportWorkerStatus = true;
 
-        // TODO 注释对齐
         /**
          * 是否有 Worker Class
          */
