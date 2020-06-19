@@ -98,7 +98,7 @@ Alloy-worker 对原始 Web Worker 能力进行 RPC 封装, **约定了 Worker �
 
 ## 使用反馈
 
-如果你的项目使用 alloy-worker 并觉得它不错, 请到[这里](https://github.com/AlloyTeam/alloy-worker/issues/1) 告诉我们.
+如果你的项目使用 alloy-worker 并觉得它不错, 请到 [这里](https://github.com/AlloyTeam/alloy-worker/issues/1) 告诉我们.
 
 ## 贡献源码
 
