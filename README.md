@@ -86,7 +86,7 @@ export default class WorkerAbilityTest {
 
 ### 接入
 
-Alloy-worker **并不是一个 npm 包**. 你需要手动将它融合到你的项目里, 并成为项目源码的一部分. 好在手动也并不复杂, 而且不会影响现有业务.
+Alloy-worker **并不是一个 npm 包**. 需要你手动将它融合到你的项目里, 并成为项目源码的一部分. 好在手动也不复杂, 而且不会影响现有业务.
 
 接入步骤, [请查看这里][alloy-worker 接入教程].
 
