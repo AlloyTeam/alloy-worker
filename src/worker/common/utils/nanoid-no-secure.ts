@@ -21,9 +21,10 @@ while (i-- - 10) {
 }
 
 export default (size = 21): string => {
+    let _size = size;
     let id = '';
     // Compact alternative for `for (var i = 0; i < size; i++)`
-    while (size--) {
+    while (_size--) {
         // `| 0` is compact and faster alternative for `Math.floor()`
         id += url[(Math.random() * 64) | 0];
     }

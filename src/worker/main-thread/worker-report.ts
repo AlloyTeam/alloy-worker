@@ -1,16 +1,11 @@
 import BaseAction from '../common/base-action';
 import { WorkerReportActionType } from '../common/action-type';
 import ReportProxy, { WorkerErrorSource, WorkerMonitorId } from '../report-proxy';
-import Controller from './controller';
 
 /**
  * Alloy Worker 内部上报的事务
  */
 export default class Raven extends BaseAction {
-    constructor(controller: Controller) {
-        super(controller);
-    }
-
     protected addActionHandler(): void {
         this.controller.addActionHandler(
             WorkerReportActionType.CaptureWorkerException,

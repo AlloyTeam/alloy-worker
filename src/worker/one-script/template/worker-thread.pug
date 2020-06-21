@@ -1,15 +1,10 @@
 import BaseAction from '../common/base-action';
 import { <%=WorkerActionName%>ActionType } from '../common/action-type';
-import Controller from './controller';
 
 /**
- *
+ * <%=WorkerActionName%>
  */
 export default class <%=WorkerActionName%> extends BaseAction {
-    constructor(controller: Controller) {
-        super(controller);
-    }
-
     protected addActionHandler(): void {
         this.controller.addActionHandler(<%=WorkerActionName%>ActionType.__MainCallWorker__, this.__MainCallWorker__.bind(this));
     }

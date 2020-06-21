@@ -1,15 +1,10 @@
 import BaseAction from '../common/base-action';
 import { WorkerReportActionType } from '../common/action-type';
-import Controller from './controller';
 
 /**
  * Alloy Worker 内部上报的事务
  */
 export default class Raven extends BaseAction {
-    constructor(controller: Controller) {
-        super(controller);
-    }
-
     protected addActionHandler(): void {}
 
     /**
