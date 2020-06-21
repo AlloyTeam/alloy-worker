@@ -6,3 +6,4 @@
 * `./script` 只在 alloy-worker 项目内部使用.
 * `./worker-script` 除了内部使用, 还兼顾源码融合到其他项目时复制到其他项目中.
 
+## EOF

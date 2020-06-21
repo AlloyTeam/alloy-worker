@@ -28,11 +28,12 @@
 
 ## Demo
 * Web Worker 能力测试
+> https://alloyteam.github.io/alloy-worker/dist/index.html
 
 ![](./docs/img/worker-ability-test.gif)
 
 * Worker 图像处理 Demo
-> https://todo.com
+> https://alloyteam.github.io/alloy-worker/dist/image.html
 
 ## 代码示例
 
@@ -92,7 +93,7 @@ Alloy-worker **并不是一个 npm 包**. 需要你手动将它融合到你的�
 
 ### 使用
 
-Alloy-worker 对原始 Web Worker 能力进行 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 alloy-worker 的约定.
+Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 alloy-worker 的约定.
 
 约定不复杂, [请查看这里][alloy-worker 使用教程].
 
