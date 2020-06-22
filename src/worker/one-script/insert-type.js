@@ -1,12 +1,12 @@
 const fs = require('fs');
 const config = require('./config');
 
-const insertInfo = (pureActionName) => {
+const insertType = (pureActionName) => {
     // 添加新事务的 aciton type
     const actionTypeFileStr = fs.readFileSync(config.actionTypeFilePath, 'utf-8').toString();
     const appendActionTypeStr = `\nexport const enum ${pureActionName}ActionType {
-    __MainCallWorker__ = '__MainCallWorker__',
-    __WorkerCallMain__ = '__WorkerCallMain__',
+    MainCallWorker = 'MainCallWorker',
+    WorkerCallMain = 'WorkerCallMain',
 }\n`;
     fs.writeFileSync(config.actionTypeFilePath, `${actionTypeFileStr}${appendActionTypeStr}`, 'utf-8');
     console.log('done: 添加新事务的 aciton type.');
@@ -17,8 +17,8 @@ const insertInfo = (pureActionName) => {
     // 请求类型
     const appendPayloadTypeStr = `
     namespace ${pureActionName} {
-        type __MainCallWorker__ = string;
-        type __WorkerCallMain__ = {
+        type MainCallWorker = string;
+        type WorkerCallMain = {
             hello: number;
             world: number;
         };
@@ -28,8 +28,8 @@ const insertInfo = (pureActionName) => {
     // 响应类型
     const appendResponseTypeStr = `
     namespace ${pureActionName} {
-        type __MainCallWorker__ = number;
-        type __WorkerCallMain__ = {
+        type MainCallWorker = number;
+        type WorkerCallMain = {
             alloy: string;
             worker: string;
         };
@@ -42,4 +42,4 @@ const insertInfo = (pureActionName) => {
     return true;
 };
 
-module.exports = insertInfo;
+module.exports = insertType;

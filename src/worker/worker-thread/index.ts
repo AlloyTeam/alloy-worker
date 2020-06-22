@@ -17,6 +17,7 @@ import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
 import Cookie from './cookie';
+// AlloyWorkerAutoInsert: import <%=AlloyWorkerPureActionName%> from './<%=AlloyWorkerActionName%>';
 
 /**
  * Worker 线程的 Alloy Worker Class
@@ -33,6 +34,7 @@ class WorkerThreadWorker {
     workerAbilityTest: WorkerAbilityTest;
     workerReport: WorkerReport;
     cookie: Cookie;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 
     constructor() {
         this.controller = new Controller();
@@ -40,6 +42,7 @@ class WorkerThreadWorker {
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
         this.workerReport = new WorkerReport(this.controller);
         this.cookie = new Cookie(this.controller);
+        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
 
         // this.cookie.getCookie().then((payload) => {
         //     console.log('Get document cookie from main thread:', payload);

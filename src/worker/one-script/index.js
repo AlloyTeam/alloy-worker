@@ -7,7 +7,8 @@
 
 const checkName = require('./check-name');
 const generateFile = require('./generate-file');
-const insertInfo = require('./insert-info');
+const insertType = require('./insert-type');
+const insertToIndex = require('./insert-to-index');
 
 // 获取新增事务的参数
 const args = process.argv.slice(2);
@@ -34,8 +35,10 @@ console.log('事务的纯字母名称:', `${pureActionName}.\n`);
 generateFile(actionName, pureActionName);
 
 // 添加事务引用
-insertInfo(pureActionName);
+insertType(pureActionName);
+
+// 引入事务和实例化事务
+insertToIndex(actionName, pureActionName);
 
 console.log('\n新增事务模板代码完成.');
-console.log('请在主线程和 Worker 线程各自引用和实例化该事务.');
-console.log('然后修改事务的 action, payload 类型声明, 并编写业务逻辑.\n');
+console.log('请修改事务的 action, payload 类型声明, 并编写业务逻辑.\n');

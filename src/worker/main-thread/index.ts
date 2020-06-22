@@ -9,6 +9,7 @@ import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
 import Cookie from './cookie';
+// AlloyWorkerAutoInsert: import <%=AlloyWorkerPureActionName%> from './<%=AlloyWorkerActionName%>';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -51,11 +52,13 @@ export default class MainThreadWorker {
     workerAbilityTest: WorkerAbilityTest;
     workerReport: WorkerReport;
     cookie: Cookie;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
         this.controller = new Controller(options);
         this.heartBeatCheck = new HeartBeatCheck(this);
+        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
