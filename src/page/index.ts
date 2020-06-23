@@ -6,6 +6,7 @@ document.cookie = 'xsrf=alloy,token=worker';
 // 初始化 AlloyWorker
 const alloyWorker = createAlloyWorker({
     workerName: 'alloyWorker--test',
+    // isDebugMode: true,
 });
 
 // 挂载到全局环境, 用于调试
