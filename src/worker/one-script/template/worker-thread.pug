@@ -12,7 +12,7 @@ export default class <%=WorkerActionName%> extends BaseAction {
     /**
      * 响应主线程的处理器
      */
-    async mainCallWorker(
+    private async mainCallWorker(
         payload: WorkerPayload.<%=WorkerActionName%>.MainCallWorker = 'hello'
     ): Promise<WorkerReponse.<%=WorkerActionName%>.MainCallWorker> {
         // 通过 async await 实现异步逻辑

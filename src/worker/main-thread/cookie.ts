@@ -9,7 +9,7 @@ export default class Cookie extends BaseAction {
     /**
      * 获取 cookie 处理器
      */
-    getCookie(): WorkerReponse.Cookie.Cookie {
+    private getCookie(): WorkerReponse.Cookie.Cookie {
         const cookie = document.cookie;
         return cookie;
     }

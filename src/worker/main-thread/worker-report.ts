@@ -20,7 +20,7 @@ export default class WorkerReport extends BaseAction {
      *
      * @param payload 报错信息
      */
-    captureWorkerException(payload: WorkerPayload.WorkerReport.CaptureWorkerException): void {
+    private captureWorkerException(payload: WorkerPayload.WorkerReport.CaptureWorkerException): void {
         const { message, stack } = payload;
         // 防御一下 error 实例修改属性, 一些浏览器内部抛出的错误无法修改 message 字段
         try {
@@ -41,7 +41,7 @@ export default class WorkerReport extends BaseAction {
      *
      * @param payload 日志信息
      */
-    weblog(payload: WorkerPayload.WorkerReport.Weblog): void {
+    private weblog(payload: WorkerPayload.WorkerReport.Weblog): void {
         ReportProxy.weblog(payload);
     }
 
@@ -50,7 +50,7 @@ export default class WorkerReport extends BaseAction {
      *
      * @param payload 日志信息
      */
-    monitor(payload: WorkerPayload.WorkerReport.Monitor): void {
+    private monitor(payload: WorkerPayload.WorkerReport.Monitor): void {
         ReportProxy.monitor(payload as WorkerMonitorId);
     }
 }

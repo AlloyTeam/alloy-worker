@@ -21,7 +21,7 @@ export default class <%=WorkerActionName%> extends BaseAction {
     /**
      * 响应 Worker 线程的处理器
      */
-    workerCallMain(
+    private workerCallMain(
         payload: WorkerPayload.<%=WorkerActionName%>.WorkerCallMain
     ): WorkerReponse.<%=WorkerActionName%>.WorkerCallMain {
         const response = {
