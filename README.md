@@ -35,6 +35,9 @@
 * Worker 图像处理 Demo
 > https://alloyteam.github.io/alloy-worker/image.html
 
+[![](./docs/img/image-demo.jpg)](https://alloyteam.github.io/alloy-worker/docs/img/image-demo.mp4)
+*(图片上右键新窗口打开可查看视频)*
+
 ## 代码示例
 
 * 主线程实例化 alloy-worker.
