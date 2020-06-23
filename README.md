@@ -24,7 +24,7 @@
 | [promise-worker](https://github.com/nolanlawson/promise-worker) | 封装基本 API 为 Promise 化通信 | ✘ | ✔️ | ✘ | ✘ | ✘ |
 | [comlink](https://github.com/GoogleChromeLabs/comlink) | Chrome 团队, 通信 RPC 封装 | ✘ | ✔️ | 同名函数(基于Proxy) | ✘ | ✘ |
 | [workerize-loader](https://github.com/developit/workerize-loader) | 社区目前比较完整的方案 | ✔️ | ✔️ | 同名函数(基于AST生成) | ✘ | ✘ |
-| **alloy-worker** | 面向事务的高可用 Worker 通信框架 | 提供构建脚本 | 通信️控制器 | 同名函数(基于约定), TS 声明 | 完整监控指标, 全周期错误监控 | 命名空间, 事务生成脚本 |
+| [alloy-worker](https://github.com/AlloyTeam/alloy-worker) | 面向事务的高可用 Worker 通信框架 | 提供构建脚本 | 通信️控制器 | 同名函数(基于约定), TS 声明 | 完整监控指标, 全周期错误监控 | 命名空间, 事务生成脚本 |
 
 ## Demo
 * Web Worker 能力测试
@@ -93,7 +93,7 @@ Alloy-worker **并不是一个 npm 包**. 需要你手动将它融合到你的�
 
 ### 使用
 
-Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 alloy-worker 的约定.
+Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 [alloy-worker 的约定][alloy-worker 代码约定]
 
 约定不复杂, [请查看这里][alloy-worker 使用教程].
 
@@ -109,6 +109,9 @@ Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 
 
 [alloy-worker 接入教程]: ./docs/alloy-worker%20%E6%8E%A5%E5%85%A5%E6%95%99%E7%A8%8B.md
 * [alloy-worker 接入教程][alloy-worker 接入教程]
+
+[alloy-worker 代码约定]: ./alloy-worker%20%E4%BB%A3%E7%A0%81%E7%BA%A6%E5%AE%9A.md
+* [alloy-worker 代码约定][alloy-worker 代码约定]
 
 [alloy-worker 使用教程]: ./docs/alloy-worker%20%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md
 * [alloy-worker 使用教程][alloy-worker 使用教程]
