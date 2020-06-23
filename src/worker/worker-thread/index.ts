@@ -44,8 +44,8 @@ class WorkerThreadWorker {
         this.cookie = new Cookie(this.controller);
         // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
 
-        // this.cookie.getCookie().then((payload) => {
-        //     console.log('Get document cookie from main thread:', payload);
+        // this.cookie.getCookie().then((res) => {
+        //     console.log('document cookie:', res);
         // });
     }
 }
