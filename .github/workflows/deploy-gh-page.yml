@@ -38,5 +38,5 @@ jobs:
         git checkout -b gh-pages-test
         git add --all
         git commit -m "deploy to Github pages"
-        git push origin gh-pages -f
+        git push origin gh-pages-test -f
         echo 🤘 deploy gh-pages complete.
