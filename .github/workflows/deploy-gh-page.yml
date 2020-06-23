@@ -7,7 +7,7 @@ jobs:
   build:
     name: Build and deploy gh-pages
     env:
-      MY_SECRET   : ${{secrets.commit_secret}}
+      MY_SECRET   : ${{secrets.BYCNTCHEN}}
       USER_NAME   : githubaction
       USER_EMAIL  : githubaction@fake.com
       PUBLISH_DIR : ./dist
