@@ -110,7 +110,7 @@ Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 
 [alloy-worker 接入教程]: ./docs/alloy-worker%20%E6%8E%A5%E5%85%A5%E6%95%99%E7%A8%8B.md
 * [alloy-worker 接入教程][alloy-worker 接入教程]
 
-[alloy-worker 代码约定]: ./alloy-worker%20%E4%BB%A3%E7%A0%81%E7%BA%A6%E5%AE%9A.md
+[alloy-worker 代码约定]: ./docs/alloy-worker%20%E4%BB%A3%E7%A0%81%E7%BA%A6%E5%AE%9A.md
 * [alloy-worker 代码约定][alloy-worker 代码约定]
 
 [alloy-worker 使用教程]: ./docs/alloy-worker%20%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md
