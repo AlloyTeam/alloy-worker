@@ -5,7 +5,7 @@ import ReportProxy, { WorkerErrorSource, WorkerMonitorId } from '../report-proxy
 /**
  * Alloy Worker 内部上报的事务
  */
-export default class Raven extends BaseAction {
+export default class WorkerReport extends BaseAction {
     protected addActionHandler(): void {
         this.controller.addActionHandler(
             WorkerReportActionType.CaptureWorkerException,

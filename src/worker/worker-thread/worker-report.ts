@@ -4,7 +4,7 @@ import { WorkerReportActionType } from '../common/action-type';
 /**
  * Alloy Worker 内部上报的事务
  */
-export default class Raven extends BaseAction {
+export default class WorkerReport extends BaseAction {
     protected addActionHandler(): void {}
 
     /**
