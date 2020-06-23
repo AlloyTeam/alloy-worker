@@ -1,25 +1,20 @@
 import BaseAction from '../common/base-action';
 import { <%=WorkerActionName%>ActionType } from '../common/action-type';
-import Controller from './controller';
 
 /**
- *
+ * <%=WorkerActionName%>
  */
 export default class <%=WorkerActionName%> extends BaseAction {
-    constructor(controller: Controller) {
-        super(controller);
-    }
-
     protected addActionHandler(): void {
-        this.controller.addActionHandler(<%=WorkerActionName%>ActionType.__MainCallWorker__, this.__MainCallWorker__.bind(this));
+        this.controller.addActionHandler(<%=WorkerActionName%>ActionType.MainCallWorker, this.mainCallWorker.bind(this));
     }
 
     /**
      * 响应主线程的处理器
      */
-    async __MainCallWorker__(
-        payload: WorkerPayload.<%=WorkerActionName%>.__MainCallWorker__ = '1024'
-    ): Promise<WorkerReponse.<%=WorkerActionName%>.__MainCallWorker__> {
+    private async mainCallWorker(
+        payload: WorkerPayload.<%=WorkerActionName%>.MainCallWorker = 'hello'
+    ): Promise<WorkerReponse.<%=WorkerActionName%>.MainCallWorker> {
         // 通过 async await 实现异步逻辑
         await new Promise((resolve) => {
             setTimeout(() => {
@@ -28,19 +23,19 @@ export default class <%=WorkerActionName%> extends BaseAction {
         });
 
         // 1000ms 后再返回结果
-        const response = Number(payload);
+        const response = `${payload}, from Worker Thread.`;
         return response;
     }
 
     /**
      * Worker 线程去调用主线程
      */
-    __WorkerCallMain__(
-        payload: WorkerPayload.<%=WorkerActionName%>.__WorkerCallMain__ = {
+    workerCallMain(
+        payload: WorkerPayload.<%=WorkerActionName%>.WorkerCallMain = {
             hello: -1,
             world: +1,
         }
-    ): Promise<WorkerReponse.<%=WorkerActionName%>.__WorkerCallMain__> {
-        return this.controller.requestPromise(<%=WorkerActionName%>ActionType.__WorkerCallMain__, payload);
+    ): Promise<WorkerReponse.<%=WorkerActionName%>.WorkerCallMain> {
+        return this.controller.requestPromise(<%=WorkerActionName%>ActionType.WorkerCallMain, payload);
     }
 }

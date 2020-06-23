@@ -10,6 +10,7 @@ import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
 import Cookie from './cookie';
 import Image from './image';
+// AlloyWorkerAutoInsert: import <%=AlloyWorkerPureActionName%> from './<%=AlloyWorkerActionName%>';
 
 /**
  * 主线程的 Alloy Worker Class
@@ -53,11 +54,13 @@ export default class MainThreadWorker {
     workerReport: WorkerReport;
     cookie: Cookie;
     image: Image;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 
     constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
         this.controller = new Controller(options);
         this.heartBeatCheck = new HeartBeatCheck(this);
+        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller);
@@ -114,7 +117,6 @@ export default class MainThreadWorker {
         }
         MainThreadWorker.hasReportWorkerStatus = true;
 
-        // TODO 注释对齐
         /**
          * 是否有 Worker Class
          */

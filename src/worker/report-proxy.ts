@@ -54,9 +54,15 @@ export enum WorkerErrorSource {
  * @param monitorId 监控点
  */
 function monitor(monitorId: WorkerMonitorId): void {
-    console.log('%cMonitor 上报 id:', 'color: orange', monitorId);
+    console.log('%cMonitor 上报:', 'color: orange', monitorId);
 }
 
+/**
+ * 错误上报
+ *
+ * @param errorSource 错误来源
+ * @param error 报错信息
+ */
 function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void {
     /**
      * window.onerror 中也能监控到 worker.onerror( Worker 运行报错)
@@ -70,8 +76,13 @@ function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void 
     console.error('Raven 上报错误:', errorSource, error);
 }
 
+/**
+ * 业务日志上报
+ *
+ * @param log
+ */
 function weblog(log: any): void {
-    console.log('%cWeblog 上报 log:', 'color: orange', log);
+    console.log('%cWeblog 上报:', 'color: orange', log);
 }
 
 export default {

@@ -61,7 +61,7 @@ export default class BaseController implements IController {
         }
 
         // 兼容上层调用的 .then().catch()
-        return Promise.reject('没有通信 Channel.');
+        return Promise.reject(new Error('没有通信 Channel.'));
     }
 
     /**
@@ -113,7 +113,7 @@ export default class BaseController implements IController {
                 return Promise.resolve(actionResult);
             } catch (error) {
                 this.reportActionHandlerError(error);
-                return Promise.reject('catch action handler exception.');
+                return Promise.reject(new Error('catch action handler exception.'));
             }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);
