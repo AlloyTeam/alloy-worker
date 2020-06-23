@@ -28,12 +28,12 @@
 
 ## Demo
 * Web Worker 能力测试
-> https://alloyteam.github.io/alloy-worker/dist/index.html
+> https://alloyteam.github.io/alloy-worker/index.html
 
 ![](./docs/img/worker-ability-test.gif)
 
 * Worker 图像处理 Demo
-> https://alloyteam.github.io/alloy-worker/dist/image.html
+> https://alloyteam.github.io/alloy-worker/image.html
 
 ## 代码示例
 
