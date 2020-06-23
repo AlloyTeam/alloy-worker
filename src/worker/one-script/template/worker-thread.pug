@@ -13,7 +13,7 @@ export default class <%=WorkerActionName%> extends BaseAction {
      * 响应主线程的处理器
      */
     async mainCallWorker(
-        payload: WorkerPayload.<%=WorkerActionName%>.MainCallWorker = '1024'
+        payload: WorkerPayload.<%=WorkerActionName%>.MainCallWorker = 'hello'
     ): Promise<WorkerReponse.<%=WorkerActionName%>.MainCallWorker> {
         // 通过 async await 实现异步逻辑
         await new Promise((resolve) => {
@@ -23,7 +23,7 @@ export default class <%=WorkerActionName%> extends BaseAction {
         });
 
         // 1000ms 后再返回结果
-        const response = Number(payload);
+        const response = `${payload}, from Worker Thread.`;
         return response;
     }
 

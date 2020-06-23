@@ -18,21 +18,21 @@ const insertType = (pureActionName) => {
     const appendPayloadTypeStr = `
     namespace ${pureActionName} {
         type MainCallWorker = string;
-        type WorkerCallMain = {
+        interface WorkerCallMain {
             hello: number;
             world: number;
-        };
+        }
     }\n`;
     payloadTypeFileStr = payloadTypeFileStr.replace(/(WorkerPayload\s{)/, `$1${appendPayloadTypeStr}`);
 
     // 响应类型
     const appendResponseTypeStr = `
     namespace ${pureActionName} {
-        type MainCallWorker = number;
-        type WorkerCallMain = {
+        type MainCallWorker = string;
+        interface WorkerCallMain {
             alloy: string;
             worker: string;
-        };
+        }
     }\n`;
     payloadTypeFileStr = payloadTypeFileStr.replace(/(WorkerReponse\s{)/, `$1${appendResponseTypeStr}`);
 
