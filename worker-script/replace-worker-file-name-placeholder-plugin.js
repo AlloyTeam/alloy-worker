@@ -29,9 +29,9 @@ function getAllFiles(root) {
 }
 
 class ReplaceWorkerFileNamePlaceholderPlugin {
-    name = 'ReplaceWorkerFileNamePlaceholderPlugin';
-
     constructor(options) {
+        this.name = 'ReplaceWorkerFileNamePlaceholderPlugin';
+
         this.options = {};
         this.options.dir = options.dir;
         this.options.test = options.test ? (options.test instanceof Array ? options.test : [options.test]) : null;
