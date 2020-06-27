@@ -131,5 +131,6 @@ Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 
 ## TODO
 * 兼容 webpack5 构建
 * 解决纯 worker 侧代码更新的 hash 问题
+* sourcemap 区分不同线程的源码
 
 ## EOF
