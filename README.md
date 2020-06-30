@@ -87,6 +87,17 @@ export default class WorkerAbilityTest {
 ```
 
 ## 用法
+### 本地调试
+```sh
+$ git clone https://github.com/AlloyTeam/alloy-worker.git
+$ git checkout demo
+$ npm install && npm run dist
+$ npx http-server -c0 ./dist
+Available on:
+  http://127.0.0.1:8080
+```
+
+打开 http://127.0.0.1:8080 和 http://127.0.0.1:8080/image.html 进行本地调试.
 
 ### 接入
 
