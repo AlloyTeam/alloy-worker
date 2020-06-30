@@ -14,8 +14,6 @@
 * 良好支持 IE10+ 浏览器.
 * 独立打包的构建支持, 无需自行配置.
 
-*想了解更多技术点, 请查看 [alloy-worker 技术细节][alloy-worker 技术细节].*
-
 ## 业界方案对比
 
 | 项目 | 简介 | 构建打包 | 底层API封装 | 跨线程调用申明 | 可用性监控 | 易拓展性 |
@@ -107,7 +105,7 @@ Alloy-worker **并不是一个 npm 包**. 需要你手动将它融合到你的�
 
 ### 使用
 
-Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 [alloy-worker 的约定][alloy-worker 代码约定]
+Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 [alloy-worker 的约定][alloy-worker 代码约定].
 
 约定不复杂, [请查看这里][alloy-worker 使用教程].
 
