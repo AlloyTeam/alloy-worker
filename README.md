@@ -38,51 +38,9 @@
 
 ## 代码示例
 
-* 主线程实例化 alloy-worker.
+以 Worker 线程发起跨线程调用到主线程取页面 cookie 为例.
 
-```js
-// src/index.ts
-
-import createAlloyWorker from '../worker/index';
-
-// 实例化
-const alloyWorker = createAlloyWorker({
-    workerName: 'alloyWorker--test',
-});
-// 跨线程 Promise 调用
-alloyWorker.workerAbilityTest.communicationTest().then(console.log);
-```
-
-* 主线程发起跨线程调用.
-
-```js
-// src/worker/main-thread/worker-ability-test.ts
-
-export default class WorkerAbilityTest {
-    communicationTest() {
-        const mainThreadPostTime: = Date.now();
-        // this.controller 为通信控制器
-        return this.controller.requestPromise(
-            WorkerAbilityTestActionType.CommunicationTest,
-            mainThreadPostTime);
-    }
-}
-```
-
-* Worker 线程收到请求并返回结果.
-
-```js
-// src/worker/worker-thread/worker-ability-test.ts
-
-export default class WorkerAbilityTest {
-    CommunicationTest(payload) {
-        // 获取主线程传递的数据
-        const mainThreadPostTime = payload;
-        // 返回发送和接收的时间差
-        return Date.now() - mainThreadPostTime;
-    }
-}
-```
+![](./docs/img/getcookie-from-main.jpg)
 
 ## 用法
 ### 本地调试
