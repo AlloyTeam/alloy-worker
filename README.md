@@ -89,8 +89,7 @@ Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 
 [alloy-worker 技术细节]: ./docs/alloy-worker%20%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82.md
 * [alloy-worker 技术细节][alloy-worker 技术细节]
 
-* Web Worker 文献综述
-> https://todo.com
+* [Web Worker 文献综述](https://github.com/CntChen/cntchen.github.io/issues/19)
 
 * 朝花夕拾: Web Worker 大型前端项目实践
 > https://todo.com
