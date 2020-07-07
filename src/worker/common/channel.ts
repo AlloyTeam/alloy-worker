@@ -94,6 +94,7 @@ export default class Channel {
             payload.transferProps.forEach((prop: string) => {
                 if (!Object.prototype.hasOwnProperty.call(payload, prop)) {
                     console.error(`Payload without porps ${prop}`);
+                    return;
                 }
 
                 /**
@@ -104,7 +105,9 @@ export default class Channel {
                  */
                 if (payload[prop] instanceof ArrayBuffer) {
                     transferList.push(payload[prop]);
+                    return;
                 }
+
                 transferList.push(payload[prop].buffer);
             });
         }
