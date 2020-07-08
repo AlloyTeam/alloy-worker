@@ -236,11 +236,11 @@ export default class Channel {
      * @param number} timeout 超时时长
      * @param actionType 事务类型
      */
-    private requestDurationReport(postMessageDuration: number, timeout: number, actionType: string): void {
-        if (postMessageDuration > timeout) {
+    private requestDurationReport(requestDuration: number, timeout: number, actionType: string): void {
+        if (requestDuration > timeout) {
             const requestDurationInfo = {
                 actionType,
-                duration: postMessageDuration,
+                duration: requestDuration,
                 inWorker: __WORKER__,
             };
 
