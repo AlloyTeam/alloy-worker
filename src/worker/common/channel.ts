@@ -90,7 +90,7 @@ export default class Channel {
          * 需在上层生成 payload 前做判断, 设置 transferProps 为空数组, 退化为数据 clone 的传输方式.
          */
         const transferList: any[] = [];
-        if (payload.transferProps) {
+        if (payload?.transferProps) {
             payload.transferProps.forEach((prop: string) => {
                 if (!Object.prototype.hasOwnProperty.call(payload, prop)) {
                     console.error(`Payload without porps ${prop}`);
