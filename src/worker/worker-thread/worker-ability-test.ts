@@ -22,7 +22,10 @@ export default class WorkerAbilityTest extends BaseAction {
     private CommunicationTest(
         payload: WorkerPayload.WorkerAbilityTest.CommunicationTest
     ): WorkerReponse.WorkerAbilityTest.CommunicationTest {
-        this.threadAction.cookie.getCookie();
+        // 通过 this.threadAction 调用其他命名空间下的事务
+        // this.threadAction.cookie.getCookie().then((res) => {
+        //     console.log('document cookie:', res);
+        // });
         const mainThreadPostTime = payload;
         // 收到主线程信息的耗时
         const workerGetMessageDuration = Date.now() - mainThreadPostTime;
