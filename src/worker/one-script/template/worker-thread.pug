@@ -8,6 +8,18 @@ import { <%=WorkerActionName%>ActionType } from '../common/action-type';
 export default class <%=WorkerActionName%> extends BaseAction {
     protected threadAction: IWorkerThreadAction;
 
+    /**
+     * Worker 线程去调用主线程
+     */
+    public workerCallMain(
+        payload: WorkerPayload.<%=WorkerActionName%>.WorkerCallMain = {
+            hello: -1,
+            world: +1,
+        }
+    ): Promise<WorkerReponse.<%=WorkerActionName%>.WorkerCallMain> {
+        return this.controller.requestPromise(<%=WorkerActionName%>ActionType.WorkerCallMain, payload);
+    }
+
     protected addActionHandler(): void {
         this.controller.addActionHandler(<%=WorkerActionName%>ActionType.MainCallWorker, this.mainCallWorker.bind(this));
     }
@@ -28,17 +40,5 @@ export default class <%=WorkerActionName%> extends BaseAction {
         // 1000ms 后再返回结果
         const response = `${payload}, from Worker Thread.`;
         return response;
-    }
-
-    /**
-     * Worker 线程去调用主线程
-     */
-    workerCallMain(
-        payload: WorkerPayload.<%=WorkerActionName%>.WorkerCallMain = {
-            hello: -1,
-            world: +1,
-        }
-    ): Promise<WorkerReponse.<%=WorkerActionName%>.WorkerCallMain> {
-        return this.controller.requestPromise(<%=WorkerActionName%>ActionType.WorkerCallMain, payload);
     }
 }

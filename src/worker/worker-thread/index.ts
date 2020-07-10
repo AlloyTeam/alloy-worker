@@ -37,7 +37,7 @@ class WorkerThreadWorker implements IWorkerThreadAction {
     public workerAbilityTest: WorkerAbilityTest;
     public workerReport: WorkerReport;
     public cookie: Cookie;
-    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+    // AlloyWorkerAutoInsert: public <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 
     /**
      * Worker 线程通信控制器

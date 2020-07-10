@@ -42,7 +42,7 @@ export default class MainThreadWorker implements IMainThreadAction {
     public workerAbilityTest: WorkerAbilityTest;
     public workerReport: WorkerReport;
     public cookie: Cookie;
-    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+    // AlloyWorkerAutoInsert: public <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 
     /**
      * Worker 状态信息
@@ -67,12 +67,12 @@ export default class MainThreadWorker implements IMainThreadAction {
         this.name = options.workerName;
         this.controller = new Controller(options);
         this.heartBeatCheck = new HeartBeatCheck(this);
-        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller, this);
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller, this);
         this.workerReport = new WorkerReport(this.controller, this);
         this.cookie = new Cookie(this.controller, this);
+        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller, this);
     }
 
     /**

@@ -7,17 +7,18 @@ import { <%=WorkerActionName%>ActionType } from '../common/action-type';
  */
 export default class <%=WorkerActionName%> extends BaseAction {
     protected threadAction: IMainThreadAction;
-    protected addActionHandler(): void {
-        this.controller.addActionHandler(<%=WorkerActionName%>ActionType.WorkerCallMain, this.workerCallMain.bind(this));
-    }
 
     /**
      * 主线程去调用 Worker 线程
      */
-    mainCallWorker(
+    public mainCallWorker(
         payload: WorkerPayload.<%=WorkerActionName%>.MainCallWorker
     ): Promise<WorkerReponse.<%=WorkerActionName%>.MainCallWorker> {
         return this.controller.requestPromise(<%=WorkerActionName%>ActionType.MainCallWorker, payload);
+    }
+
+    protected addActionHandler(): void {
+        this.controller.addActionHandler(<%=WorkerActionName%>ActionType.WorkerCallMain, this.workerCallMain.bind(this));
     }
 
     /**
