@@ -1,3 +1,4 @@
+import type { IMainThreadAction } from './index';
 import BaseAction from '../common/base-action';
 import { WorkerAbilityTestActionType } from '../common/action-type';
 
@@ -5,6 +6,7 @@ import { WorkerAbilityTestActionType } from '../common/action-type';
  * 用于测试 Worker 能力的事务
  */
 export default class WorkerAbilityTest extends BaseAction {
+    protected threadAction: IMainThreadAction;
     protected addActionHandler(): void {}
 
     /**

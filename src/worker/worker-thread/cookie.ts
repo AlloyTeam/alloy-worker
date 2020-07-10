@@ -1,7 +1,9 @@
+import type { IWorkerThreadAction } from './index';
 import BaseAction from '../common/base-action';
 import { CookieActionType } from '../common/action-type';
 
 export default class Cookie extends BaseAction {
+    protected threadAction: IWorkerThreadAction;
     protected addActionHandler(): void {}
 
     /**

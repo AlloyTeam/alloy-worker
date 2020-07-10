@@ -1,3 +1,4 @@
+import type { IWorkerThreadAction } from './index';
 import BaseAction from '../common/base-action';
 import { WorkerReportActionType } from '../common/action-type';
 
@@ -5,6 +6,7 @@ import { WorkerReportActionType } from '../common/action-type';
  * Alloy Worker 内部上报的事务
  */
 export default class WorkerReport extends BaseAction {
+    protected threadAction: IWorkerThreadAction;
     protected addActionHandler(): void {}
 
     /**

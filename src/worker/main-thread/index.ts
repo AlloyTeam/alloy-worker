@@ -11,12 +11,20 @@ import WorkerReport from './worker-report';
 import Cookie from './cookie';
 // AlloyWorkerAutoInsert: import <%=AlloyWorkerPureActionName%> from './<%=AlloyWorkerActionName%>';
 
+// 只声明事务命名空间, 用于事务中调用其他命名空间的事务
+export interface IMainThreadAction {
+    workerAbilityTest: WorkerAbilityTest;
+    workerReport: WorkerReport;
+    cookie: Cookie;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+}
+
 /**
  * 主线程的 Alloy Worker Class
  *
  * @class MainThreadWorker
  */
-export default class MainThreadWorker {
+export default class MainThreadWorker implements IMainThreadAction {
     /**
      * Worker 状态上报标识
      */
@@ -61,9 +69,9 @@ export default class MainThreadWorker {
         // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
 
         // 实例化各种业务
-        this.workerAbilityTest = new WorkerAbilityTest(this.controller);
-        this.workerReport = new WorkerReport(this.controller);
-        this.cookie = new Cookie(this.controller);
+        this.workerAbilityTest = new WorkerAbilityTest(this.controller, this);
+        this.workerReport = new WorkerReport(this.controller, this);
+        this.cookie = new Cookie(this.controller, this);
     }
 
     /**
