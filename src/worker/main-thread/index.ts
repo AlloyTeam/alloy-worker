@@ -12,28 +12,44 @@ import Cookie from './cookie';
 import Image from './image';
 // AlloyWorkerAutoInsert: import <%=AlloyWorkerPureActionName%> from './<%=AlloyWorkerActionName%>';
 
+// 只声明事务命名空间, 用于事务中调用其他命名空间的事务
+export interface IMainThreadAction {
+    workerAbilityTest: WorkerAbilityTest;
+    workerReport: WorkerReport;
+    cookie: Cookie;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+}
+
 /**
  * 主线程的 Alloy Worker Class
  *
  * @class MainThreadWorker
  */
-export default class MainThreadWorker {
+export default class MainThreadWorker implements IMainThreadAction {
     /**
      * Worker 状态上报标识
      */
-    static hasReportWorkerStatus = false;
+    public static hasReportWorkerStatus = false;
     /**
      * Alloy Worker 名称
      */
-    name: string;
+    public name: string;
     /**
      * 主线程通信控制器
      */
-    controller: Controller;
+    public controller: Controller;
+
+    // 各种业务的实例
+    public workerAbilityTest: WorkerAbilityTest;
+    public workerReport: WorkerReport;
+    public cookie: Cookie;
+    public image: Image;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+
     /**
      * Worker 状态信息
      */
-    workerStatus: {
+    public workerStatus: {
         hasWorkerClass: boolean;
         canNewWorker: boolean;
         canPostMessage: boolean;
@@ -43,36 +59,29 @@ export default class MainThreadWorker {
     /**
      * 心跳检测
      */
-    heartBeatCheck: HeartBeatCheck;
+    private heartBeatCheck: HeartBeatCheck;
     /**
      * 是否已经终止掉 Worker
      */
-    isTerminated = false;
+    private isTerminated = false;
 
-    // 各种业务的实例
-    workerAbilityTest: WorkerAbilityTest;
-    workerReport: WorkerReport;
-    cookie: Cookie;
-    image: Image;
-    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
-
-    constructor(options: IAlloyWorkerOptions) {
+    public constructor(options: IAlloyWorkerOptions) {
         this.name = options.workerName;
         this.controller = new Controller(options);
         this.heartBeatCheck = new HeartBeatCheck(this);
-        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
 
         // 实例化各种业务
-        this.workerAbilityTest = new WorkerAbilityTest(this.controller);
-        this.workerReport = new WorkerReport(this.controller);
-        this.cookie = new Cookie(this.controller);
-        this.image = new Image(this.controller);
+        this.workerAbilityTest = new WorkerAbilityTest(this.controller, this);
+        this.workerReport = new WorkerReport(this.controller, this);
+        this.cookie = new Cookie(this.controller, this);
+        this.image = new Image(this.controller, this);
+        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller, this);
     }
 
     /**
      * 开始进行心跳检测
      */
-    startHeartBeatCheck(): void {
+    public startHeartBeatCheck(): void {
         // 心跳检测一般会延迟启动, 可能这时 Worker 已经终止掉了
         // 终止的 Worker 不需要检测
         if (this.isTerminated) {
@@ -84,7 +93,7 @@ export default class MainThreadWorker {
     /**
      * 销毁 worker 实例
      */
-    terminate(): void {
+    public terminate(): void {
         this.heartBeatCheck.stop();
         this.controller.terminate();
         // 设置终止标志位
@@ -94,7 +103,7 @@ export default class MainThreadWorker {
     /**
      * 是否支持 new Worker
      */
-    get canNewWorker(): boolean {
+    public get canNewWorker(): boolean {
         return this.controller.canNewWorker;
     }
 
@@ -104,7 +113,7 @@ export default class MainThreadWorker {
      * @param [isTimeoutAndSuccess=false] 是否超时后通信成功
      * @param {number} [timeWorkerReplyMessage] 收到 Worker 线程回复的时刻; undefined 则是通信失败, 没有回复
      */
-    reportWorkerStatus(isTimeoutAndSuccess = false, timeWorkerReplyMessage?: number): void {
+    public reportWorkerStatus(isTimeoutAndSuccess = false, timeWorkerReplyMessage?: number): void {
         // 场景: 首次通信已经触发超时上报, 之后才通信成功
         if (isTimeoutAndSuccess) {
             // Worker 首次通信超时后成功上报

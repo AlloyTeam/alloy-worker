@@ -1,7 +1,10 @@
+import type { IMainThreadAction } from './index';
 import BaseAction from '../common/base-action';
 import { CookieActionType } from '../common/action-type';
 
 export default class Cookie extends BaseAction {
+    protected threadAction: IMainThreadAction;
+
     protected addActionHandler(): void {
         this.controller.addActionHandler(CookieActionType.Cookie, this.getCookie.bind(this));
     }

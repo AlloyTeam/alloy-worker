@@ -12,21 +12,21 @@ export default class Controller extends BaseController {
     /**
      * 浏览器是否实现了 HTML 规范的 Worker Class
      */
-    static hasWorkerClass = !!window.Worker;
+    public static hasWorkerClass = !!window.Worker;
     /**
      * 是否支持 new Worker, 默认为 Wroker Class 是否实现
      */
-    canNewWorker: boolean = Controller.hasWorkerClass;
+    public canNewWorker: boolean = Controller.hasWorkerClass;
     /**
      * 主线程 new Worker 起始时刻
      */
-    timeBeforeNewWorker: number;
+    public timeBeforeNewWorker: number;
     /**
      * 主线程 new Worker 完毕时刻
      */
-    timeAfterNewWorker: number;
+    public timeAfterNewWorker: number;
 
-    constructor(options: IAlloyWorkerOptions) {
+    public constructor(options: IAlloyWorkerOptions) {
         super();
 
         try {
@@ -82,11 +82,11 @@ export default class Controller extends BaseController {
     /**
      * 销毁 worker 实例
      */
-    terminate(): void {
+    public terminate(): void {
         this.worker.terminate();
     }
 
-    weblog(log: any): void {
+    public weblog(log: any): void {
         ReportProxy.weblog(log);
     }
 

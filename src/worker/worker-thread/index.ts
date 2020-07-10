@@ -20,32 +20,40 @@ import Cookie from './cookie';
 import Image from './image';
 // AlloyWorkerAutoInsert: import <%=AlloyWorkerPureActionName%> from './<%=AlloyWorkerActionName%>';
 
+// 只声明事务命名空间, 用于事务中调用其他命名空间的事务
+export interface IWorkerThreadAction {
+    workerAbilityTest: WorkerAbilityTest;
+    workerReport: WorkerReport;
+    cookie: Cookie;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+}
+
 /**
  * Worker 线程的 Alloy Worker Class
  *
  * @class WorkerThreadWorker
  */
-class WorkerThreadWorker {
+class WorkerThreadWorker implements IWorkerThreadAction {
+    // 各种业务的实例
+    public workerAbilityTest: WorkerAbilityTest;
+    public workerReport: WorkerReport;
+    public cookie: Cookie;
+    public image: Image;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+
     /**
      * Worker 线程通信控制器
      */
     private controller: Controller;
 
-    // 各种业务的实例
-    workerAbilityTest: WorkerAbilityTest;
-    workerReport: WorkerReport;
-    cookie: Cookie;
-    image: Image;
-    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
-
-    constructor() {
+    public constructor() {
         this.controller = new Controller();
 
-        this.workerAbilityTest = new WorkerAbilityTest(this.controller);
-        this.workerReport = new WorkerReport(this.controller);
-        this.cookie = new Cookie(this.controller);
-        this.image = new Image(this.controller);
-        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
+        this.workerAbilityTest = new WorkerAbilityTest(this.controller, this);
+        this.workerReport = new WorkerReport(this.controller, this);
+        this.cookie = new Cookie(this.controller, this);
+        this.image = new Image(this.controller, this);
+        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller, this);
 
         // this.cookie.getCookie().then((res) => {
         //     console.log('document cookie:', res);

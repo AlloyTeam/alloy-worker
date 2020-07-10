@@ -1,6 +1,6 @@
+import type { IWorkerThreadAction } from './index';
 import BaseAction from '../common/base-action';
 import { ImageActionType } from '../common/action-type';
-import Controller from './controller';
 import { threshold, baseBlur } from '../../lib/image-filter';
 import { isIE10 } from '../../lib/utils';
 
@@ -8,9 +8,7 @@ import { isIE10 } from '../../lib/utils';
  *
  */
 export default class Image extends BaseAction {
-    constructor(controller: Controller) {
-        super(controller);
-    }
+    protected threadAction: IWorkerThreadAction;
 
     protected addActionHandler(): void {
         this.controller.addActionHandler(ImageActionType.Threshold, this.Threshold.bind(this));
@@ -20,7 +18,7 @@ export default class Image extends BaseAction {
     /**
      * 响应主线程的处理器
      */
-    Threshold(payload: WorkerPayload.Image.Threshold): WorkerReponse.Image.Threshold {
+    private Threshold(payload: WorkerPayload.Image.Threshold): WorkerReponse.Image.Threshold {
         const startTime = Date.now();
 
         const response = threshold({
@@ -35,7 +33,7 @@ export default class Image extends BaseAction {
         };
     }
 
-    baseBlur(payload: WorkerPayload.Image.BaseBlur): WorkerReponse.Image.BaseBlur {
+    private baseBlur(payload: WorkerPayload.Image.BaseBlur): WorkerReponse.Image.BaseBlur {
         const startTime = Date.now();
 
         const response = baseBlur({

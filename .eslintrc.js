@@ -4,9 +4,12 @@ module.exports = {
         es6: true
     },
     extends: [
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        'alloy',
+        'alloy/typescript'
     ],
     globals: {
+        __WORKER__: 'readonly'
     },
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -25,6 +28,7 @@ module.exports = {
         "@typescript-eslint/interface-name-prefix": 0,
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-empty-function": 0,
-        "@typescript-eslint/no-namespace": 0
+        "@typescript-eslint/no-namespace": 0,
+        "@typescript-eslint/consistent-type-definitions": 0
     },
 };

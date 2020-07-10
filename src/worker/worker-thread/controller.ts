@@ -9,7 +9,7 @@ import { WorkerMonitorId } from '../report-proxy';
  * @class Controller
  */
 export default class Controller extends BaseController {
-    constructor() {
+    public constructor() {
         super();
 
         // 从 Worker url 获取调试模式标志位
@@ -22,7 +22,7 @@ export default class Controller extends BaseController {
         this.channel = new Channel(this.worker, this);
     }
 
-    weblog(log: any): void {
+    public weblog(log: any): void {
         // Worker 线程中, 发送到主线程去上报
         WorkerThreadWorker.workerReport.weblog(log);
     }
@@ -34,7 +34,7 @@ export default class Controller extends BaseController {
         WorkerThreadWorker.workerReport.monitor(WorkerMonitorId.ActionHandleError);
 
         // Worker 线程中, 如果有堆栈信息, 主动发送到主线程去上报
-        if (error && error.message && error.stack) {
+        if (error?.message && error.stack) {
             WorkerThreadWorker.workerReport.captureWorkerException({
                 message: error.message,
                 stack: error.stack,
