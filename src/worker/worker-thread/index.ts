@@ -50,7 +50,7 @@ class WorkerThreadWorker implements IWorkerThreadAction {
         this.workerAbilityTest = new WorkerAbilityTest(this.controller, this);
         this.workerReport = new WorkerReport(this.controller, this);
         this.cookie = new Cookie(this.controller, this);
-        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller);
+        // AlloyWorkerAutoInsert: this.<%=AlloyWorkerPureActionNameLowerCase%> = new <%=AlloyWorkerPureActionName%>(this.controller, this);
 
         // this.cookie.getCookie().then((res) => {
         //     console.log('document cookie:', res);

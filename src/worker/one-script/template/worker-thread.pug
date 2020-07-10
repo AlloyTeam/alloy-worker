@@ -1,3 +1,4 @@
+import type { IWorkerThreadAction } from './index';
 import BaseAction from '../common/base-action';
 import { <%=WorkerActionName%>ActionType } from '../common/action-type';
 
@@ -5,6 +6,8 @@ import { <%=WorkerActionName%>ActionType } from '../common/action-type';
  * <%=WorkerActionName%>
  */
 export default class <%=WorkerActionName%> extends BaseAction {
+    protected threadAction: IWorkerThreadAction;
+
     protected addActionHandler(): void {
         this.controller.addActionHandler(<%=WorkerActionName%>ActionType.MainCallWorker, this.mainCallWorker.bind(this));
     }
