@@ -44,7 +44,7 @@ export default class MainThreadWorker implements IMainThreadAction {
     public workerReport: WorkerReport;
     public cookie: Cookie;
     public image: Image;
-    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+    // AlloyWorkerAutoInsert: public <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 
     /**
      * Worker 状态信息
