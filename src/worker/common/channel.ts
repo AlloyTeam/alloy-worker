@@ -24,13 +24,88 @@ export default class Channel {
         [propsName: string]: Function;
     };
 
-    constructor(worker: Worker, controller: IController) {
+    public constructor(worker: Worker, controller: IController) {
         this.worker = worker;
         this.controller = controller;
 
         this.sessionHandlerMap = {};
         // 绑定 worker onmessage 事件的回调
         this.worker.onmessage = this.onmessage.bind(this);
+    }
+
+    /**
+     * 发送响应
+     *
+     * @param sessionId 会话 Id
+     * @param payload 负载
+     */
+    public response(sessionId: string, actionType: string, payload: any): void {
+        this.postMessage({
+            messageType: MessageType.REPLY,
+            actionType,
+            payload,
+            sessionId,
+        });
+    }
+
+    /**
+     * 发送请求, 不等待响应
+     *
+     * @param actionType 事务类型
+     * @param payload 负载
+     */
+    public request(actionType: string, payload: any): void {
+        const sessionId = this.generateSessionId();
+        this.postMessage({
+            messageType: MessageType.REQUEST,
+            actionType,
+            payload,
+            sessionId,
+        });
+
+        // 不等待结果, 还会收到响应, 添加个空的会话响应器
+        this.addSessionListener(sessionId, () => {});
+    }
+
+    /**
+     * 发送请求, 并等待响应
+     *
+     * @param actionType 事务类型
+     * @param payload 负载
+     * @param timeout 响应超时
+     * @returns {Promise<IMessage>}
+     */
+    public requestPromise(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<any> {
+        // 发送请求的时刻
+        const timeRequestStart = Date.now();
+
+        const sessionId = this.generateSessionId();
+        const message = {
+            messageType: MessageType.REQUEST,
+            actionType,
+            payload,
+            sessionId,
+        };
+
+        // 请求封装为一个 Promise, 等待会话响应器进行 resolve
+        const PromiseFunction = (resolve: Function): any => {
+            const sessionHandler: Function = (message: IMessage) => {
+                this.deleteSessionListener(message.sessionId);
+
+                // 请求时长上报
+                const requestDuration = Date.now() - timeRequestStart;
+                this.requestDurationReport(requestDuration, timeout, actionType);
+
+                resolve(message.payload);
+            };
+
+            this.addSessionListener(sessionId, sessionHandler);
+
+            // 开始发送请求
+            this.postMessage(message);
+        };
+
+        return new Promise(PromiseFunction);
     }
 
     /**
@@ -59,21 +134,6 @@ export default class Channel {
                 throw new Error(`没有找到会话 \`${sessionId}\` 的响应器.`);
             }
         }
-    }
-
-    /**
-     * 发送响应
-     *
-     * @param sessionId 会话 Id
-     * @param payload 负载
-     */
-    response(sessionId: string, actionType: string, payload: any): void {
-        this.postMessage({
-            messageType: MessageType.REPLY,
-            actionType,
-            payload,
-            sessionId,
-        });
     }
 
     /**
@@ -114,66 +174,6 @@ export default class Channel {
 
         this.worker.postMessage(message, transferList);
         this.postMessageDebugLog(message);
-    }
-
-    /**
-     * 发送请求, 不等待响应
-     *
-     * @param actionType 事务类型
-     * @param payload 负载
-     */
-    request(actionType: string, payload: any): void {
-        const sessionId = this.generateSessionId();
-        this.postMessage({
-            messageType: MessageType.REQUEST,
-            actionType,
-            payload,
-            sessionId,
-        });
-
-        // 不等待结果, 还会收到响应, 添加个空的会话响应器
-        this.addSessionListener(sessionId, () => {});
-    }
-
-    /**
-     * 发送请求, 并等待响应
-     *
-     * @param actionType 事务类型
-     * @param payload 负载
-     * @param timeout 响应超时
-     * @returns {Promise<IMessage>}
-     */
-    requestPromise(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<any> {
-        // 发送请求的时刻
-        const timeRequestStart = Date.now();
-
-        const sessionId = this.generateSessionId();
-        const message = {
-            messageType: MessageType.REQUEST,
-            actionType,
-            payload,
-            sessionId,
-        };
-
-        // 请求封装为一个 Promise, 等待会话响应器进行 resolve
-        const PromiseFunction = (resolve: Function): any => {
-            const sessionHandler: Function = (message: IMessage) => {
-                this.deleteSessionListener(message.sessionId);
-
-                // 请求时长上报
-                const requestDuration = Date.now() - timeRequestStart;
-                this.requestDurationReport(requestDuration, timeout, actionType);
-
-                resolve(message.payload);
-            };
-
-            this.addSessionListener(sessionId, sessionHandler);
-
-            // 开始发送请求
-            this.postMessage(message);
-        };
-
-        return new Promise(PromiseFunction);
     }
 
     /**

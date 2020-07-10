@@ -13,7 +13,7 @@ export default abstract class BaseAction {
      */
     protected threadAction: any;
 
-    constructor(controller: Controller, threadAction: any) {
+    public constructor(controller: Controller, threadAction: any) {
         this.controller = controller;
         this.threadAction = threadAction;
 

@@ -7,12 +7,11 @@ import { WorkerAbilityTestActionType } from '../common/action-type';
  */
 export default class WorkerAbilityTest extends BaseAction {
     protected threadAction: IMainThreadAction;
-    protected addActionHandler(): void {}
 
     /**
      * 通信能力检测
      */
-    communicationTest(): Promise<WorkerReponse.WorkerAbilityTest.CommunicationTest> {
+    public communicationTest(): Promise<WorkerReponse.WorkerAbilityTest.CommunicationTest> {
         const mainThreadPostTime: WorkerPayload.WorkerAbilityTest.CommunicationTest = Date.now();
         return this.controller.requestPromise(WorkerAbilityTestActionType.CommunicationTest, mainThreadPostTime);
     }
@@ -20,9 +19,11 @@ export default class WorkerAbilityTest extends BaseAction {
     /**
      * 心跳检测
      */
-    heartBeatTest(
+    public heartBeatTest(
         heartBeat: WorkerPayload.WorkerAbilityTest.HeartBeatTest
     ): Promise<WorkerReponse.WorkerAbilityTest.HeartBeatTest> {
         return this.controller.requestPromise(WorkerAbilityTestActionType.HeartBeatTest, heartBeat);
     }
+
+    protected addActionHandler(): void {}
 }

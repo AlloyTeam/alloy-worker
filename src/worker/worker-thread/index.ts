@@ -33,18 +33,18 @@ export interface IWorkerThreadAction {
  * @class WorkerThreadWorker
  */
 class WorkerThreadWorker implements IWorkerThreadAction {
+    // 各种业务的实例
+    public workerAbilityTest: WorkerAbilityTest;
+    public workerReport: WorkerReport;
+    public cookie: Cookie;
+    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
+
     /**
      * Worker 线程通信控制器
      */
     private controller: Controller;
 
-    // 各种业务的实例
-    workerAbilityTest: WorkerAbilityTest;
-    workerReport: WorkerReport;
-    cookie: Cookie;
-    // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
-
-    constructor() {
+    public constructor() {
         this.controller = new Controller();
 
         this.workerAbilityTest = new WorkerAbilityTest(this.controller, this);

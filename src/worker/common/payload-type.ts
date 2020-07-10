@@ -25,9 +25,13 @@ declare namespace WorkerReponse {
     }
 }
 
-type Transfer = {
+/**
+ * 支持 transfer 传输方式的类型声明
+ * 通过 `&` 附加到 payload 类型后面
+ */
+interface Transfer {
     /**
      * 转换为 transfer 传输的属性列表
      */
     transferProps?: string[];
-};
+}

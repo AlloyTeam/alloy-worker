@@ -6,31 +6,31 @@ import ReportProxy, { WorkerMonitorId } from './report-proxy';
  * 对 Worker 线程进行心跳检测
  */
 export default class HeartBeatCheck {
-    mainThreadWorker: MainThreadWorker;
+    private mainThreadWorker: MainThreadWorker;
     /**
      * 是否正在测心跳
      */
-    isHeartBeatChecking = false;
+    private isHeartBeatChecking = false;
     /**
      * 当前的心跳动次
      */
-    heartBeatNow = 0;
+    private heartBeatNow = 0;
     /**
      * 不正常的心跳列表
      */
-    sickHeartBeats: number[] = [];
+    private sickHeartBeats: number[] = [];
 
-    checkInterValHandle: number;
-    checkTimeoutHandle: number;
+    private checkInterValHandle: number;
+    private checkTimeoutHandle: number;
 
-    constructor(mainThreadWorker: MainThreadWorker) {
+    public constructor(mainThreadWorker: MainThreadWorker) {
         this.mainThreadWorker = mainThreadWorker;
     }
 
     /**
      * 开始心跳检测
      */
-    start(): void {
+    public start(): void {
         // 定时检查
         this.checkInterValHandle = window.setInterval(() => {
             this.checkOne();
@@ -40,7 +40,7 @@ export default class HeartBeatCheck {
     /**
      * 停止心跳检测
      */
-    stop(): void {
+    public stop(): void {
         clearInterval(this.checkInterValHandle);
         clearTimeout(this.checkTimeoutHandle);
     }
@@ -48,7 +48,7 @@ export default class HeartBeatCheck {
     /**
      * 检查一次心跳
      */
-    checkOne(): void {
+    private checkOne(): void {
         // 上一次检测未完成, 直接返回
         if (this.isHeartBeatChecking) {
             return;
@@ -79,7 +79,7 @@ export default class HeartBeatCheck {
     /**
      * 检查心跳是否健康
      */
-    checkHealth(): void {
+    private checkHealth(): void {
         const sickHeartBeatsLength = this.sickHeartBeats.length;
         if (sickHeartBeatsLength >= 2) {
             // 检查规则: 连续2次心跳超时, 认为 Worker 线程死亡
@@ -94,7 +94,7 @@ export default class HeartBeatCheck {
     /**
      * Worker 线程死亡的 UI 提示
      */
-    showDeadTip(): void {
+    private showDeadTip(): void {
         console.error(`Worker 线程 \`${this.mainThreadWorker.name}\` 已经挂掉了.`);
     }
 
@@ -103,7 +103,7 @@ export default class HeartBeatCheck {
      *
      * @param heartBeatDuration 心跳时长
      */
-    durationReport(heartBeatDuration: number): void {
+    private durationReport(heartBeatDuration: number): void {
         // 心跳时长超过心跳检测间隔, 上报
         if (heartBeatDuration > HeartBeatCheckTimeout) {
             // Worker 心跳包超时上报
@@ -119,7 +119,7 @@ export default class HeartBeatCheck {
     /**
      * Worker 线程死亡的上报
      */
-    deadReport(): void {
+    private deadReport(): void {
         // Worker 心跳停止上报
         ReportProxy.monitor(WorkerMonitorId.HeartBeatStop);
         ReportProxy.weblog({

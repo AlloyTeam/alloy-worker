@@ -9,6 +9,10 @@ import { isPromise } from './utils/index';
  */
 export default class BaseController implements IController {
     /**
+     * 是否调试模式, 默认为否
+     */
+    public isDebugMode = false;
+    /**
      * 原生 worker, 在子类中实例化
      */
     protected worker: Worker;
@@ -20,14 +24,10 @@ export default class BaseController implements IController {
      * 事务处理器 Map
      */
     protected actionHandlerMap: {
-        [propsName: string]: Function;
+        [propsName: string]: (payload: any) => any;
     };
-    /**
-     * 是否调试模式, 默认为否
-     */
-    isDebugMode = false;
 
-    constructor() {
+    public constructor() {
         this.actionHandlerMap = {};
     }
 
@@ -37,7 +37,7 @@ export default class BaseController implements IController {
      * @param actionType 事务类型
      * @param payload 负载
      */
-    request(actionType: string, payload: any): void {
+    public request(actionType: string, payload: any): void {
         if (this.channel) {
             return this.channel.request(actionType, payload);
         }
@@ -54,7 +54,7 @@ export default class BaseController implements IController {
      * @param [timeout] 响应的超时; Worker 通道是可靠的, 超时后只上报, 不阻止当前请求
      * @memberof BaseController
      */
-    requestPromise(actionType: string, payload: any = '', timeout?: number): Promise<any> {
+    public requestPromise(actionType: string, payload: any = '', timeout?: number): Promise<any> {
         // 有 Channel 实例才能进行通信, 此时还没有实例化是浏览器不支持创建 worker
         if (this.channel) {
             return this.channel.requestPromise(actionType, payload, timeout);
@@ -70,7 +70,7 @@ export default class BaseController implements IController {
      * @param actionType 事务类型
      * @param handler 事务处理器
      */
-    addActionHandler(actionType: string, handler: (payload: any) => any): void {
+    public addActionHandler(actionType: string, handler: (payload: any) => any): void {
         // 调试模式使用
         if (this.isDebugMode) {
             console.log(`%cAdd actionType \`${actionType}\``, 'color: orange');
@@ -88,7 +88,7 @@ export default class BaseController implements IController {
      * @param message 会话消息
      * @returns
      */
-    actionHandler(message: IMessage): Promise<any> {
+    public actionHandler(message: IMessage): Promise<any> {
         const { actionType, payload } = message;
 
         if (this.hasActionHandler(actionType)) {
@@ -121,6 +121,15 @@ export default class BaseController implements IController {
     }
 
     /**
+     * Weblog 上报
+     * @description
+     * 在各线程 Controller 中 override
+     *
+     * @param log 上报信息
+     */
+    public weblog(log: any): void {}
+
+    /**
      * 判断是否有指定事务的处理器
      *
      * @protected
@@ -130,15 +139,6 @@ export default class BaseController implements IController {
     protected hasActionHandler(actionType: string): boolean {
         return !!this.actionHandlerMap[actionType];
     }
-
-    /**
-     * Weblog 上报
-     * @description
-     * 在各线程 Controller 中 override
-     *
-     * @param log 上报信息
-     */
-    weblog(log: any): void {}
 
     /**
      * 上报事务处理器执行报错
