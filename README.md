@@ -25,22 +25,20 @@
 | [alloy-worker](https://github.com/AlloyTeam/alloy-worker) | 面向事务的高可用 Worker 通信框架 | 提供构建脚本 | 通信️控制器 | 同名函数(基于约定), TS 声明 | 完整监控指标, 全周期错误监控 | 命名空间, 事务生成脚本 |
 
 ## Demo
-* Web Worker 能力测试
-> https://alloyteam.github.io/alloy-worker/index.html
+* [Web Worker 能力测试](https://alloyteam.github.io/alloy-worker/index.html)
 
-![](./docs/img/worker-ability-test.gif)
+![](https://user-images.githubusercontent.com/4598445/87221688-8a423580-c3a0-11ea-9aef-d8028fdc4969.gif)
 
-* Worker 图像处理 Demo
-> https://alloyteam.github.io/alloy-worker/image.html
+* [图像处理 Demo](https://alloyteam.github.io/alloy-worker/image.html)
 
-[![](./docs/img/image-demo.jpg)](https://alloyteam.github.io/alloy-worker/docs/img/image-demo.mp4)
+[![](https://user-images.githubusercontent.com/4598445/87221671-61ba3b80-c3a0-11ea-9a13-d43f271519af.jpg)](https://alloyteam.github.io/alloy-worker/docs/img/image-demo.mp4)
 *(图片上右键新窗口打开可查看视频)*
 
 ## 代码示例
 
 以 Worker 线程发起跨线程调用到主线程取页面 cookie 为例.
 
-![](./docs/img/getcookie-from-main.jpg)
+![](https://user-images.githubusercontent.com/4598445/87221679-7696cf00-c3a0-11ea-865c-66b174a8744a.jpg)
 
 ## 用法
 ### 本地调试
@@ -77,16 +75,16 @@ Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 
 
 ## 相关文档
 
-[alloy-worker 接入教程]: ./docs/alloy-worker%20%E6%8E%A5%E5%85%A5%E6%95%99%E7%A8%8B.md
+[alloy-worker 接入教程]: https://github.com/AlloyTeam/alloy-worker/wiki/alloy-worker-%E6%8E%A5%E5%85%A5%E6%95%99%E7%A8%8B
 * [alloy-worker 接入教程][alloy-worker 接入教程]
 
-[alloy-worker 代码约定]: ./docs/alloy-worker%20%E4%BB%A3%E7%A0%81%E7%BA%A6%E5%AE%9A.md
+[alloy-worker 代码约定]: https://github.com/AlloyTeam/alloy-worker/wiki/alloy-worker-%E4%BB%A3%E7%A0%81%E7%BA%A6%E5%AE%9A
 * [alloy-worker 代码约定][alloy-worker 代码约定]
 
-[alloy-worker 使用教程]: ./docs/alloy-worker%20%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.md
+[alloy-worker 使用教程]: https://github.com/AlloyTeam/alloy-worker/wiki/alloy-worker-%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B
 * [alloy-worker 使用教程][alloy-worker 使用教程]
 
-[alloy-worker 技术细节]: ./docs/alloy-worker%20%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82.md
+[alloy-worker 技术细节]: https://github.com/AlloyTeam/alloy-worker/wiki/alloy-worker-%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82
 * [alloy-worker 技术细节][alloy-worker 技术细节]
 
 * [Web Worker 文献综述](https://github.com/CntChen/cntchen.github.io/issues/19)
