@@ -9,7 +9,7 @@ export default abstract class BaseAction {
      */
     protected controller: Controller;
     /**
-     * 线程上的
+     * 线程上的 action 集合, 用于调用其他命名空间下的事务
      */
     protected threadAction: any;
 
