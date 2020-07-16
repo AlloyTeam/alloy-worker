@@ -121,6 +121,21 @@ export default class BaseController implements IController {
     }
 
     /**
+     * 添加 worker onmessage 事件的回调
+     *
+     * @param {(event: any) => void} onmessage 回调函数
+     * @returns {() => void} 移除监听函数
+     */
+    public addOnmessageListener(onmessage: (event: any) => void): () => void {
+        this.worker.addEventListener('message', onmessage);
+
+        // 返回移除监听函数
+        return () => {
+            this.worker.removeEventListener('message', onmessage);
+        };
+    }
+
+    /**
      * Weblog 上报
      * @description
      * 在各线程 Controller 中 override

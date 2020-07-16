@@ -30,7 +30,7 @@ export default class Channel {
 
         this.sessionHandlerMap = {};
         // 绑定 worker onmessage 事件的回调
-        this.worker.onmessage = this.onmessage.bind(this);
+        this.worker.addEventListener('message', this.onmessage.bind(this));
     }
 
     /**
