@@ -54,10 +54,10 @@ export default class BaseController implements IController {
      * @param [timeout] 响应的超时; Worker 通道是可靠的, 超时后只上报, 不阻止当前请求
      * @memberof BaseController
      */
-    public requestPromise(actionType: string, payload: any = '', timeout?: number): Promise<any> {
+    public requestPromise<T = any>(actionType: string, payload: any = '', timeout?: number): Promise<T> {
         // 有 Channel 实例才能进行通信, 此时还没有实例化是浏览器不支持创建 worker
         if (this.channel) {
-            return this.channel.requestPromise(actionType, payload, timeout);
+            return this.channel.requestPromise<T>(actionType, payload, timeout);
         }
 
         // 兼容上层调用的 .then().catch()

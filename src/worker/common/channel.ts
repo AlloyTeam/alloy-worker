@@ -75,7 +75,7 @@ export default class Channel {
      * @param timeout 响应超时
      * @returns {Promise<IMessage>}
      */
-    public requestPromise(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<any> {
+    public requestPromise<T>(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<T> {
         // 发送请求的时刻
         const timeRequestStart = Date.now();
 
