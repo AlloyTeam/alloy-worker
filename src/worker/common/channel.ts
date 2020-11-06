@@ -64,7 +64,7 @@ export default class Channel {
         });
 
         // 不等待结果, 还会收到响应, 添加个空的会话响应器
-        this.addSessionListener(sessionId, () => {});
+        this.addSessionHandler(sessionId, () => {});
     }
 
     /**
@@ -90,7 +90,7 @@ export default class Channel {
         // 请求封装为一个 Promise, 等待会话响应器进行 resolve
         const PromiseFunction = (resolve: Function): any => {
             const sessionHandler: Function = (message: IMessage) => {
-                this.deleteSessionListener(message.sessionId);
+                this.deleteSessionHandler(message.sessionId);
 
                 // 请求时长上报
                 const requestDuration = Date.now() - timeRequestStart;
@@ -99,7 +99,7 @@ export default class Channel {
                 resolve(message.payload);
             };
 
-            this.addSessionListener(sessionId, sessionHandler);
+            this.addSessionHandler(sessionId, sessionHandler);
 
             // 开始发送请求
             this.postMessage(message);
@@ -183,7 +183,7 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param handler 会话响应器
      */
-    private addSessionListener(sessionId: string, handler: Function): void {
+    private addSessionHandler(sessionId: string, handler: Function): void {
         if (!this.hasSessionHandler(sessionId)) {
             this.sessionHandlerMap[sessionId] = handler;
         } else {
@@ -198,7 +198,7 @@ export default class Channel {
      * @param sessionId
      * @memberof Channel
      */
-    private deleteSessionListener(sessionId: string): void {
+    private deleteSessionHandler(sessionId: string): void {
         if (this.hasSessionHandler(sessionId)) {
             delete this.sessionHandlerMap[sessionId];
         }
