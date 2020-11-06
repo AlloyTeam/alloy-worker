@@ -16,7 +16,7 @@ function getAllFiles(root) {
     let res = [];
     const files = fs.readdirSync(root);
     files.forEach(function (file) {
-        const pathname = root + '/' + file;
+        const pathname = `${root}/${file}`;
         const stat = fs.lstatSync(pathname);
 
         if (!stat.isDirectory()) {
@@ -54,39 +54,44 @@ class ReplaceWorkerFileNamePlaceholderPlugin {
     }
 
     apply(compiler) {
-        compiler.hooks.afterEmit.tap('afterCompile', (compilation) => {
+        compiler.hooks.afterEmit.tapAsync(this.name, (compilation, callback) => {
             const dir = this.options.dir || compilation.outputOptions.path;
 
-            // 获取带 hash 的 worker 资源文件名
-            const manifestWorker = JSON.parse(fs.readFileSync(this.options.manifestFileForWorkerPath).toString());
-            const workerFileNameWithHash = manifestWorker[this.options.workerFileName];
+            // 等待 2000ms, 避免资源未落硬盘, 导致无法读取 manifest 文件
+            setTimeout(() => {
+                // 获取带 hash 的 worker 资源文件名
+                const manifestWorker = JSON.parse(fs.readFileSync(this.options.manifestFileForWorkerPath).toString());
+                const workerFileNameWithHash = manifestWorker[this.options.workerFileName];
 
-            if (!workerFileNameWithHash) {
-                console.error(`${this.options.workerFileName} not exist.`);
-                return;
-            }
-
-            let targetFiles = getAllFiles(dir);
-
-            // 根据过滤规则进行文件过滤
-            if (this.options.test) {
-                targetFiles = targetFiles.filter((file) => {
-                    return this.options.test.some((test) => test.test(file));
-                });
-            }
-            // console.log('匹配到的文件: ', targetFiles);
-
-            targetFiles.forEach((file) => {
-                const fileStr = fs.readFileSync(file).toString();
-                const newFileStr = fileStr.replace(
-                    new RegExp(this.options.workerFileNamePlaceholder, 'g'),
-                    workerFileNameWithHash
-                );
-                if (fileStr != newFileStr) {
-                    // console.log('进行替换的文件: ', file);
+                if (!workerFileNameWithHash) {
+                    console.error(`${this.options.workerFileName} not exist.`);
+                    return;
                 }
-                fs.writeFileSync(file, newFileStr, 'utf-8');
-            });
+
+                let targetFiles = getAllFiles(dir);
+
+                // 根据过滤规则进行文件过滤
+                if (this.options.test) {
+                    targetFiles = targetFiles.filter((file) => {
+                        return this.options.test.some((test) => test.test(file));
+                    });
+                }
+                // console.log('匹配到的文件: ', targetFiles);
+
+                targetFiles.forEach((file) => {
+                    const fileStr = fs.readFileSync(file).toString();
+                    const newFileStr = fileStr.replace(
+                        new RegExp(this.options.workerFileNamePlaceholder, 'g'),
+                        workerFileNameWithHash
+                    );
+                    if (fileStr != newFileStr) {
+                        // console.log('进行替换的文件: ', file);
+                    }
+                    fs.writeFileSync(file, newFileStr, 'utf-8');
+                });
+
+                callback();
+            }, 2000);
         });
     }
 }

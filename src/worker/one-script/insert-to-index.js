@@ -29,7 +29,7 @@ const insertToIndex = (actionName, pureActionName) => {
                     instertedStr = instertedStr.replace(replaceFromReg, item.to);
                 });
 
-                return '\n' + p1 + instertedStr + match;
+                return `\n${p1}${instertedStr}${match}`;
             }
         );
 

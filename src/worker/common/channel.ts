@@ -30,7 +30,7 @@ export default class Channel {
 
         this.sessionHandlerMap = {};
         // 绑定 worker onmessage 事件的回调
-        this.worker.onmessage = this.onmessage.bind(this);
+        this.worker.addEventListener('message', this.onmessage.bind(this));
     }
 
     /**
@@ -64,7 +64,7 @@ export default class Channel {
         });
 
         // 不等待结果, 还会收到响应, 添加个空的会话响应器
-        this.addSessionListener(sessionId, () => {});
+        this.addSessionHandler(sessionId, () => {});
     }
 
     /**
@@ -75,7 +75,7 @@ export default class Channel {
      * @param timeout 响应超时
      * @returns {Promise<IMessage>}
      */
-    public requestPromise(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<any> {
+    public requestPromise<T>(actionType: string, payload: any, timeout = CommunicationTimeout): Promise<T> {
         // 发送请求的时刻
         const timeRequestStart = Date.now();
 
@@ -90,7 +90,7 @@ export default class Channel {
         // 请求封装为一个 Promise, 等待会话响应器进行 resolve
         const PromiseFunction = (resolve: Function): any => {
             const sessionHandler: Function = (message: IMessage) => {
-                this.deleteSessionListener(message.sessionId);
+                this.deleteSessionHandler(message.sessionId);
 
                 // 请求时长上报
                 const requestDuration = Date.now() - timeRequestStart;
@@ -99,7 +99,7 @@ export default class Channel {
                 resolve(message.payload);
             };
 
-            this.addSessionListener(sessionId, sessionHandler);
+            this.addSessionHandler(sessionId, sessionHandler);
 
             // 开始发送请求
             this.postMessage(message);
@@ -163,12 +163,21 @@ export default class Channel {
                  * IE10 对 ArrayBuffer 也支持
                  * 所以 alloy-worker 只支持 ArrayBuffer 类型
                  */
+                // 如果是 ArrayBuffer, push 到 tansfer 数组
                 if (payload[prop] instanceof ArrayBuffer) {
                     transferList.push(payload[prop]);
                     return;
                 }
 
-                transferList.push(payload[prop].buffer);
+                if (!payload[prop].buffer) {
+                    console.error(`Payload porps ${prop} without buffer`);
+                    return;
+                }
+
+                // 取 prop 的 buffer 属性, push 到 transfer 数组
+                if (payload[prop].buffer instanceof ArrayBuffer) {
+                    transferList.push(payload[prop].buffer);
+                }
             });
         }
 
@@ -183,7 +192,7 @@ export default class Channel {
      * @param sessionId 会话 Id
      * @param handler 会话响应器
      */
-    private addSessionListener(sessionId: string, handler: Function): void {
+    private addSessionHandler(sessionId: string, handler: Function): void {
         if (!this.hasSessionHandler(sessionId)) {
             this.sessionHandlerMap[sessionId] = handler;
         } else {
@@ -198,7 +207,7 @@ export default class Channel {
      * @param sessionId
      * @memberof Channel
      */
-    private deleteSessionListener(sessionId: string): void {
+    private deleteSessionHandler(sessionId: string): void {
         if (this.hasSessionHandler(sessionId)) {
             delete this.sessionHandlerMap[sessionId];
         }

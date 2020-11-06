@@ -19,6 +19,10 @@ export default class HeartBeatCheck {
      * 不正常的心跳列表
      */
     private sickHeartBeats: number[] = [];
+    /**
+     * 移除 onmessage 监听的函数
+     */
+    private removeOnmessageListener: null | (() => void);
 
     private checkInterValHandle: number;
     private checkTimeoutHandle: number;
@@ -35,6 +39,10 @@ export default class HeartBeatCheck {
         this.checkInterValHandle = window.setInterval(() => {
             this.checkOne();
         }, HeartBeatCheckInterVal);
+
+        this.removeOnmessageListener = this.mainThreadWorker.controller.addOnmessageListener(
+            this.onmessageAsHealthHeartBeat.bind(this)
+        );
     }
 
     /**
@@ -43,6 +51,9 @@ export default class HeartBeatCheck {
     public stop(): void {
         clearInterval(this.checkInterValHandle);
         clearTimeout(this.checkTimeoutHandle);
+
+        this.removeOnmessageListener?.();
+        this.removeOnmessageListener = null;
     }
 
     /**
@@ -67,6 +78,7 @@ export default class HeartBeatCheck {
             this.durationReport(heartBeatDuration);
         });
 
+        clearTimeout(this.checkTimeoutHandle);
         this.checkTimeoutHandle = window.setTimeout(() => {
             this.isHeartBeatChecking = false;
             clearTimeout(this.checkTimeoutHandle);
@@ -74,6 +86,19 @@ export default class HeartBeatCheck {
             this.sickHeartBeats.push(this.heartBeatNow);
             this.checkHealth();
         }, HeartBeatCheckTimeout);
+    }
+
+    /**
+     * 监听 worker 的 onmessage, 作为正常返回的心跳
+     */
+    private onmessageAsHealthHeartBeat() {
+        // 不是检查中, 直接返回
+        if (!this.isHeartBeatChecking) {
+            return;
+        }
+
+        this.isHeartBeatChecking = false;
+        clearTimeout(this.checkTimeoutHandle);
     }
 
     /**
