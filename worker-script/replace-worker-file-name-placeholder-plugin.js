@@ -16,7 +16,7 @@ function getAllFiles(root) {
     let res = [];
     const files = fs.readdirSync(root);
     files.forEach(function (file) {
-        const pathname = root + '/' + file;
+        const pathname = `${root}/${file}`;
         const stat = fs.lstatSync(pathname);
 
         if (!stat.isDirectory()) {
