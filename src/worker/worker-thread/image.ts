@@ -11,14 +11,14 @@ export default class Image extends BaseAction {
     protected threadAction: IWorkerThreadAction;
 
     protected addActionHandler(): void {
-        this.controller.addActionHandler(ImageActionType.Threshold, this.Threshold.bind(this));
+        this.controller.addActionHandler(ImageActionType.Threshold, this.threshold.bind(this));
         this.controller.addActionHandler(ImageActionType.BaseBlur, this.baseBlur.bind(this));
     }
 
     /**
      * 响应主线程的处理器
      */
-    private Threshold(payload: WorkerPayload.Image.Threshold): WorkerReponse.Image.Threshold {
+    private threshold(payload: WorkerPayload.Image.Threshold): WorkerReponse.Image.Threshold {
         const startTime = Date.now();
 
         const response = threshold({

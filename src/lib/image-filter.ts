@@ -23,6 +23,9 @@ export const threshold = ({ data, threshold = 128 }: { data: Uint8ClampedArray; 
     };
 };
 
+/**
+ * 模糊算法
+ */
 export const baseBlur = ({
     data,
     width,
@@ -59,7 +62,7 @@ export const baseBlur = ({
 
         for (let i = minX; i < maxX; i++) {
             for (let j = minY; j < maxY; j++) {
-                if (i == x && j == y) {
+                if (i === x && j === y) {
                     continue;
                 }
 
