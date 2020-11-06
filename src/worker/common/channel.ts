@@ -163,12 +163,21 @@ export default class Channel {
                  * IE10 对 ArrayBuffer 也支持
                  * 所以 alloy-worker 只支持 ArrayBuffer 类型
                  */
+                // 如果是 ArrayBuffer, push 到 tansfer 数组
                 if (payload[prop] instanceof ArrayBuffer) {
                     transferList.push(payload[prop]);
                     return;
                 }
 
-                transferList.push(payload[prop].buffer);
+                if (!payload[prop].buffer) {
+                    console.error(`Payload porps ${prop} without buffer`);
+                    return;
+                }
+
+                // 取 prop 的 buffer 属性, push 到 transfer 数组
+                if (payload[prop].buffer instanceof ArrayBuffer) {
+                    transferList.push(payload[prop].buffer);
+                }
             });
         }
 
