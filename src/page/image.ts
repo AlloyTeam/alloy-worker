@@ -109,6 +109,13 @@ function addEvent() {
             document.getElementById('range-info')!.innerText = `${image.width}`;
         }
     });
+
+    let rotateZDeg = 180;
+    const anmimotionImage = document.getElementById('animotion-image');
+    setInterval(() => {
+        rotateZDeg = (rotateZDeg + 6) % 360;
+        anmimotionImage!.style.transform = `rotateZ(${rotateZDeg}deg)`;
+    }, 20);
 }
 
 async function addCanvasElement(processRangeValue: number, isUseWorker: boolean) {
