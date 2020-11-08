@@ -1,3 +1,4 @@
+import MainThreadWorker from '../worker/main-thread';
 import createAlloyWorker from '../worker/index';
 import { threshold, baseBlur } from '../lib/image-filter';
 import { isIE10, isIE11 } from '../lib/utils';
@@ -23,10 +24,12 @@ if (isIE10) {
 const image: HTMLImageElement = document.getElementById('original')! as HTMLImageElement;
 if (image.complete) {
     getImage();
+    initWorker();
     addEvent();
 } else {
     image.onload = function () {
         getImage();
+        initWorker();
         addEvent();
     };
 }
@@ -49,6 +52,13 @@ function getImage() {
     document.getElementById('range-info')!.innerText = `${image.width}`;
 }
 
+let alloyWorker: MainThreadWorker;
+function initWorker() {
+    alloyWorker = createAlloyWorker({
+        workerName: 'alloyWorker',
+    });
+}
+
 function addEvent() {
     image.addEventListener('click', () => {
         if (document.getElementById('original-info')!.innerText.length) {
@@ -69,12 +79,16 @@ function addEvent() {
                 const isMainThreadSetTimeout: boolean = (document.getElementById('use-settimeout') as HTMLInputElement)
                     .checked;
                 const isUseWorker: boolean = (document.getElementById('use-worker') as HTMLInputElement).checked;
+                const isUseMultiWorker: boolean = (document.getElementById('use-multi-worker') as HTMLInputElement).checked;
 
                 const startTime = Date.now();
                 const taskPromiseArray = [2, 5, 10, 15, 20, 25].map((redius) => {
                     return new Promise((resolve) => {
                         if (isUseWorker) {
                             addCanvasElement(redius, true).then(resolve);
+                            return;
+                        } else if (isUseMultiWorker) {
+                            addCanvasElement(redius, true, true).then(resolve);
                             return;
                         } else if (isMainThreadSetTimeout) {
                             setTimeout(() => {
@@ -118,12 +132,12 @@ function addEvent() {
     }, 20);
 }
 
-async function addCanvasElement(processRangeValue: number, isUseWorker: boolean) {
+async function addCanvasElement(processRangeValue: number, isUseWorker: boolean, isUseMultiWorker: boolean = false) {
     const startTime = Date.now();
     const imageDataObj = getImageData(image);
 
     const startTimeForThreshold = Date.now();
-    const newImageData = await processImage(imageDataObj, processRangeValue, isUseWorker);
+    const newImageData = await processImage(imageDataObj, processRangeValue, isUseWorker, isUseMultiWorker);
 
     const startTimeForDrawImage = Date.now();
     drawImageToCanvas(newImageData);
@@ -149,15 +163,17 @@ function getImageData(image: HTMLImageElement) {
     return imageDataObj;
 }
 
-async function processImage(pixelData: ImageData, processRangeValue: number, isUseWorker: boolean) {
+async function processImage(pixelData: ImageData, processRangeValue: number, isUseWorker: boolean, isUseMultiWorker: boolean = false) {
     let newImageData: {
         data: Uint8ClampedArray;
     };
 
     if (isUseWorker) {
-        const alloyWorker = createAlloyWorker({
-            workerName: 'alloyWorker--test',
-        });
+        const oldAlloyWorker = alloyWorker;
+        if (isUseMultiWorker) {
+            // 新建一条线程备用
+            initWorker();
+        }
 
         newImageData = await alloyWorker.image.baseBlur({
             transferProps: isIE10 ? [] : ['data'],
@@ -167,13 +183,15 @@ async function processImage(pixelData: ImageData, processRangeValue: number, isU
             radius: processRangeValue,
         });
 
+        if (isUseMultiWorker) {
+            oldAlloyWorker.terminate();
+        }
+
         // newImageData = await alloyWorker.image.threshold({
         //     transferProps: isIE10 ? [] : ['data'],
         //     data: pixelData.data,
         //     threshold: processRangeValue * 10 % 256,
         // });
-
-        alloyWorker.terminate();
     } else {
         newImageData = baseBlur({
             data: pixelData.data,
