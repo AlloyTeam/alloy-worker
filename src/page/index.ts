@@ -19,7 +19,6 @@ console.log('alloyWorker', alloyWorker);
 
 // 轮循 alloyWorker 的状态, 并渲染到页面上
 const testIntervalHandle = setInterval(() => {
-    type TWorkerStatus = typeof alloyWorker.workerStatus;
     type TWorkerStatusKey = keyof typeof alloyWorker.workerStatus;
 
     const workerStatus: any = alloyWorker.workerStatus;
@@ -43,7 +42,7 @@ const testIntervalHandle = setInterval(() => {
         .map((key) => {
             let status = workerStatus[key];
             if (typeof status === 'number') {
-                status = status >= 0 ? `- ${status} ms` : status;
+                status = status >= 0 ? `&nbsp;${status}ms` : status;
             } else {
                 status = status ? '&nbsp;✔️' : '&nbsp;❌';
             }
