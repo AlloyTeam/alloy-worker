@@ -20,10 +20,16 @@
         "removeComments": true,
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "node",
-        "baseUrl": "./"
+        "baseUrl": "./",
+        "paths": {
+            "worker/*": [
+                "src/worker/*"
+            ]
+        }
     },
     "include": [
-        "./src/**/*"
+        "./src/**/*",
+        "test/**/*"
     ],
     "exclude": [
         "node_modules"

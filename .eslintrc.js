@@ -1,15 +1,16 @@
 module.exports = {
     env: {
         browser: true,
-        es6: true
+        es6: true,
+        jest: true,
     },
     extends: [
         "plugin:@typescript-eslint/recommended",
         'alloy',
-        'alloy/typescript'
+        'alloy/typescript',
     ],
     globals: {
-        __WORKER__: 'readonly'
+        __WORKER__: 'readonly',
     },
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -29,6 +30,6 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": 0,
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/no-namespace": 0,
-        "@typescript-eslint/consistent-type-definitions": 0
+        "@typescript-eslint/consistent-type-definitions": 0,
     },
 };
