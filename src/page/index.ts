@@ -1,4 +1,4 @@
-import createAlloyWorker from '../worker/index';
+import createAlloyWorker from 'worker/index';
 
 // 写入测试 cookie
 document.cookie = 'xsrf=alloy,token=worker';
