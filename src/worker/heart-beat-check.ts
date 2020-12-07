@@ -37,7 +37,7 @@ export default class HeartBeatCheck {
     public start(): void {
         // 定时检查
         this.checkInterValHandle = window.setInterval(() => {
-            this.checkOne();
+            this.checkHeartBeat();
         }, HeartBeatCheckInterVal);
 
         this.removeOnmessageListener = this.mainThreadWorker.controller.addOnmessageListener(
@@ -59,7 +59,7 @@ export default class HeartBeatCheck {
     /**
      * 检查一次心跳
      */
-    private checkOne(): void {
+    private checkHeartBeat(): void {
         // 上一次检测未完成, 直接返回
         if (this.isHeartBeatChecking) {
             return;
