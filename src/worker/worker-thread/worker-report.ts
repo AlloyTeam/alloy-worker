@@ -1,4 +1,3 @@
-import type { IWorkerThreadAction } from './index';
 import BaseAction from '../common/base-action';
 import { WorkerReportActionType } from '../common/action-type';
 
@@ -6,8 +5,6 @@ import { WorkerReportActionType } from '../common/action-type';
  * Alloy Worker 内部上报的事务
  */
 export default class WorkerReport extends BaseAction {
-    protected threadAction: IWorkerThreadAction;
-
     /**
      * 将 Worker 线程的报错堆栈发到主线程进行上报
      *
