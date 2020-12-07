@@ -32,11 +32,12 @@ module.exports = {
     coverageReporters: ['text', 'lcov', 'clover', 'json'],
     reporters: ['default'],
     moduleNameMapper: {
+        '^test/(.*)$': '<rootDir>/test/$1',
         '^worker/(.*)$': '<rootDir>/src/worker/$1',
     },
     globals: {
         'ts-jest': {
-            tsconfig: '<rootDir>/tsconfig.json',
+            tsconfig: '<rootDir>/test/tsconfig.json',
             // https://kulshekhar.github.io/ts-jest/user/config/babelConfig
             babelConfig: true,
         },
