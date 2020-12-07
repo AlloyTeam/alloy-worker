@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 import MoebiusObject from 'test/any';
 import HeartBeatCheck from 'worker/heart-beat-check';
-import reportProxy from 'worker/report-proxy';
+import reportProxy from 'worker/external/report-proxy';
 
 /**
  * @author cntchen

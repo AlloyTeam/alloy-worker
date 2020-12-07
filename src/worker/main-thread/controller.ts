@@ -1,7 +1,8 @@
-import { IAlloyWorkerOptions } from '../type';
+import type { IAlloyWorkerOptions } from '../type';
+import reportProxy from '../external/report-proxy';
+import { WorkerMonitorId, WorkerErrorSource } from '../common/report-type';
 import BaseController from '../common/base-controller';
 import Channel from '../common/channel';
-import ReportProxy, { WorkerMonitorId, WorkerErrorSource } from '../report-proxy';
 
 /**
  * 主线程通信控制器
@@ -60,9 +61,11 @@ export default class Controller extends BaseController {
             this.worker.onerror = (error): void => {
                 console.error('Worker onerror:', error);
 
-                // 主动上报错误
-                ReportProxy.raven(WorkerErrorSource.WorkerOnerror, error);
-                ReportProxy.monitor(WorkerMonitorId.WorkerOnerror);
+                // 主动上报错误和 monitor
+                reportProxy.raven(error);
+                reportProxy.monitor(WorkerErrorSource.WorkerOnerror);
+
+                reportProxy.monitor(WorkerMonitorId.WorkerOnerror);
             };
 
             this.timeAfterNewWorker = Date.now();
@@ -74,8 +77,9 @@ export default class Controller extends BaseController {
             // 创建 worker 失败, 标识改为不支持
             this.canNewWorker = false;
 
-            // 主动上报错误
-            ReportProxy.raven(WorkerErrorSource.CreateWorkerError, error);
+            // 主动上报错误和 monitor
+            reportProxy.raven(error);
+            reportProxy.monitor(WorkerErrorSource.CreateWorkerError);
         }
     }
 
@@ -86,15 +90,11 @@ export default class Controller extends BaseController {
         this.worker.terminate();
     }
 
-    public weblog(log: any): void {
-        ReportProxy.weblog(log);
-    }
-
     protected reportActionHandlerError(error: any): void {
         console.error('Worker aciton error:', error);
 
         // 事务处理器逻辑错误上报
-        ReportProxy.monitor(WorkerMonitorId.ActionHandleError);
+        reportProxy.monitor(WorkerMonitorId.ActionHandleError);
 
         // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
         throw new Error(error);

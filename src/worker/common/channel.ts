@@ -1,4 +1,5 @@
 import { IController, MessageType, IMessage } from '../type';
+import reportProxy from '../external/report-proxy';
 import { CommunicationTimeout } from '../config';
 import nanoid from './utils/nanoid-no-secure';
 import { getDebugTimeStamp } from './utils/index';
@@ -253,8 +254,7 @@ export default class Channel {
                 inWorker: __WORKER__,
             };
 
-            // 通过通信控制器进行上报
-            this.controller.weblog({
+            reportProxy.weblog({
                 module: 'worker',
                 action: 'channel_long_time',
                 info: requestDurationInfo,

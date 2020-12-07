@@ -1,5 +1,5 @@
 /*
- * Worker 可用性上报
+ * Worker 可用性上报的字段
  */
 
 export const enum WorkerMonitorId {
@@ -47,46 +47,3 @@ export enum WorkerErrorSource {
      */
     WorkerThreadError = 'WorkerThreadError',
 }
-
-/**
- * 监控点上报
- *
- * @param monitorId 监控点
- */
-function monitor(monitorId: WorkerMonitorId): void {
-    console.log('%cMonitor 上报:', 'color: orange', monitorId);
-}
-
-/**
- * 错误上报
- *
- * @param errorSource 错误来源
- * @param error 报错信息
- */
-function raven(errorSource: WorkerErrorSource, error: Error | ErrorEvent): void {
-    /**
-     * window.onerror 中也能监控到 worker.onerror( Worker 运行报错)
-     * 但是对于加载 js 资源 state 非 2xx, window.onerror 监控不到
-     * 如果 window.onerror 已经上报, 这里可以不上报
-     */
-    if (errorSource === WorkerErrorSource.WorkerOnerror) {
-        return;
-    }
-
-    console.error('Raven 上报错误:', errorSource, error);
-}
-
-/**
- * 业务日志上报
- *
- * @param log
- */
-function weblog(log: any): void {
-    console.log('%cWeblog 上报:', 'color: orange', log);
-}
-
-export default {
-    monitor,
-    raven,
-    weblog,
-};

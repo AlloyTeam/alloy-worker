@@ -136,15 +136,6 @@ export default class BaseController implements IController {
     }
 
     /**
-     * Weblog 上报
-     * @description
-     * 在各线程 Controller 中 override
-     *
-     * @param log 上报信息
-     */
-    public weblog(log: any): void {}
-
-    /**
      * 判断是否有指定事务的处理器
      *
      * @protected

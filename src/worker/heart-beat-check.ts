@@ -1,6 +1,7 @@
+import reportProxy from './external/report-proxy';
+import { WorkerMonitorId } from './common/report-type';
 import { HeartBeatCheckInterVal, HeartBeatCheckTimeout } from './config';
 import MainThreadWorker from './main-thread/index';
-import ReportProxy, { WorkerMonitorId } from './report-proxy';
 
 /**
  * 对 Worker 线程进行心跳检测
@@ -132,8 +133,8 @@ export default class HeartBeatCheck {
         // 心跳时长超过心跳检测间隔, 上报
         if (heartBeatDuration > HeartBeatCheckTimeout) {
             // Worker 心跳包超时上报
-            ReportProxy.monitor(WorkerMonitorId.HeartBeatTimeout);
-            ReportProxy.weblog({
+            reportProxy.monitor(WorkerMonitorId.HeartBeatTimeout);
+            reportProxy.weblog({
                 module: 'worker',
                 action: 'worker_heartbeat_duration',
                 info: heartBeatDuration,
@@ -146,8 +147,8 @@ export default class HeartBeatCheck {
      */
     private deadReport(): void {
         // Worker 心跳停止上报
-        ReportProxy.monitor(WorkerMonitorId.HeartBeatStop);
-        ReportProxy.weblog({
+        reportProxy.monitor(WorkerMonitorId.HeartBeatStop);
+        reportProxy.weblog({
             module: 'worker',
             action: 'worker_heartbeat_dead',
             // 上报最后一次心跳计数
