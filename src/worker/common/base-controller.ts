@@ -104,16 +104,21 @@ export default class BaseController implements IController {
                         // 通过 setTimeout 将报错抛到一个宏任务中, 暴露出去
                         // 参考: https://stackoverflow.com/questions/30715367/why-can-i-not-throw-inside-a-promise-catch-handler
                         setTimeout(() => {
-                            this.reportActionHandlerError(error);
+                            this.reportActionHandlerError(actionType, error);
                         }, 0);
+
+                        // 继续抛出给外层
+                        return Promise.reject(error);
                     });
                 }
 
                 // 对数据结果, 包装为 Promise
                 return Promise.resolve(actionResult);
             } catch (error) {
-                this.reportActionHandlerError(error);
-                return Promise.reject(new Error('catch action handler exception.'));
+                this.reportActionHandlerError(actionType, error);
+
+                // 继续抛出给外层
+                return Promise.reject(error);
             }
         } else {
             throw new Error(`没有找到事务 \`${actionType}\` 的处理器, 是否已注册.`);
@@ -151,7 +156,8 @@ export default class BaseController implements IController {
      * @description
      * 在各线程 Controller 中 override
      *
+     * @param actionType 事务类型
      * @param error 报错信息
      */
-    protected reportActionHandlerError(error: any): void {}
+    protected reportActionHandlerError(actionType: string, error: any): void {}
 }
