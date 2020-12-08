@@ -70,7 +70,10 @@ export default class Controller extends BaseController {
 
             this.timeAfterNewWorker = Date.now();
 
-            this.channel = new Channel(this.worker, this);
+            this.channel = new Channel(this.worker, {
+                actionHandler: this.actionHandler,
+                isDebugMode: this.isDebugMode,
+            });
         } catch (error) {
             console.error('Init worker fail:', error);
 

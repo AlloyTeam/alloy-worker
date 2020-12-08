@@ -127,7 +127,9 @@ export default class Channel {
             this.controller.actionHandler(message).then((actionResult) => {
                 this.response(sessionId, actionType, actionResult);
             });
-        } else if (messageType === MessageType.REPLY) {
+        }
+
+        if (messageType === MessageType.REPLY) {
             // 接收到响应
             if (this.hasSessionHandler(sessionId)) {
                 this.sessionHandlerMap[sessionId](message);

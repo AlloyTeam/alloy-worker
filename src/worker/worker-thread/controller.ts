@@ -20,7 +20,10 @@ export default class Controller extends BaseController {
 
         // Worker 线程中的全局环境 self 就是 Worker 实例
         this.worker = self as any;
-        this.channel = new Channel(this.worker, this);
+        this.channel = new Channel(this.worker, {
+            actionHandler: this.actionHandler,
+            isDebugMode: this.isDebugMode,
+        });
     }
 
     protected reportActionHandlerError(error: any): void {
