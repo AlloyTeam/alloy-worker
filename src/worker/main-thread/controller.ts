@@ -71,7 +71,7 @@ export default class Controller extends BaseController {
             this.timeAfterNewWorker = Date.now();
 
             this.channel = new Channel(this.worker, {
-                actionHandler: this.actionHandler,
+                actionHandler: this.actionHandler.bind(this),
                 isDebugMode: this.isDebugMode,
             });
         } catch (error) {
