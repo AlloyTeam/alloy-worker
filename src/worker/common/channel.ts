@@ -1,4 +1,5 @@
 import { IController, MessageType, IMessage } from '../type';
+import reportProxy from '../external/report-proxy';
 import { CommunicationTimeout } from '../config';
 import nanoid from './utils/nanoid-no-secure';
 import { getDebugTimeStamp } from './utils/index';
@@ -87,10 +88,13 @@ export default class Channel {
             sessionId,
         };
 
+        let timeoutHandler: any;
+
         // 请求封装为一个 Promise, 等待会话响应器进行 resolve
         const PromiseFunction = (resolve: Function): any => {
             const sessionHandler: Function = (message: IMessage) => {
                 this.deleteSessionHandler(message.sessionId);
+                clearTimeout(timeoutHandler);
 
                 // 请求时长上报
                 const requestDuration = Date.now() - timeRequestStart;
@@ -104,6 +108,12 @@ export default class Channel {
             // 开始发送请求
             this.postMessage(message);
         };
+
+        timeoutHandler = setTimeout(() => {
+            clearTimeout(timeoutHandler);
+
+            this.timeoutReport(actionType);
+        });
 
         return new Promise(PromiseFunction);
     }
@@ -126,7 +136,9 @@ export default class Channel {
             this.controller.actionHandler(message).then((actionResult) => {
                 this.response(sessionId, actionType, actionResult);
             });
-        } else if (messageType === MessageType.REPLY) {
+        }
+
+        if (messageType === MessageType.REPLY) {
             // 接收到响应
             if (this.hasSessionHandler(sessionId)) {
                 this.sessionHandlerMap[sessionId](message);
@@ -241,8 +253,8 @@ export default class Channel {
      * 请求时长上报
      *
      * @private
-     * @param postMessageDuration 请求时长
-     * @param number} timeout 超时时长
+     * @param requestDuration 请求时长
+     * @param timeout timeout 超时时长
      * @param actionType 事务类型
      */
     private requestDurationReport(requestDuration: number, timeout: number, actionType: string): void {
@@ -253,13 +265,31 @@ export default class Channel {
                 inWorker: __WORKER__,
             };
 
-            // 通过通信控制器进行上报
-            this.controller.weblog({
+            reportProxy.weblog({
                 module: 'worker',
                 action: 'channel_long_time',
                 info: requestDurationInfo,
             });
         }
+    }
+
+    /**
+     * worker 通信超时上报
+     *
+     * @private
+     * @param actionType 事务类型
+     */
+    private timeoutReport(actionType: string) {
+        const reportInfo = {
+            actionType,
+            isInWorker: __WORKER__,
+        };
+
+        reportProxy.weblog({
+            module: 'webworker',
+            action: 'channel_time_out',
+            ver5: reportInfo,
+        });
     }
 
     /**

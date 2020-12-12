@@ -1,7 +1,8 @@
+import reportProxy from '../external/report-proxy';
 import BaseController from '../common/base-controller';
 import Channel from '../common/channel';
+import { WorkerMonitorId } from '../common/report-type';
 import WorkerThreadWorker from './index';
-import { WorkerMonitorId } from '../report-proxy';
 
 /**
  * Worker 线程通信控制器
@@ -19,19 +20,17 @@ export default class Controller extends BaseController {
 
         // Worker 线程中的全局环境 self 就是 Worker 实例
         this.worker = self as any;
-        this.channel = new Channel(this.worker, this);
+        this.channel = new Channel(this.worker, {
+            actionHandler: this.actionHandler.bind(this),
+            isDebugMode: this.isDebugMode,
+        });
     }
 
-    public weblog(log: any): void {
-        // Worker 线程中, 发送到主线程去上报
-        WorkerThreadWorker.workerReport.weblog(log);
-    }
-
-    protected reportActionHandlerError(error: any): void {
-        console.error('Worker aciton error:', error);
+    protected reportActionHandlerError(actionType: string, error: any): void {
+        console.error(`Worker aciton ${actionType} error:`, error);
 
         // 事务处理器逻辑错误上报
-        WorkerThreadWorker.workerReport.monitor(WorkerMonitorId.ActionHandleError);
+        reportProxy.monitor(WorkerMonitorId.ActionHandleError);
 
         // Worker 线程中, 如果有堆栈信息, 主动发送到主线程去上报
         if (error?.message && error.stack) {

@@ -2,8 +2,10 @@
  * 主线程的 Worker 业务
  */
 
-import { IAlloyWorkerOptions } from '../type';
-import ReportProxy, { WorkerMonitorId } from '../report-proxy';
+import type { IAlloyWorkerOptions } from '../type';
+import reportProxy, { ReportProxy } from '../external/report-proxy';
+import report from '../external/report';
+import { WorkerMonitorId } from '../common/report-type';
 import HeartBeatCheck from '../heart-beat-check';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
@@ -19,6 +21,11 @@ export interface IMainThreadAction {
     cookie: Cookie;
     // AlloyWorkerAutoInsert: <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 }
+
+/**
+ * 主线程, 将上报代理替换为真实上报模块
+ */
+ReportProxy.eachLoad(report);
 
 /**
  * 主线程的 Alloy Worker Class
@@ -117,7 +124,7 @@ export default class MainThreadWorker implements IMainThreadAction {
         // 场景: 首次通信已经触发超时上报, 之后才通信成功
         if (isTimeoutAndSuccess) {
             // Worker 首次通信超时后成功上报
-            ReportProxy.monitor(WorkerMonitorId.FirstCommunicationTimeoutAndSuccess);
+            reportProxy.monitor(WorkerMonitorId.FirstCommunicationTimeoutAndSuccess);
         }
 
         // 已经上报过不再上报
@@ -162,7 +169,7 @@ export default class MainThreadWorker implements IMainThreadAction {
             newWorkerDuration,
         };
 
-        ReportProxy.weblog({
+        reportProxy.weblog({
             module: 'worker',
             action: 'worker_status',
             info: this.workerStatus,
@@ -170,11 +177,11 @@ export default class MainThreadWorker implements IMainThreadAction {
 
         if (!canNewWorker) {
             // Worker 没有实例化成功上报
-            ReportProxy.monitor(WorkerMonitorId.NoWorkerInstance);
+            reportProxy.monitor(WorkerMonitorId.NoWorkerInstance);
         }
         if (!canPostMessage) {
             // Worker 首次通信失败上报
-            ReportProxy.monitor(WorkerMonitorId.FirstCommunicationFail);
+            reportProxy.monitor(WorkerMonitorId.FirstCommunicationFail);
         }
     }
 }

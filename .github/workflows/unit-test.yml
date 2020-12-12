@@ -1,0 +1,29 @@
+name: unit-test
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    name: run unit test
+    env:
+      MY_SECRET   : ${{secrets.BYCNTCHEN}}
+      USER_NAME   : githubaction
+      USER_EMAIL  : githubaction@fake.com
+      PUBLISH_DIR : ./dist
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install
+      run: |
+        npm install
+    - name: npm run test
+      run: |
+        npm run test
