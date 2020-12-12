@@ -2,7 +2,7 @@ name: unit-test
 on:
   push:
     branches:
-      - unit-test
+      - master
 jobs:
   build:
     name: run unit test
