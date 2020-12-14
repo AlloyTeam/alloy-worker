@@ -6,6 +6,9 @@ module.exports = {
     verbose: true,
     // Jest 环境准备好后的拓展脚本
     setupFilesAfterEnv: [
+        // https://github.com/kulshekhar/ts-jest/issues/281#issuecomment-546337648
+        // 解决引入的 enum .ts 文件单测中提示 undefined
+        'core-js',
         '<rootDir>/script/test/setup.ts',
     ],
     testMatch: [
@@ -40,6 +43,7 @@ module.exports = {
             tsconfig: '<rootDir>/test/tsconfig.json',
             // https://kulshekhar.github.io/ts-jest/user/config/babelConfig
             babelConfig: true,
+            // isolatedModules: true,
         },
     },
 };
