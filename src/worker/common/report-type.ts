@@ -33,7 +33,7 @@ export const enum WorkerMonitorId {
     ActionHandleError = 'ActionHandleError',
 }
 
-export enum WorkerErrorSource {
+export const enum WorkerErrorSource {
     /**
      * 来源为创建 Worker (new Worker)
      */
