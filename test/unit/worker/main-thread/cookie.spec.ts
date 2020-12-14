@@ -1,7 +1,5 @@
 import MoebiusObject from 'test/any';
-import MockController from '../mock/mock-controller';
 import Cookie from 'worker/main-thread/cookie';
-import { CookieActionType } from 'worker/common/action-type';
 
 /**
  * @author cntchen
