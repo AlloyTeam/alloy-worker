@@ -1,10 +1,9 @@
 /*
  * 上报能力代理
- * 
+ *
  * @Author: CntChen
  * @Date: 2020-12-07
  */
-
 
 class ReportProxy {
     /**
@@ -87,9 +86,12 @@ class ReportProxy {
     /**
      * 获取真实上报函数
      */
-    private getExecuteFunction(module: any, funcNameSpace: string[]): {
-        self: any,
-        func: Function,
+    private getExecuteFunction(
+        module: any,
+        funcNameSpace: string[]
+    ): {
+        self: any;
+        func: Function;
     } {
         const reportFunctionName = funcNameSpace.shift();
 
