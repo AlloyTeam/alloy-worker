@@ -29,8 +29,6 @@ export interface IWorkerThreadAction {
 
 /**
  * Worker 线程的 Alloy Worker Class
- *
- * @class WorkerThreadWorker
  */
 class WorkerThreadWorker implements IWorkerThreadAction {
     // 各种业务的实例

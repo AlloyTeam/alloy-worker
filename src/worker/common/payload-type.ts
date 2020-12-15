@@ -1,3 +1,6 @@
+/**
+ * 跨线程通信各事务的发送数据类型声明
+ */
 export declare namespace WorkerPayload {
     namespace WorkerReport {
         type CaptureWorkerException = {
@@ -15,6 +18,9 @@ export declare namespace WorkerPayload {
     }
 }
 
+/**
+ * 跨线程通信各事务的响应数据类型声明
+ */
 export declare namespace WorkerReponse {
     namespace WorkerAbilityTest {
         type CommunicationTest = number;

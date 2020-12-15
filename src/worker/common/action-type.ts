@@ -1,3 +1,8 @@
+/*
+ * Worker 事务标识
+ * 每类事务有命名空间, 包含多个具体事务
+ */
+
 export const enum WorkerAbilityTestActionType {
     CommunicationTest = 'CommunicationTest',
     HeartBeatTest = 'HeartBeatTest',
