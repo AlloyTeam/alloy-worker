@@ -254,7 +254,7 @@ export default class Channel {
      *
      * @private
      * @param requestDuration 请求时长
-     * @param timeout timeout 超时时长
+     * @param timeout 超时时长
      * @param actionType 事务类型
      */
     private requestDurationReport(requestDuration: number, timeout: number, actionType: string): void {
