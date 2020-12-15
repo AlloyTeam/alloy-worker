@@ -1,5 +1,6 @@
 import type { IMainThreadAction } from './index';
 import reportProxy from '../external/report-proxy';
+import { WorkerPayload } from '../common/payload-type';
 import { WorkerErrorSource, WorkerMonitorId } from '../common/report-type';
 import BaseAction from '../common/base-action';
 import { WorkerReportActionType } from '../common/action-type';

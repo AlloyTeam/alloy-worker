@@ -1,5 +1,6 @@
 import type { IWorkerThreadAction } from './index';
 import BaseAction from '../common/base-action';
+import { WorkerPayload, WorkerReponse } from '../common/payload-type';
 import { WorkerAbilityTestActionType } from '../common/action-type';
 
 /**

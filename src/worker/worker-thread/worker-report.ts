@@ -1,6 +1,7 @@
 import type Controller from './controller';
 import reportProxy, { ReportProxy } from '../external/report-proxy';
 import BaseAction from '../common/base-action';
+import { WorkerPayload } from '../common/payload-type';
 import { WorkerReportActionType } from '../common/action-type';
 
 /**
