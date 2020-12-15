@@ -28,7 +28,7 @@ describe('worker ability test', () => {
         const mockController: any = new MockController();
         const workerAbilityTest = new WorkerAbilityTest(mockController, MoebiusObject);
 
-        const result = mockController.trigger(WorkerAbilityTestActionType.CommunicationTest, 1024);
+        const result = mockController.trigger(WorkerAbilityTestActionType.HeartBeatTest, 1024);
 
         expect(result).toEqual(1024);
     });
