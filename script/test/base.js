@@ -43,7 +43,6 @@ module.exports = {
             tsconfig: '<rootDir>/test/tsconfig.json',
             // https://kulshekhar.github.io/ts-jest/user/config/babelConfig
             babelConfig: true,
-            // isolatedModules: true,
         },
     },
 };
