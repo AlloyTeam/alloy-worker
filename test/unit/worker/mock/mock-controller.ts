@@ -20,7 +20,7 @@ export default class MockController {
 
     // 测试中主动触发事件
     public trigger(actionType: string, response: any) {
-        this.actionHandlerMap[actionType](response);
+        return this.actionHandlerMap[actionType](response);
     }
 
     public wait() {
