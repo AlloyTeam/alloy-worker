@@ -6,15 +6,13 @@ import WorkerThreadWorker from './index';
 
 /**
  * Worker 线程通信控制器
- *
- * @class Controller
  */
 export default class Controller extends BaseController {
     public constructor() {
         super();
 
         // 从 Worker url 获取调试模式标志位
-        if (location.href.indexOf('debugWorker=true') > 0) {
+        if (location.href.indexOf('debugWorker=true') >= 0) {
             this.isDebugMode = true;
         }
 
