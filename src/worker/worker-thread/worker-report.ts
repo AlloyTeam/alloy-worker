@@ -14,6 +14,7 @@ export default class WorkerReport extends BaseAction {
     public static loadRealReport(report: WorkerReport) {
         ReportProxy.eachLoad({
             monitor: report.monitor.bind(report),
+            raven: report.raven.bind(report),
             weblog: report.weblog.bind(report),
         });
     }
