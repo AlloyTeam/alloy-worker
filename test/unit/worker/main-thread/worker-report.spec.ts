@@ -1,6 +1,8 @@
 import MoebiusObject from 'test/any';
+import MockController from '../mock/mock-controller';
 import reportProxy from 'worker/external/report-proxy';
 import WorkerReport from 'worker/main-thread/worker-report';
+import { WorkerReportActionType } from 'worker/common/action-type';
 
 /**
  * @author cntchen
@@ -15,12 +17,13 @@ describe('worker report', () => {
     });
 
     it('captureWorkerException', () => {
-        const workerReport = new WorkerReport(MoebiusObject, MoebiusObject);
+        const mockController: any = new MockController();
+        const workerReport = new WorkerReport(mockController, MoebiusObject);
 
         reportProxy['raven'] = jest.fn();
         reportProxy['monitor'] = jest.fn();
 
-        workerReport['captureWorkerException']({
+        mockController.trigger(WorkerReportActionType.CaptureWorkerException, {
             message: 'testMessage',
             stack: 'testStack',
         });
@@ -30,31 +33,34 @@ describe('worker report', () => {
     });
 
     it('monitor', () => {
-        const workerReport = new WorkerReport(MoebiusObject, MoebiusObject);
+        const mockController: any = new MockController();
+        const workerReport = new WorkerReport(mockController, MoebiusObject);
 
         reportProxy['monitor'] = jest.fn();
 
-        workerReport['monitor'](MoebiusObject);
+        mockController.trigger(WorkerReportActionType.Monitor, 'testMonitor');
 
         expect(reportProxy['monitor']).toBeCalled();
     });
 
     it('raven', () => {
-        const workerReport = new WorkerReport(MoebiusObject, MoebiusObject);
+        const mockController: any = new MockController();
+        const workerReport = new WorkerReport(mockController, 'testRaven');
 
         reportProxy['raven'] = jest.fn();
 
-        workerReport['raven'](MoebiusObject);
+        mockController.trigger(WorkerReportActionType.Raven, MoebiusObject);
 
         expect(reportProxy['raven']).toBeCalled();
     });
 
     it('weblog', () => {
-        const workerReport = new WorkerReport(MoebiusObject, MoebiusObject);
+        const mockController: any = new MockController();
+        const workerReport = new WorkerReport(mockController, MoebiusObject);
 
         reportProxy['weblog'] = jest.fn();
 
-        workerReport['weblog'](MoebiusObject);
+        mockController.trigger(WorkerReportActionType.Weblog, 'testWeblog');
 
         expect(reportProxy['weblog']).toBeCalled();
     });

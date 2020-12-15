@@ -1,6 +1,6 @@
 import MoebiusObject from 'test/any';
 import MockController from '../mock/mock-controller';
-import reportProxy, { ReportProxy } from 'worker/external/report-proxy';
+import reportProxy from 'worker/external/report-proxy';
 import WorkerReport from 'worker/worker-thread/worker-report';
 
 /**
