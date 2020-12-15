@@ -12,7 +12,7 @@ export default class WorkerAbilityTest extends BaseAction {
     protected addActionHandler(): void {
         this.controller.addActionHandler(
             WorkerAbilityTestActionType.CommunicationTest,
-            this.CommunicationTest.bind(this)
+            this.communicationTest.bind(this)
         );
         this.controller.addActionHandler(WorkerAbilityTestActionType.HeartBeatTest, this.heartBeatTest.bind(this));
     }
@@ -20,7 +20,7 @@ export default class WorkerAbilityTest extends BaseAction {
     /**
      * 通信能力检测的处理器
      */
-    private CommunicationTest(
+    private communicationTest(
         payload: WorkerPayload.WorkerAbilityTest.CommunicationTest
     ): WorkerReponse.WorkerAbilityTest.CommunicationTest {
         // 通过 this.threadAction 调用其他命名空间下的事务
