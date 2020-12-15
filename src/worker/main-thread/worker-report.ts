@@ -1,4 +1,3 @@
-import type { IMainThreadAction } from './index';
 import reportProxy from '../external/report-proxy';
 import { WorkerPayload } from '../common/payload-type';
 import { WorkerErrorSource, WorkerMonitorId } from '../common/report-type';
@@ -9,8 +8,6 @@ import { WorkerReportActionType } from '../common/action-type';
  * Alloy Worker 内部上报的事务
  */
 export default class WorkerReport extends BaseAction {
-    protected tthreadAction: IMainThreadAction;
-
     protected addActionHandler(): void {
         this.controller.addActionHandler(
             WorkerReportActionType.CaptureWorkerException,
