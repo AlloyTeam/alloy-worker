@@ -1,13 +1,11 @@
 import { IController, MessageType, IMessage } from '../type';
-import reportProxy from '../external/report-proxy';
 import { CommunicationTimeout } from '../config';
+import reportProxy from '../external/report-proxy';
 import nanoid from './utils/nanoid-no-secure';
 import { getDebugTimeStamp } from './utils/index';
 
 /**
  * 通信 Channel
- *
- * @class Channel
  */
 export default class Channel {
     /**
@@ -113,7 +111,7 @@ export default class Channel {
             clearTimeout(timeoutHandler);
 
             this.timeoutReport(actionType);
-        });
+        }, timeout);
 
         return new Promise(PromiseFunction);
     }
@@ -254,7 +252,7 @@ export default class Channel {
      *
      * @private
      * @param requestDuration 请求时长
-     * @param timeout timeout 超时时长
+     * @param timeout 超时时长
      * @param actionType 事务类型
      */
     private requestDurationReport(requestDuration: number, timeout: number, actionType: string): void {
@@ -299,23 +297,26 @@ export default class Channel {
      * @param message 接收到的会话消息
      */
     private onmesssageDebugLog(message: IMessage): void {
-        // 主线程和 Worker 线程通信是对等的, 只在 Worker 线程中打 log, 就可以了
-        if (__WORKER__) {
-            // 根据调试标志位展示
-            if (this.controller.isDebugMode) {
-                /**
-                 * ⬇alloyWorker--test, ["00:35.022", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
-                 * 线程名称, [时间戳, 会话 Id, 事务类型, 事务负载]
-                 * `⬇` 表示 Worker 线程收到的信息
-                 */
-                console.log(`%c ⬇${self.name}`, 'background: #80FF80; font-size: 15px', [
-                    getDebugTimeStamp(),
-                    message.sessionId,
-                    message.actionType,
-                    message.payload,
-                ]);
-            }
+        // 主线程和 Worker 线程通信是对等的, 只需在 Worker 线程中打 log, 避免主线程打日志耗时
+        if (!__WORKER__) {
+            return;
         }
+        // 根据调试标志位展示
+        if (!this.controller.isDebugMode) {
+            return;
+        }
+
+        /**
+         * ⬇alloyWorker--test, ["00:35.022", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+         * 线程名称, [时间戳, 会话 Id, 事务类型, 事务负载]
+         * `⬇` 表示 Worker 线程收到的信息
+         */
+        console.log(`%c ⬇${self.name}`, 'background: #80FF80; font-size: 15px', [
+            getDebugTimeStamp(),
+            message.sessionId,
+            message.actionType,
+            message.payload,
+        ]);
     }
 
     /**
@@ -325,20 +326,23 @@ export default class Channel {
      * @param message 发送的会话消息
      */
     private postMessageDebugLog(message: IMessage): void {
-        if (__WORKER__) {
-            if (this.controller.isDebugMode) {
-                /**
-                 * ⬆ alloyWorker--test, ["00:35.023", "w_2o-bRMLmGwXi5V", undefined, 1]
-                 * 线程名称, [时间戳, 会话 Id, 事务类型, 事务负载]
-                 * `⬆` 表示 Worker 线程发出的信息
-                 */
-                console.log(`%c⬆ ${self.name}`, 'background: #FF8080; font-size: 15px', [
-                    getDebugTimeStamp(),
-                    message.sessionId,
-                    message.actionType,
-                    message.payload,
-                ]);
-            }
+        if (!__WORKER__) {
+            return;
         }
+        if (!this.controller.isDebugMode) {
+            return;
+        }
+
+        /**
+         * ⬆ alloyWorker--test, ["00:35.023", "w_2o-bRMLmGwXi5V", "HeartBeatTest", 1]
+         * 线程名称, [时间戳, 会话 Id, 事务类型, 事务负载]
+         * `⬆` 表示 Worker 线程发出的信息
+         */
+        console.log(`%c⬆ ${self.name}`, 'background: #FF8080; font-size: 15px', [
+            getDebugTimeStamp(),
+            message.sessionId,
+            message.actionType,
+            message.payload,
+        ]);
     }
 }

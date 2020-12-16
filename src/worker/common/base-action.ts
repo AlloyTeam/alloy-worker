@@ -1,4 +1,4 @@
-import Controller from './base-controller';
+import type Controller from './base-controller';
 
 /**
  * 事务的基类

@@ -19,9 +19,9 @@ console.log('alloyWorker', alloyWorker);
 
 // 轮循 alloyWorker 的状态, 并渲染到页面上
 const testIntervalHandle = setInterval(() => {
-    type TWorkerStatusKey = keyof typeof alloyWorker.workerStatus;
+    type TWorkerStatusKey = keyof typeof alloyWorker['workerStatusCheck']['workerStatus'];
 
-    const workerStatus: any = alloyWorker.workerStatus;
+    const workerStatus: any = alloyWorker['workerStatusCheck']['workerStatus'];
 
     if (!workerStatus) {
         return;

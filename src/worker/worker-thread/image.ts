@@ -1,5 +1,6 @@
 import type { IWorkerThreadAction } from './index';
 import BaseAction from '../common/base-action';
+import { WorkerPayload, WorkerReponse } from '../common/payload-type';
 import { ImageActionType } from '../common/action-type';
 import { threshold, baseBlur } from '../../lib/image-filter';
 import { isIE10 } from '../../lib/utils';

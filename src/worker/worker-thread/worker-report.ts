@@ -1,6 +1,7 @@
 import type Controller from './controller';
 import reportProxy, { ReportProxy } from '../external/report-proxy';
 import BaseAction from '../common/base-action';
+import { WorkerPayload } from '../common/payload-type';
 import { WorkerReportActionType } from '../common/action-type';
 
 /**
@@ -13,6 +14,7 @@ export default class WorkerReport extends BaseAction {
     public static loadRealReport(report: WorkerReport) {
         ReportProxy.eachLoad({
             monitor: report.monitor.bind(report),
+            raven: report.raven.bind(report),
             weblog: report.weblog.bind(report),
         });
     }

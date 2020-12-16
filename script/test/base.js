@@ -6,6 +6,9 @@ module.exports = {
     verbose: true,
     // Jest 环境准备好后的拓展脚本
     setupFilesAfterEnv: [
+        // https://github.com/kulshekhar/ts-jest/issues/281#issuecomment-546337648
+        // 解决引入的 enum .ts 文件单测中提示 undefined
+        'core-js',
         '<rootDir>/script/test/setup.ts',
     ],
     testMatch: [
@@ -25,6 +28,8 @@ module.exports = {
         'src/**/*.{js,ts}',
         // 忽略生成新事务脚本
         '!src/worker/one-script/**/*.{js,ts}',
+        // 忽略测试页面
+        '!src/page/**/*.{js,ts}',
         '!**/*.d.ts',
         '!**/test/**',
         '!**/dist/**',

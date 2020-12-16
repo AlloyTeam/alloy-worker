@@ -3,10 +3,9 @@
  */
 
 import type { IAlloyWorkerOptions } from '../type';
-import reportProxy, { ReportProxy } from '../external/report-proxy';
-import report from '../external/report';
-import { WorkerMonitorId } from '../common/report-type';
+import { HeartBeatCheckStartDelay } from '../config';
 import HeartBeatCheck from '../heart-beat-check';
+import WorkerStatusCheck from '../worker-status-check';
 import Controller from './controller';
 import WorkerAbilityTest from './worker-ability-test';
 import WorkerReport from './worker-report';
@@ -23,20 +22,11 @@ export interface IMainThreadAction {
 }
 
 /**
- * 主线程, 将上报代理替换为真实上报模块
- */
-ReportProxy.eachLoad(report);
-
-/**
  * 主线程的 Alloy Worker Class
  *
  * @class MainThreadWorker
  */
 export default class MainThreadWorker implements IMainThreadAction {
-    /**
-     * Worker 状态上报标识
-     */
-    public static hasReportWorkerStatus = false;
     /**
      * Alloy Worker 名称
      */
@@ -54,19 +44,13 @@ export default class MainThreadWorker implements IMainThreadAction {
     // AlloyWorkerAutoInsert: public <%=AlloyWorkerPureActionNameLowerCase%>: <%=AlloyWorkerPureActionName%>;
 
     /**
-     * Worker 状态信息
-     */
-    public workerStatus: {
-        hasWorkerClass: boolean;
-        canNewWorker: boolean;
-        canPostMessage: boolean;
-        workerReadyDuration: number;
-        newWorkerDuration: number;
-    };
-    /**
-     * 心跳检测
+     * Worker 心跳检查
      */
     private heartBeatCheck: HeartBeatCheck;
+    /**
+     * Worker 状态检查
+     */
+    private workerStatusCheck: WorkerStatusCheck;
     /**
      * 是否已经终止掉 Worker
      */
@@ -76,6 +60,7 @@ export default class MainThreadWorker implements IMainThreadAction {
         this.name = options.workerName;
         this.controller = new Controller(options);
         this.heartBeatCheck = new HeartBeatCheck(this);
+        this.workerStatusCheck = new WorkerStatusCheck(this.controller, this);
 
         // 实例化各种业务
         this.workerAbilityTest = new WorkerAbilityTest(this.controller, this);
@@ -86,15 +71,24 @@ export default class MainThreadWorker implements IMainThreadAction {
     }
 
     /**
-     * 开始进行心跳检测
+     * 开始进行状态检查
      */
-    public startHeartBeatCheck(): void {
-        // 心跳检测一般会延迟启动, 可能这时 Worker 已经终止掉了
-        // 终止的 Worker 不需要检测
-        if (this.isTerminated) {
+    public startWorkerStatusCheck() {
+        // 无法实例化 Worker, 不能再去检测 Worker 能力了, 会报错
+        if (!this.controller.canNewWorker) {
+            // 直接上报当前状态
+            this.workerStatusCheck.report();
             return;
         }
-        this.heartBeatCheck.start();
+
+        // 检查 Worker 状态
+        this.workerStatusCheck.check();
+
+        // 心跳检测, 延迟启动
+        // 避免打开页面时主线程的同步逻辑阻塞 Worker js 加载; 也等待 Worker 线程启动完
+        setTimeout(() => {
+            this.startHeartBeatCheck();
+        }, HeartBeatCheckStartDelay);
     }
 
     /**
@@ -108,80 +102,14 @@ export default class MainThreadWorker implements IMainThreadAction {
     }
 
     /**
-     * 是否支持 new Worker
+     * 开始进行心跳检查
      */
-    public get canNewWorker(): boolean {
-        return this.controller.canNewWorker;
-    }
-
-    /**
-     * Worker 状态上报
-     *
-     * @param [isTimeoutAndSuccess=false] 是否超时后通信成功
-     * @param {number} [timeWorkerReplyMessage] 收到 Worker 线程回复的时刻; undefined 则是通信失败, 没有回复
-     */
-    public reportWorkerStatus(isTimeoutAndSuccess = false, timeWorkerReplyMessage?: number): void {
-        // 场景: 首次通信已经触发超时上报, 之后才通信成功
-        if (isTimeoutAndSuccess) {
-            // Worker 首次通信超时后成功上报
-            reportProxy.monitor(WorkerMonitorId.FirstCommunicationTimeoutAndSuccess);
-        }
-
-        // 已经上报过不再上报
-        if (MainThreadWorker.hasReportWorkerStatus === true) {
+    private startHeartBeatCheck(): void {
+        // 心跳检测一般会延迟启动, 可能这时 Worker 已经终止掉了
+        // 终止的 Worker 不需要检测
+        if (this.isTerminated) {
             return;
         }
-        MainThreadWorker.hasReportWorkerStatus = true;
-
-        /**
-         * 是否有 Worker Class
-         */
-        const hasWorkerClass = Controller.hasWorkerClass;
-        /**
-         * 创建 Worker 实例是否成功
-         */
-        const canNewWorker = this.controller.canNewWorker;
-        /**
-         * Worker 实例有无通讯能力, 或 Worker 脚本加载失败
-         */
-        const canPostMessage = !!timeWorkerReplyMessage;
-        /**
-         * 第一条信息从发出到收到的时间间隔
-         * 如果无法通信, 则默认为 -1
-         */
-        let workerReadyDuration = -1;
-        if (canPostMessage && timeWorkerReplyMessage) {
-            workerReadyDuration = timeWorkerReplyMessage - this.controller.timeBeforeNewWorker;
-        }
-        /**
-         * 主线程创建 Worker 的同步耗时, 正常为 1ms 就完成了
-         */
-        let newWorkerDuration = NaN;
-        if (this.controller.timeAfterNewWorker && this.controller.timeBeforeNewWorker) {
-            newWorkerDuration = this.controller.timeAfterNewWorker - this.controller.timeBeforeNewWorker;
-        }
-
-        this.workerStatus = {
-            hasWorkerClass,
-            canNewWorker,
-            canPostMessage,
-            workerReadyDuration,
-            newWorkerDuration,
-        };
-
-        reportProxy.weblog({
-            module: 'worker',
-            action: 'worker_status',
-            info: this.workerStatus,
-        });
-
-        if (!canNewWorker) {
-            // Worker 没有实例化成功上报
-            reportProxy.monitor(WorkerMonitorId.NoWorkerInstance);
-        }
-        if (!canPostMessage) {
-            // Worker 首次通信失败上报
-            reportProxy.monitor(WorkerMonitorId.FirstCommunicationFail);
-        }
+        this.heartBeatCheck.start();
     }
 }

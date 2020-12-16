@@ -1,5 +1,5 @@
-import { IController, IMessage } from '../type';
-import Channel from './channel';
+import type { IController, IMessage } from '../type';
+import type Channel from './channel';
 import { isPromise } from './utils/index';
 
 /**
@@ -52,7 +52,6 @@ export default class BaseController implements IController {
      * @param actionType 事务类型
      * @param payload 负载
      * @param [timeout] 响应的超时; Worker 通道是可靠的, 超时后只上报, 不阻止当前请求
-     * @memberof BaseController
      */
     public requestPromise<T = any>(actionType: string, payload: any = '', timeout?: number): Promise<T> {
         // 有 Channel 实例才能进行通信, 此时还没有实例化是浏览器不支持创建 worker
@@ -143,7 +142,6 @@ export default class BaseController implements IController {
     /**
      * 判断是否有指定事务的处理器
      *
-     * @protected
      * @param actionType 事务类型
      * @returns {boolean}
      */

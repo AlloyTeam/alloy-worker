@@ -1,5 +1,6 @@
 import type { IMainThreadAction } from './index';
 import BaseAction from '../common/base-action';
+import { WorkerPayload, WorkerReponse } from '../common/payload-type';
 import { ImageActionType } from '../common/action-type';
 
 /**

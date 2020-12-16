@@ -1,5 +1,6 @@
 import type { IMainThreadAction } from './index';
 import BaseAction from '../common/base-action';
+import { WorkerReponse } from '../common/payload-type';
 import { CookieActionType } from '../common/action-type';
 
 export default class Cookie extends BaseAction {

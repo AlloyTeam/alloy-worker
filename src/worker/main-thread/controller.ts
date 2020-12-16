@@ -6,8 +6,6 @@ import Channel from '../common/channel';
 
 /**
  * 主线程通信控制器
- *
- * @class Controller
  */
 export default class Controller extends BaseController {
     /**
@@ -30,26 +28,42 @@ export default class Controller extends BaseController {
     public constructor(options: IAlloyWorkerOptions) {
         super();
 
+        this.isDebugMode = options.isDebugMode || false;
+
+        if (!this.canNewWorker) {
+            // 都没有 Worker Class, 没法继续了
+            return;
+        }
+
+        this.newWorker(options);
+    }
+
+    /**
+     * 销毁 Worker 线程实例
+     */
+    public terminate(): void {
+        this.worker?.terminate();
+    }
+
+    protected reportActionHandlerError(actionType: string, error: any): void {
+        console.error(`Worker aciton ${actionType} error:`, error);
+
+        // 事务处理器逻辑错误上报
+        reportProxy.monitor(WorkerMonitorId.ActionHandleError);
+
+        // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
+        throw new Error(error);
+    }
+
+    /**
+     * 创建 Worker 线程实例
+     */
+    private newWorker(options: IAlloyWorkerOptions) {
+        this.timeBeforeNewWorker = Date.now();
+
         try {
-            if (!this.canNewWorker) {
-                // 都没有 Worker Class, 没法继续了
-                return;
-            }
-
-            this.timeBeforeNewWorker = Date.now();
-
-            let workerUrl = options.workerUrl;
-            if (options.isDebugMode) {
-                this.isDebugMode = true;
-
-                // 通过 Worker url 传递调试参数到 Worker 线程中
-                const debugModeSearch = `debugWorker=true`;
-                workerUrl =
-                    workerUrl.indexOf('?') > 0 ? `${workerUrl}&${debugModeSearch}` : `${workerUrl}?${debugModeSearch}`;
-            }
-
             // 主线程通过 new Worker() 获取 Worker 实例
-            this.worker = new Worker(workerUrl, {
+            this.worker = new Worker(options.workerUrl, {
                 name: options.workerName,
             });
 
@@ -64,12 +78,12 @@ export default class Controller extends BaseController {
                 // 主动上报错误和 monitor
                 reportProxy.raven(error);
                 reportProxy.monitor(WorkerErrorSource.WorkerOnerror);
-
                 reportProxy.monitor(WorkerMonitorId.WorkerOnerror);
             };
 
             this.timeAfterNewWorker = Date.now();
 
+            // 实例化 Channel
             this.channel = new Channel(this.worker, {
                 actionHandler: this.actionHandler.bind(this),
                 isDebugMode: this.isDebugMode,
@@ -84,22 +98,5 @@ export default class Controller extends BaseController {
             reportProxy.raven(error);
             reportProxy.monitor(WorkerErrorSource.CreateWorkerError);
         }
-    }
-
-    /**
-     * 销毁 worker 实例
-     */
-    public terminate(): void {
-        this.worker.terminate();
-    }
-
-    protected reportActionHandlerError(actionType: string, error: any): void {
-        console.error(`Worker aciton ${actionType} error:`, error);
-
-        // 事务处理器逻辑错误上报
-        reportProxy.monitor(WorkerMonitorId.ActionHandleError);
-
-        // 主线程的报错, 在 window.onerror 中可以拿到报错堆栈, 直接抛出即可
-        throw new Error(error);
     }
 }

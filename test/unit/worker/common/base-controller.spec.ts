@@ -8,7 +8,7 @@ import { MessageType } from 'worker/type';
  * @priority P0
  * @casetype unit
  */
-describe('baseController', () => {
+describe('base controller', () => {
     // mock channel
     const channel = MoebiusObject;
     // mock worker

@@ -1,4 +1,7 @@
-declare namespace WorkerPayload {
+/**
+ * 跨线程通信各事务的发送数据类型声明
+ */
+export declare namespace WorkerPayload {
     namespace Image {
         type Threshold = {
             data: Uint8ClampedArray;
@@ -31,7 +34,10 @@ declare namespace WorkerPayload {
     }
 }
 
-declare namespace WorkerReponse {
+/**
+ * 跨线程通信各事务的响应数据类型声明
+ */
+export declare namespace WorkerReponse {
     namespace Image {
         type Threshold = {
             data: Uint8ClampedArray;
@@ -56,7 +62,7 @@ declare namespace WorkerReponse {
  * 支持 transfer 传输方式的类型声明
  * 通过 `&` 附加到 payload 类型后面
  */
-interface Transfer {
+export interface Transfer {
     /**
      * 转换为 transfer 传输的属性列表
      */
