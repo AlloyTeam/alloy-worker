@@ -3,8 +3,15 @@
  */
 
 import type { IAlloyWorkerOptions } from './type';
-import { CommunicationTimeout, HeartBeatCheckStartDelay } from './config';
+import { ReportProxy } from './external/report-proxy';
+import report from './external/report';
 import MainThreadWorker from './main-thread/index';
+
+/**
+ * 主线程, 将上报代理替换为真实上报模块
+ * 只需替换一次, 所以放在 Alloy Worker 入口
+ */
+ReportProxy.eachLoad(report);
 
 /**
  * 创建 Alloy Worker 的工厂函数
@@ -34,15 +41,8 @@ export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'wo
         workerUrl: getWorkerUrl(isDebugMode),
     });
 
-    // 无法实例化 Worker, 不能再去检测 Worker 能力了, 会报错
-    if (!mainThreadWorker.canNewWorker) {
-        // 上报
-        mainThreadWorker.reportWorkerStatus();
-        return mainThreadWorker;
-    }
-
-    // Worker 通信能力测试
-    runWorkerAbilityTest(mainThreadWorker);
+    // Worker 状态监测
+    mainThreadWorker.startWorkerStatusCheck();
 
     return mainThreadWorker;
 }
@@ -52,7 +52,7 @@ export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'wo
  *
  * @param isDebugMode
  */
-function getWorkerUrl(isDebugMode: boolean): string {
+export function getWorkerUrl(isDebugMode: boolean): string {
     /** worker url 会在构建时替换掉
      * dev: 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker.js'
      * dist: 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker-51497b48.js'
@@ -67,46 +67,4 @@ function getWorkerUrl(isDebugMode: boolean): string {
     workerUrl = workerUrl.indexOf('?') > 0 ? `${workerUrl}&${debugModeSearch}` : `${workerUrl}?${debugModeSearch}`;
 
     return workerUrl;
-}
-
-/**
- * 进行 worker 通信能力测试
- *
- * @param mainThreadWorker
- */
-function runWorkerAbilityTest(mainThreadWorker: MainThreadWorker) {
-    // 等待通信超时后上报
-    // 为了可用性, 通信超时后并不会结束等待, 而是打点上报
-    // 正常不会走到事务的 .catch 逻辑, 所以需要独立设置超时上报
-    const firstCommunicationTimeoutHandle = setTimeout(() => {
-        mainThreadWorker.reportWorkerStatus();
-    }, CommunicationTimeout);
-
-    // 默认 worker 才进行 worker 能力上报
-    // 上报 worker 信息
-    mainThreadWorker.workerAbilityTest
-        .communicationTest()
-        .then((workerGetMessageDuration: number) => {
-            const timeWorkerReplyMessage = Date.now();
-            clearTimeout(firstCommunicationTimeoutHandle);
-
-            if (mainThreadWorker.controller.isDebugMode) {
-                console.log(`%cFirst comunication duration: ${workerGetMessageDuration}ms`, 'color: orange');
-            }
-
-            const isTimeout = workerGetMessageDuration > CommunicationTimeout;
-            mainThreadWorker.reportWorkerStatus(isTimeout, timeWorkerReplyMessage);
-        })
-        .catch((error) => {
-            if (mainThreadWorker.controller.isDebugMode) {
-                // 首次通信 timeout 错误
-                console.error(`%cFirst communication timeout: ${error}`, 'color: orange');
-            }
-        });
-
-    // 心跳检测, 延迟启动
-    // 避免打开页面时主线程的同步逻辑阻塞 Worker js 加载; 也等待 Worker 线程启动完
-    setTimeout(() => {
-        mainThreadWorker.startHeartBeatCheck();
-    }, HeartBeatCheckStartDelay);
 }
