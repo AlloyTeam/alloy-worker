@@ -1,4 +1,5 @@
 import reportProxy from 'worker/external/report-proxy';
+import MockWorker from '../mock/mock-worker';
 import Controller from 'worker/main-thread/controller';
 
 /**
@@ -11,13 +12,8 @@ describe('controller', () => {
     const originWorker = global.Worker;
     let mockWorker: any;
 
-    const getMockWorker = () => jest.fn(() => ({
-        addEventListener: () => {},
-        terminate: jest.fn(),
-    }));
-
     beforeEach(() => {
-        mockWorker = getMockWorker();
+        mockWorker = MockWorker;
         // @ts-ignore
         global.Worker = mockWorker;
 
@@ -43,8 +39,7 @@ describe('controller', () => {
         });
 
         expect(controller.canNewWorker).toBe(true);
-        expect(mockWorker).toHaveBeenCalledTimes(1);
-        expect(mockWorker).lastCalledWith('test', { name: 'test' });
+        expect(controller['worker']).toBeInstanceOf(Worker);
     });
 
     test('new -- throwError', () => {

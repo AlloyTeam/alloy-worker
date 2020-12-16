@@ -1,7 +1,9 @@
 /* eslint-disable dot-notation */
 
 import MoebiusObject from 'test/any';
+import MockWorker, { mockPostMessagePayload } from '../mock/mock-worker';
 import { IMessage, MessageType } from 'worker/type';
+import reportProxy from 'worker/external/report-proxy';
 import Channel from 'worker/common/channel';
 
 /**
@@ -165,16 +167,7 @@ describe('channel', () => {
     });
 
     it('postMessage -- normal', () => {
-        let messageResult: IMessage;
-        let transferListResult;
-
-        const mockWorker: any = {
-            addEventListener: jest.fn,
-            postMessage: (message: any, transferList: any) => {
-                messageResult = message;
-                transferListResult = transferList;
-            },
-        };
+        const mockWorker: any = new MockWorker();
 
         const channel = new Channel(mockWorker, MoebiusObject);
 
@@ -184,8 +177,8 @@ describe('channel', () => {
             payload: 'testPayload',
         });
 
-        expect(messageResult!.payload).toEqual('testPayload');
-        expect(transferListResult).toEqual([]);
+        expect(mockPostMessagePayload.data.message!.payload).toEqual('testPayload');
+        expect(mockPostMessagePayload.data.transferList).toEqual([]);
 
         // payload 为空对象
         channel['postMessage']({
@@ -193,21 +186,12 @@ describe('channel', () => {
             payload: {},
         });
 
-        expect(messageResult!.payload).toEqual({});
-        expect(transferListResult).toEqual([]);
+        expect(mockPostMessagePayload.data.message!.payload).toEqual({});
+        expect(mockPostMessagePayload.data.transferList).toEqual([]);
     });
 
     it('postMessage -- transfer', () => {
-        let messageResult: IMessage;
-        let transferListResult: any[];
-
-        const mockWorker: any = {
-            addEventListener: jest.fn,
-            postMessage: (message: any, transferList: any) => {
-                messageResult = message;
-                transferListResult = transferList;
-            },
-        };
+        const mockWorker: any = new MockWorker();
 
         const channel = new Channel(mockWorker, MoebiusObject);
 
@@ -221,7 +205,7 @@ describe('channel', () => {
         });
 
         // transfer 列表里为 ArrayBuffer
-        expect(transferListResult![0]).toBeInstanceOf(ArrayBuffer);
+        expect(mockPostMessagePayload.data.transferList![0]).toBeInstanceOf(ArrayBuffer);
 
         // 发送 Int8Array
         channel['postMessage']({
@@ -232,9 +216,26 @@ describe('channel', () => {
             },
         });
 
-
         // transfer 列表里为 ArrayBuffer
-        expect(transferListResult![0]).toBeInstanceOf(ArrayBuffer);
+        expect(mockPostMessagePayload.data.transferList![0]).toBeInstanceOf(ArrayBuffer);
+    });
+
+    it('postMessage -- transfer without buffer', () => {
+        const mockWorker: any = new MockWorker();
+
+        const channel = new Channel(mockWorker, MoebiusObject);
+
+        // 发送 ArrayBuffer
+        channel['postMessage']({
+            ...TestMessage,
+            payload: {
+                transferA: 'not buffer',
+                transferProps: ['transferA'],
+            },
+        });
+
+        // transfer 列表里为空
+        expect(mockPostMessagePayload.data.transferList.length).toEqual(0);
     });
 
     it('addSessionHandler', () => {
@@ -273,5 +274,27 @@ describe('channel', () => {
 
         // sessionId 长度为 16 位
         expect(sessionId.length).toEqual(16);
+    });
+
+    it('requestDurationReport', () => {
+        const channel = new Channel(MoebiusObject, MoebiusObject);
+
+        reportProxy.weblog = jest.fn();
+
+        channel['requestDurationReport'](1024, 30000, 'testAction');
+        channel['requestDurationReport'](102400, 30000, 'testAction');
+
+        // 只有超时才上报, 共上报1次
+        expect(reportProxy.weblog).toBeCalledTimes(1);
+    });
+
+    it('timeoutReport', () => {
+        const channel = new Channel(MoebiusObject, MoebiusObject);
+
+        reportProxy.weblog = jest.fn();
+
+        channel['timeoutReport']('testAction');
+
+        expect(reportProxy.weblog).toBeCalledTimes(1);
     });
 });
