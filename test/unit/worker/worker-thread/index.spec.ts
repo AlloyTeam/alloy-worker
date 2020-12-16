@@ -1,4 +1,3 @@
-import MoebiusObject from 'test/any';
 import alloyWorker from 'worker/worker-thread';
 
 /**
