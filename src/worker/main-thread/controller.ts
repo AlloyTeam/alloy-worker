@@ -78,7 +78,6 @@ export default class Controller extends BaseController {
                 // 主动上报错误和 monitor
                 reportProxy.raven(error);
                 reportProxy.monitor(WorkerErrorSource.WorkerOnerror);
-
                 reportProxy.monitor(WorkerMonitorId.WorkerOnerror);
             };
 

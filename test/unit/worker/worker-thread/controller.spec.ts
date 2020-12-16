@@ -1,4 +1,3 @@
-import MoebiusObject from 'test/any';
 import Controller from 'worker/worker-thread/controller';
 
 /**
