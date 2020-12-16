@@ -1,12 +1,17 @@
 // @ts-nocheck
 
+/**
+ * @author cntchen
+ * @priority P0
+ * @casetype e2e
+ */
 describe('Alloy Worker', () => {
     beforeAll(async () => {
-      await page.goto('http://127.0.0.1:6843');
+        await page.goto('http://127.0.0.1:6842');
     });
 
     it('test page title', async () => {
-      await expect(page.title()).resolves.toMatch('Alloy Worker');
+        await expect(page.title()).resolves.toMatch('Alloy Worker');
     });
 
     it('get worker status', async () => {
@@ -24,21 +29,21 @@ describe('Alloy Worker', () => {
         expect(workerStatus.canPostMessage).toEqual(true);
         expect(typeof workerStatus.workerReadyDuration).toEqual('number');
         expect(typeof workerStatus.newWorkerDuration).toEqual('number');
-    })
+    });
 
     it('run communicationTest', async () => {
         const testResult = await page.evaluate(() => {
             return alloyWorker.workerAbilityTest.communicationTest();
-          })
+        })
 
-          expect(typeof testResult).toEqual('number');
+        expect(typeof testResult).toEqual('number');
     });
 
     it('run heartBeatTest', async () => {
         const heartBeatResult = await page.evaluate(() => {
             return alloyWorker.workerAbilityTest.heartBeatTest(1024);
-          })
+        })
 
-          expect(heartBeatResult).toEqual(1024);
+        expect(heartBeatResult).toEqual(1024);
     });
-  });
+});
