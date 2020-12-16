@@ -28,6 +28,8 @@ module.exports = {
         'src/**/*.{js,ts}',
         // 忽略生成新事务脚本
         '!src/worker/one-script/**/*.{js,ts}',
+        // 忽略测试页面
+        '!src/page/**/*.{js,ts}',
         '!**/*.d.ts',
         '!**/test/**',
         '!**/dist/**',
