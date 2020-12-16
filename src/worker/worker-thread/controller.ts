@@ -2,7 +2,6 @@ import reportProxy from '../external/report-proxy';
 import BaseController from '../common/base-controller';
 import Channel from '../common/channel';
 import { WorkerMonitorId } from '../common/report-type';
-import WorkerThreadWorker from './index';
 
 /**
  * Worker 线程通信控制器
@@ -32,7 +31,9 @@ export default class Controller extends BaseController {
 
         // Worker 线程中, 如果有堆栈信息, 主动发送到主线程去上报
         if (error?.message && error.stack) {
-            WorkerThreadWorker.workerReport.captureWorkerException({
+            // @ts-ignore
+            // 调用 worker 线程的 上报事务
+            self.alloyWorker.workerReport.captureWorkerException({
                 message: error.message,
                 stack: error.stack,
             });
