@@ -141,7 +141,7 @@ export default class Channel {
             if (this.hasSessionHandler(sessionId)) {
                 this.sessionHandlerMap[sessionId](message);
             } else {
-                throw new Error(`没有找到会话 \`${sessionId}\` 的响应器.`);
+                throw new Error(`Session \`${sessionId}\` handle no exist`);
             }
         }
     }
