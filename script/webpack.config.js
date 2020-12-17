@@ -25,7 +25,7 @@ const config = {
         'worker/worker-thread': 'worker.WorkerThreadWorker',
         'worker/worker-thread/index': 'worker.WorkerThreadWorker',
     },
-    mode: isProduction ? 'production': 'development',
+    mode: isProduction ? 'production' : 'development',
     devtool: sourceMap,
     optimization: {
         minimize: isProduction,
