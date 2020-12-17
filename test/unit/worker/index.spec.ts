@@ -12,7 +12,6 @@ jest.mock('worker/main-thread', () => class MainThreadWorker {
  */
 describe('alloyWorker', () => {
     beforeEach(() => {
-        // @ts-ignore
         global.__WORKER__ = false;
     });
 
@@ -29,7 +28,7 @@ describe('alloyWorker', () => {
         // 成功创建 worker 实例
         expect(alloyWorker).toBeDefined();
 
-        await new Promise(resolve => resolve());
+        await new Promise<void>(resolve => resolve());
 
         // 调用了 worker status 上报函数
         expect(alloyWorker.startWorkerStatusCheck).toBeCalled();

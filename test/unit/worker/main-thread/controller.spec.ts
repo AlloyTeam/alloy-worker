@@ -8,7 +8,6 @@ import Controller from 'worker/main-thread/controller';
  * @casetype unit
  */
 describe('controller', () => {
-    // @ts-ignore
     const originWorker = global.Worker;
     let mockWorker: any;
 
@@ -17,7 +16,6 @@ describe('controller', () => {
         // @ts-ignore
         global.Worker = mockWorker;
 
-        // @ts-ignore
         global.__WORKER__ = false;
 
         // 判断为有 Worker Class
@@ -25,7 +23,6 @@ describe('controller', () => {
     });
 
     afterEach(() => {
-        // @ts-ignore
         global.Worker = originWorker;
 
         // @ts-ignore

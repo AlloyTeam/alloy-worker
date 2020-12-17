@@ -29,7 +29,6 @@ describe('controller', () => {
     it('reportActionHandlerError', () => {
         const controller = new Controller();
 
-        // @ts-ignore
         global.alloyWorker = {
             workerReport: {
                 captureWorkerException: jest.fn(),
@@ -38,7 +37,6 @@ describe('controller', () => {
 
         controller['reportActionHandlerError']('testAction', new Error('testError'));
 
-        // @ts-ignore
         expect(global.alloyWorker.workerReport.captureWorkerException).toBeCalled();
     });
 
