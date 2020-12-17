@@ -46,7 +46,7 @@ export default class Controller extends BaseController {
     }
 
     protected reportActionHandlerError(actionType: string, error: any): void {
-        console.error(`Worker aciton ${actionType} error:`, error);
+        console.error(`Worker aciton ${actionType}:`, error);
 
         // 事务处理器逻辑错误上报
         reportProxy.monitor(WorkerMonitorId.ActionHandleError);

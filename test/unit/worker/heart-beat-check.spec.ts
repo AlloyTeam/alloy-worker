@@ -10,9 +10,7 @@ import reportProxy from 'worker/external/report-proxy';
  */
 describe('heart-beat-check', () => {
     const realSetTimeout = global.setTimeout;
-    const realSetInterval = global.setInterval;
     const realClearTimeout = global.clearTimeout;
-    const realClearInterval = global.clearInterval;
 
     const mockMainThreadWorker: any = {
         name: 'defaultWorker',

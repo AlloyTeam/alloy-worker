@@ -1,8 +1,7 @@
 /* eslint-disable dot-notation */
-
 import MoebiusObject from 'test/any';
 import MockWorker, { mockPostMessagePayload } from '../mock/mock-worker';
-import { IMessage, MessageType } from 'worker/type';
+import { MessageType } from 'worker/type';
 import reportProxy from 'worker/external/report-proxy';
 import Channel from 'worker/common/channel';
 

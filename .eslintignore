@@ -1,2 +1,6 @@
 # 生成事务模板脚本
 src/worker/one-script/*
+# worker 构建脚本
+worker-script/*
+scripts/*
+script/*
