@@ -42,7 +42,7 @@ export default class BaseController implements IController {
             return this.channel.request(actionType, payload);
         }
 
-        console.error('没有通信 Channel.');
+        console.error('No channel.');
         return;
     }
 
@@ -60,7 +60,7 @@ export default class BaseController implements IController {
         }
 
         // 兼容上层调用的 .then().catch()
-        return Promise.reject(new Error('没有通信 Channel.'));
+        return Promise.reject(new Error('No channel.'));
     }
 
     /**
@@ -76,7 +76,7 @@ export default class BaseController implements IController {
         }
 
         if (this.hasActionHandler(actionType)) {
-            throw new Error(`已注册事务 \`${actionType}\` 的处理器, 不能重复注册`);
+            throw new Error(`Add action \`${actionType}\` handler repeat`);
         }
         this.actionHandlerMap[actionType] = handler;
     }

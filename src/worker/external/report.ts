@@ -1,5 +1,9 @@
 /*
  * 项目的上报服务
+ *
+ * Alloy Worker 及 Worker 线程运行的日志/报错信息都会汇总到上报服务
+ * 引入 AlloyWorker 后, 需将上报对接到业务的上报平台
+ * 比如在 raven 中调用 raven.js 进行上报
  */
 
 /**
@@ -8,7 +12,8 @@
  * @param monitorId 监控点
  */
 function monitor(monitorId: string): void {
-    console.error('%cMonitor 上报:', 'color: orange', monitorId);
+    // 请在这里调用项目的上报平台
+    console.error('%cMonitor Report:', 'color: orange', monitorId);
 }
 
 /**
@@ -17,7 +22,8 @@ function monitor(monitorId: string): void {
  * @param error 报错信息
  */
 function raven(error: Error | ErrorEvent): void {
-    console.error('Raven 上报错误:', error);
+    // 请在这里调用项目的上报平台
+    console.error('Raven Report:', error);
 }
 
 /**
@@ -26,7 +32,8 @@ function raven(error: Error | ErrorEvent): void {
  * @param log
  */
 function weblog(log: any): void {
-    console.error('%cWeblog 上报:', 'color: orange', log);
+    // 请在这里调用项目的上报平台
+    console.error('%cWeblog Report:', 'color: orange', log);
 }
 
 export default {

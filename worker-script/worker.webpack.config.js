@@ -18,7 +18,7 @@ const config = {
     resolve: {
         extensions: ['.js', '.ts'],
     },
-    mode: isProduction ? 'production': 'development',
+    mode: isProduction ? 'production' : 'development',
     devtool: sourceMap,
     optimization: {
         minimize: isProduction,

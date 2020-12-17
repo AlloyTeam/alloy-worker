@@ -2,7 +2,6 @@
 import MoebiusObject from 'test/any';
 import WorkerStatusCheck from 'worker/worker-status-check';
 import reportProxy from 'worker/external/report-proxy';
-import MockController from './mock/mock-controller';
 
 /**
  * @author cntchen
@@ -10,12 +9,6 @@ import MockController from './mock/mock-controller';
  * @casetype unit
  */
 describe('worker-status-check', () => {
-    const realConsoleError = console.error;
-    const realSetTimeout = global.setTimeout;
-    const realSetInterval = global.setInterval;
-    const realClearTimeout = global.clearTimeout;
-    const realClearInterval = global.clearInterval;
-
     beforeEach(() => {
         // 重置一下类属性
         WorkerStatusCheck.hasReportWorkerStatus = false;

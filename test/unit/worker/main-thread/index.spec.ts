@@ -1,5 +1,4 @@
 import MoebiusObject from 'test/any';
-import reportProxy from 'worker/external/report-proxy';
 import MainThreadWorker from 'worker/main-thread';
 
 /**

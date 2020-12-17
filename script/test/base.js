@@ -12,7 +12,7 @@ module.exports = {
         '<rootDir>/script/test/setup.ts',
     ],
     testMatch: [
-        '<rootDir>/test/**/*.(spec|test).(js|ts)',
+        '<rootDir>/test/unit/**/*.(spec|test).(js|ts)',
     ],
     testPathIgnorePatterns: [
         '/node_modules/',

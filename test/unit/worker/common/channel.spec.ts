@@ -1,8 +1,7 @@
 /* eslint-disable dot-notation */
-
 import MoebiusObject from 'test/any';
 import MockWorker, { mockPostMessagePayload } from '../mock/mock-worker';
-import { IMessage, MessageType } from 'worker/type';
+import { MessageType } from 'worker/type';
 import reportProxy from 'worker/external/report-proxy';
 import Channel from 'worker/common/channel';
 
@@ -24,7 +23,6 @@ describe('channel', () => {
 
     const realInt8Array = Int8Array;
     beforeAll(() => {
-        // @ts-ignore
         // 设置环境为 worker 线程
         global.__WORKER__ = true;
 
@@ -151,7 +149,7 @@ describe('channel', () => {
         await new Promise((resolve) => {
             setTimeout(resolve, 0);
         }).then(() => {
-            // @ts-ignore, 断言调用了上报函数
+            // 断言调用了上报函数
             expect(channel['timeoutReport']).toBeCalled();
         });
     });

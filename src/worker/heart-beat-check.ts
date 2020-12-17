@@ -121,7 +121,7 @@ export default class HeartBeatCheck {
      * Worker 线程死亡的 UI 提示
      */
     private showDeadTip(): void {
-        console.error(`Worker 线程 \`${this.mainThreadWorker.name}\` 已经挂掉了.`);
+        console.error(`%cWorker thread \`${this.mainThreadWorker.name}\` dead`, 'color: orange');
     }
 
     /**
