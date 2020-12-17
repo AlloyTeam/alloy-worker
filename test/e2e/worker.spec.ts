@@ -29,7 +29,7 @@ describe('Alloy Worker', () => {
 
         const url = await workers[0].url();
 
-        expect(/public-worker/i.test(url)).toEqual(true);
+        expect(/alloy-worker/i.test(url)).toEqual(true);
     });
 
     it('get cookie from main thread', async () => {
