@@ -38,8 +38,7 @@ describe('base controller', () => {
         let result = baseController.request(TestActionType, TestPayload);
         expect(result).not.toBeDefined();
 
-        // @ts-ignore
-        baseController.channel = channel;
+        baseController['channel'] = channel;
 
         // 有 channel 时调用
         result = baseController.request(TestActionType, TestPayload);
@@ -55,8 +54,7 @@ describe('base controller', () => {
                 expect(error).toBeInstanceOf(Error);
             });
 
-        // @ts-ignore
-        baseController.channel = channel;
+        baseController['channel'] = channel;
 
         // 有 channel 时调用
         const result = baseController.requestPromise(TestActionType, TestPayload);
@@ -69,8 +67,7 @@ describe('base controller', () => {
         // 注册 actionType 的回调函数
         baseController.addActionHandler(TestActionType, jest.fn());
 
-        // @ts-ignore
-        expect(Object.keys(baseController.actionHandlerMap).length).toBe(1);
+        expect(Object.keys(baseController['actionHandlerMap']).length).toBe(1);
 
         // 重复注册 actionType 的回调函数
         expect(() => {
@@ -117,8 +114,8 @@ describe('base controller', () => {
         it('sync handler throw Error', async () => {
             const baseController = new BaseController();
 
-            // @ts-ignore, mock reportActionHandlerError
-            baseController.reportActionHandlerError = jest.fn();
+            // mock reportActionHandlerError
+            baseController['reportActionHandlerError'] = jest.fn();
 
             // 注册 actionType 的回调函数, 回调函数为同步函数
             baseController.addActionHandler(TestActionType, () => {
@@ -127,16 +124,16 @@ describe('base controller', () => {
 
             await baseController.actionHandler(testMessage).catch((error) => {
                 expect(error).toBeInstanceOf(Error);
-                // @ts-ignore, 断言调用上报函数
-                expect(baseController.reportActionHandlerError).toBeCalled();
+                // 断言调用上报函数
+                expect(baseController['reportActionHandlerError']).toBeCalled();
             });
         });
 
         it('async handler throw Error', async () => {
             const baseController = new BaseController();
 
-            // @ts-ignore, mock reportActionHandlerError
-            baseController.reportActionHandlerError = jest.fn();
+            // mock reportActionHandlerError
+            baseController['reportActionHandlerError'] = jest.fn();
 
             // 注册 actionType 的回调函数, 回调函数为异步函数
             baseController.addActionHandler(
@@ -155,8 +152,8 @@ describe('base controller', () => {
             await new Promise((resolve) => {
                 setTimeout(resolve, 0);
             }).then(() => {
-                // @ts-ignore, 断言调用了上报函数
-                expect(baseController.reportActionHandlerError).toBeCalled();
+                // 断言调用了上报函数
+                expect(baseController['reportActionHandlerError']).toBeCalled();
             });
         });
     });
@@ -164,8 +161,7 @@ describe('base controller', () => {
     it('addOnmessageListener', () => {
         const baseController = new BaseController();
 
-        // @ts-ignore
-        baseController.worker = worker;
+        baseController['worker'] = worker;
 
         const result = baseController.addOnmessageListener(jest.fn());
 
