@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin').WebpackManifestPlugin;
 
 const { isProduction, outputPath, projectDir, workerFileName, manifestFileForWorker } = require('./project.config');
 
