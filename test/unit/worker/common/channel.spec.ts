@@ -2,7 +2,6 @@
 import MoebiusObject from 'test/any';
 import MockWorker, { mockPostMessagePayload } from '../mock/mock-worker';
 import { MessageType } from 'worker/type';
-import reportProxy from 'worker/external/report-proxy';
 import Channel from 'worker/common/channel';
 
 /**
@@ -135,7 +134,7 @@ describe('channel', () => {
         const channel = new Channel(MoebiusObject, MoebiusObject);
 
         // mock timeoutReport
-        channel['timeoutReport'] = jest.fn();
+        channel['channelReport']['timeoutReport'] = jest.fn();
 
         // timeout 设定为 0
         const result = channel.requestPromise('test', 'test', 0);
@@ -146,11 +145,11 @@ describe('channel', () => {
         expect(sessionHandlerCount).toBe(1);
 
         // 对齐源码中的延迟
-        await new Promise((resolve) => {
+        await new Promise<void>((resolve) => {
             setTimeout(resolve, 0);
         }).then(() => {
             // 断言调用了上报函数
-            expect(channel['timeoutReport']).toBeCalled();
+            expect(channel['channelReport']['timeoutReport']).toBeCalled();
         });
     });
 
@@ -272,27 +271,5 @@ describe('channel', () => {
 
         // sessionId 长度为 16 位
         expect(sessionId.length).toEqual(16);
-    });
-
-    it('requestDurationReport', () => {
-        const channel = new Channel(MoebiusObject, MoebiusObject);
-
-        reportProxy.weblog = jest.fn();
-
-        channel['requestDurationReport'](1024, 30000, 'testAction');
-        channel['requestDurationReport'](102400, 30000, 'testAction');
-
-        // 只有超时才上报, 共上报1次
-        expect(reportProxy.weblog).toBeCalledTimes(1);
-    });
-
-    it('timeoutReport', () => {
-        const channel = new Channel(MoebiusObject, MoebiusObject);
-
-        reportProxy.weblog = jest.fn();
-
-        channel['timeoutReport']('testAction');
-
-        expect(reportProxy.weblog).toBeCalledTimes(1);
     });
 });
