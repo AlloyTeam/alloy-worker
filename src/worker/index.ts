@@ -6,6 +6,15 @@ import type { IAlloyWorkerOptions } from './type';
 import { ReportProxy } from './external/report-proxy';
 import report from './external/report';
 import MainThreadWorker from './main-thread/index';
+/**
+ * 引用 worker thread
+ * 会由 alloy-worker-plugin 构建为独立 worker js 资源, 并返回资源 url
+ *
+ * 这里使用 alloy-worker! 显式指定构建的 loader.
+ * 区分同构逻辑中的 import ‘worker-thread’,
+ * 使得同构逻辑中的 import 可以引用到真实的 worker thread.
+ */
+import workerThreadWorker from 'alloy-worker!./worker-thread';
 
 /**
  * 主线程, 将上报代理替换为真实上报模块
@@ -53,11 +62,13 @@ export default function createAlloyWorker(options: Omit<IAlloyWorkerOptions, 'wo
  * @param isDebugMode
  */
 export function getWorkerUrl(isDebugMode: boolean): string {
-    /** worker url 会在构建时替换掉
-     * dev: 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker.js'
-     * dist: 'WORKER_FILE_NAME_PLACEHOLDER' -> 'alloy-worker-51497b48.js'
+    /**
+     * 在构建时替换为 worker 资源 url 字符串
+     * dev: alloy-worker.js
+     * dist: alloy-worker-51497b48.js
      */
-    let workerUrl = './WORKER_FILE_NAME_PLACEHOLDER';
+    let workerUrl = workerThreadWorker;
+
     if (!isDebugMode) {
         return workerUrl;
     }
