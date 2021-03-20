@@ -1,10 +1,7 @@
 const webpack = require('webpack');
 const execSync = require('child_process').execSync;
-
-const workerConfig = require('../worker-script/worker.webpack.config');
 const config = require('./webpack.config');
-
-const { isProduction, outputPath } = require('../worker-script/project.config');
+const { isProduction, outputPath } = require('./project.config');
 
 function getBuildFinishTime() {
     function addZero(num) {
@@ -25,6 +22,7 @@ const statFunc = (cb) => {
             console.log(
                 stats.toString({
                     all: false,
+                    assets: true,
                     chunks: true,
                     errors: true,
                     errorDetails: false,
@@ -44,14 +42,14 @@ const statFunc = (cb) => {
 execSync(`rm -rf ${outputPath}`);
 
 if (isProduction) {
-    const compiler = webpack([workerConfig, config]);
+    const compiler = webpack(config);
     compiler.run(
         statFunc((err, stats) => {
             console.log('dist: 页面构建完成', getBuildFinishTime());
         })
     );
 } else {
-    const compiler = webpack([workerConfig, config]);
+    const compiler = webpack(config);
     compiler.watch(
         {
             ignored: ['node_modules', 'script'],

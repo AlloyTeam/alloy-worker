@@ -1,9 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-
-const { isProduction, outputPath, projectDir } = require('../worker-script/project.config');
-const PluginForMainThreadBuild = require('../worker-script/plugin-for-main-thread-build');
+const { isProduction, outputPath, projectDir } = require('./project.config');
+// alloy-worker 自定义插件, 实现 worker 资源独立构建和动态化等能力
+const AlloyWorkerPlugin = require('../src/plugin/alloy-worker-plugin');
 
 const sourceMap = isProduction ? 'source-map' : 'cheap-module-source-map';
 const pagePath = path.join(projectDir, './src/page');
@@ -44,7 +44,6 @@ const config = {
         ],
     },
     plugins: [
-        ...PluginForMainThreadBuild,
         new HtmlWebpackPlugin({
             template: path.join(pagePath, '/index.html'),
             filename: 'index.html',
@@ -61,6 +60,7 @@ const config = {
                 to: path.join(outputPath, 'img'),
             },
         ]),
+        new AlloyWorkerPlugin({}),
     ],
 };
 

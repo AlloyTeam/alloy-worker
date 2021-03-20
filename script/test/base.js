@@ -39,6 +39,7 @@ module.exports = {
     moduleNameMapper: {
         '^test/(.*)$': '<rootDir>/test/$1',
         '^worker/(.*)$': '<rootDir>/src/worker/$1',
+        '^alloy-worker\!(.*)$': '<rootDir>/test/__mocks__/alloy-worker-mock.js',
     },
     globals: {
         'ts-jest': {

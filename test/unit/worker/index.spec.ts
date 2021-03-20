@@ -37,10 +37,10 @@ describe('alloyWorker', () => {
     it('getWorkerUrl', () => {
         const result = getWorkerUrl(false);
 
-        expect(result).toEqual('./WORKER_FILE_NAME_PLACEHOLDER');
+        expect(result).toEqual('worker-index.js');
 
         const result_debugMode = getWorkerUrl(true);
 
-        expect(result_debugMode).toEqual('./WORKER_FILE_NAME_PLACEHOLDER?debugWorker=true');
+        expect(result_debugMode).toEqual('worker-index.js?debugWorker=true');
     });
 });
