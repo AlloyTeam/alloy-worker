@@ -9,8 +9,6 @@
         "one": "node ./src/worker/one-script/index.js",
         "dev": "cross-env NODE_ENV=development node ./script/build.js",
         "dist": "cross-env NODE_ENV=production node ./script/build.js && cp -rf ./docs ./dist",
-        "dev:worker": "cross-env NODE_ENV=development node ./worker-script/build-worker.js",
-        "dist:worker": "cross-env NODE_ENV=production node ./worker-script/build-worker.js",
         "ts-check": "tsc --noEmit",
         "commit": "git-cz",
         "prettier": "prettier --write 'src/**/*.{js,ts}'",
