@@ -11,6 +11,7 @@ describe('Alloy Worker', () => {
     });
 
     it('test page title', async () => {
+        // 页面标题正确
         await expect(page.title()).resolves.toMatch('Alloy Worker');
     });
 
@@ -23,6 +24,7 @@ describe('Alloy Worker', () => {
             return Promise.resolve(alloyWorker.workerStatusCheck.workerStatus);
         });
 
+        // worker 可用性状态检查
         expect(workerStatus).not.toBeUndefined();
         expect(workerStatus.hasWorkerClass).toEqual(true);
         expect(workerStatus.canNewWorker).toEqual(true);
@@ -36,6 +38,7 @@ describe('Alloy Worker', () => {
             return alloyWorker.workerAbilityTest.communicationTest();
         })
 
+        // 主线程 worker 通信能力检查成功
         expect(typeof testResult).toEqual('number');
     });
 
@@ -44,6 +47,7 @@ describe('Alloy Worker', () => {
             return alloyWorker.workerAbilityTest.heartBeatTest(1024);
         })
 
+        // 主线程心跳包检查成功
         expect(heartBeatResult).toEqual(1024);
     });
 });
