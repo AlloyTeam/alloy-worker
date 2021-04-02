@@ -46,8 +46,7 @@
         "ts-jest": "^26.4.4",
         "ts-loader": "^6.2.1",
         "typescript": "^3.8.3",
-        "webpack": "^4.42.0",
-        "webpack-manifest-plugin": "^3.0.0"
+        "webpack": "^4.42.0"
     },
     "dependencies": {
         "core-js": "^3.6.4",
