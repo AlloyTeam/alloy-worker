@@ -55,13 +55,13 @@ Available on:
 
 ### 接入
 
-Alloy-worker **并不是一个 npm 包**. 需要你手动将它融合到你的项目里, 并成为项目源码的一部分. 好在手动也不复杂, 而且不会影响现有业务.
+alloy-worker 需要你手动将它融合到你的项目里, 并成为项目源码的一部分. 好在手动也不复杂, 而且不会影响现有业务.
 
 接入步骤, [请查看这里][alloy-worker 接入教程].
 
 ### 使用
 
-Alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 [alloy-worker 的约定][alloy-worker 代码约定].
+alloy-worker 对原始 Web Worker 通信能力进行了 RPC 封装, **约定了 Worker 代码组织方式**. 使用 alloy-worker 开发 Worker 侧业务时, 需对齐 [alloy-worker 的约定][alloy-worker 代码约定].
 
 约定不复杂, [请查看这里][alloy-worker 使用教程].
 
