@@ -1,20 +1,7 @@
 {
     "name": "alloy-worker",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "面向事务的高可用 Web Worker 通信框架",
-    "main": "index.js",
-    "scripts": {
-        "test": "cross-env NODE_ENV=test jest -c script/test/base.js",
-        "e2e": "cross-env NODE_ENV=test jest -c script/test/e2e.js",
-        "test:lint-staged": "cross-env NODE_ENV=test jest -c script/test/base.js --findRelatedTests",
-        "one": "node ./src/worker/one-script/index.js",
-        "dev": "cross-env NODE_ENV=development node ./script/build.js",
-        "dist": "cross-env NODE_ENV=production node ./script/build.js",
-        "ts-check": "tsc --noEmit",
-        "commit": "git-cz",
-        "prettier": "prettier --write 'src/**/*.{js,ts}'",
-        "eslint": "eslint 'src/**/*.{js,ts}'"
-    },
     "keywords": [
         "Web",
         "Worker",
@@ -23,6 +10,25 @@
     ],
     "author": "AlloyTeam",
     "license": "MIT",
+    "main": "index.js",
+    "types": "lib/typings/index.d.ts",
+    "bin": {
+        "alloy-worker": "src/command/index.js"
+    },
+    "scripts": {
+        "test": "cross-env NODE_ENV=test jest -c script/test/base.js",
+        "e2e": "cross-env NODE_ENV=test jest -c script/test/e2e.js",
+        "test:lint-staged": "cross-env NODE_ENV=test jest -c script/test/base.js --findRelatedTests",
+        "dev": "cross-env NODE_ENV=development node ./script/build.js",
+        "dist": "cross-env NODE_ENV=production node ./script/build.js",
+        "type": "mkdir -p lib && cp -r src/typings lib/",
+        "plugin": "mkdir -p lib && cp -r src/plugin lib/",
+        "prepublishOnly": "npm run plugin && npm run type",
+        "ts-check": "tsc --noEmit",
+        "commit": "git-cz",
+        "prettier": "prettier --write 'src/**/*.{js,ts}'",
+        "eslint": "eslint 'src/**/*.{js,ts}'"
+    },
     "devDependencies": {
         "@babel/core": "^7.9.0",
         "@babel/plugin-transform-runtime": "^7.9.0",
@@ -50,10 +56,10 @@
         "ts-jest": "^26.4.4",
         "ts-loader": "^6.2.1",
         "typescript": "^3.8.3",
-        "webpack": "^4.42.0",
-        "webpack-manifest-plugin": "^3.0.0"
+        "webpack": "^4.42.0"
     },
     "dependencies": {
+        "commander": "^2.7.0",
         "core-js": "^3.6.4",
         "regenerator-runtime": "^0.13.5"
     },
