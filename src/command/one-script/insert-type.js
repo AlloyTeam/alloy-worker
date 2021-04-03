@@ -18,7 +18,7 @@ const insertType = (pureActionName) => {
     const appendPayloadTypeStr = `
     namespace ${pureActionName} {
         type MainCallWorker = string;
-        type WorkerCallMain {
+        type WorkerCallMain = {
             hello: number;
             world: number;
         }
@@ -29,7 +29,7 @@ const insertType = (pureActionName) => {
     const appendResponseTypeStr = `
     namespace ${pureActionName} {
         type MainCallWorker = string;
-        type WorkerCallMain {
+        type WorkerCallMain = {
             alloy: string;
             worker: string;
         }
