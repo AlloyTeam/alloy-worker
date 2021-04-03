@@ -2,4 +2,4 @@
 *
 
 # But not these files
-./lib
+!lib/**/*

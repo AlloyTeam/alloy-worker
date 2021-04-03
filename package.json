@@ -1,6 +1,6 @@
 {
     "name": "alloy-worker",
-    "version": "0.1.1",
+    "version": "1.0.0",
     "description": "面向事务的高可用 Web Worker 通信框架",
     "keywords": [
         "Web",
@@ -12,10 +12,12 @@
     "license": "MIT",
     "main": "index.js",
     "types": "lib/typings/index.d.ts",
+    "bin": {
+        "alloy-worker": "src/command/index.js"
+    },
     "scripts": {
         "test": "cross-env NODE_ENV=test jest -c script/test/base.js",
         "test:lint-staged": "cross-env NODE_ENV=test jest -c script/test/base.js --findRelatedTests",
-        "one": "node ./src/worker/one-script/index.js",
         "dev": "cross-env NODE_ENV=development node ./script/build.js",
         "dist": "cross-env NODE_ENV=production node ./script/build.js",
         "type": "mkdir -p lib && cp -r src/typings lib/",
@@ -53,6 +55,7 @@
         "webpack": "^4.42.0"
     },
     "dependencies": {
+        "commander": "^2.7.0",
         "core-js": "^3.6.4",
         "regenerator-runtime": "^0.13.5"
     },
