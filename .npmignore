@@ -2,4 +2,9 @@
 *
 
 # But not these files
+# plugin 和 ts 类型声明
 !lib/**/*
+# bin 脚本
+!src/command/**/*
+# 通信源码
+!src/worker/**/*
