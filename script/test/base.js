@@ -30,6 +30,10 @@ module.exports = {
         '!src/worker/one-script/**/*.{js,ts}',
         // 忽略测试页面
         '!src/page/**/*.{js,ts}',
+        // 忽略 plugin
+        '!src/plugin/**/*.{js,ts}',
+        // 忽略 command
+        '!src/command/**/*.{js,ts}',
         '!**/*.d.ts',
         '!**/test/**',
         '!**/dist/**',
