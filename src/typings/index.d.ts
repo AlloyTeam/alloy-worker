@@ -35,3 +35,14 @@ declare namespace NodeJS {
         name: string;
     }
 }
+
+/**
+ * alloy-worker! 表示构建为独立 worker js 资源, 并返回资源 url
+ * 将加载的 worker 线程源码类型声明为 string, 避免 ts-check 报错
+ * 比如:
+ * import workerThread from 'alloy-worker!./worker-thread';
+ */
+declare module 'alloy-worker!*' {
+    const type: string;
+    export = type;
+}

@@ -28,4 +28,46 @@ Alloy-worker 的构建脚本路径和正常前端项目有差异: 脚本在 `./s
 $ npm run dist
 ```
 
+## 关联分支
+* master, 主干分支.
+* demo, 部署 demo 页面分支, 并推送到 gh-pages 分支.
+* e2e-test, e2e 分支, 避免 master 构建失败.
+* release, 发布 alloy-worker npm 包分支.
+
+## 更新 demo 页面
+
+demo: https://alloyteam.github.io/alloy-worker/index.html
+
+在 `demo` 分支关联了 github action, 专门用于生成 github page, 执行 dist 构建并推送到 `gh-pages` 分支.
+
+```sh
+$ git checkout demo
+$ git merge master
+$ git push
+```
+
+## 自动化测试
+
+在 master 分支关联了单元测试, 每次 push 都会执行.
+
+查看: https://github.com/AlloyTeam/alloy-worker/actions/workflows/unit-test.yml
+
+在 `e2e-test` 分支关联了 e2e 测试. 启动测试:
+
+```sh
+$ git checkout e2e-test
+$ git merge master
+$ git push
+```
+
+## 发布 npm 包
+
+在 `release` 分支关联了 github action, 专门用于生成 `standard-version`, 并执行 `npm publish`, 再 merge 回 master.
+
+```sh
+$ git checkout release
+$ git merge master
+$ git push
+```
+
 ## EOF

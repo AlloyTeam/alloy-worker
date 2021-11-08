@@ -30,6 +30,10 @@ module.exports = {
         '!src/worker/one-script/**/*.{js,ts}',
         // 忽略测试页面
         '!src/page/**/*.{js,ts}',
+        // 忽略 plugin
+        '!src/plugin/**/*.{js,ts}',
+        // 忽略 command
+        '!src/command/**/*.{js,ts}',
         '!**/*.d.ts',
         '!**/test/**',
         '!**/dist/**',
@@ -39,6 +43,7 @@ module.exports = {
     moduleNameMapper: {
         '^test/(.*)$': '<rootDir>/test/$1',
         '^worker/(.*)$': '<rootDir>/src/worker/$1',
+        '^alloy-worker\!(.*)$': '<rootDir>/test/__mocks__/alloy-worker-mock.js',
     },
     globals: {
         'ts-jest': {

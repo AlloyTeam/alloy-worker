@@ -1,6 +1,8 @@
-# 生成事务模板脚本
-src/worker/one-script/*
+# 脚本
+/src/command/*
+
 # worker 构建脚本
-worker-script/*
-scripts/*
 script/*
+
+# alloy-worker webpack plugin
+src/plugin/*
