@@ -1,6 +1,6 @@
 {
     "name": "alloy-worker",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "面向事务的高可用 Web Worker 通信框架",
     "keywords": [
         "Web",
