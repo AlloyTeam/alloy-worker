@@ -17,6 +17,7 @@ describe('Alloy Worker', () => {
 
         const workers = await page.workers();
 
+        // 成功创建 worker 线程
         expect(workers.length).toEqual(1);
     });
 
@@ -29,7 +30,8 @@ describe('Alloy Worker', () => {
 
         const url = await workers[0].url();
 
-        expect(/alloy-worker/i.test(url)).toEqual(true);
+        // worker 线程由 worker-index.js 创建
+        expect(/worker-index/i.test(url)).toEqual(true);
     });
 
     it('get cookie from main thread', async () => {
@@ -48,6 +50,7 @@ describe('Alloy Worker', () => {
             return alloyWorker.cookie.getCookie();
         });
 
+        // worker 线程取到主线程 cookie
         expect(/alloy=worker/i.test(mainThreadCookie)).toEqual(true);
     });
 });
