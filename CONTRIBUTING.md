@@ -28,6 +28,12 @@ Alloy-worker 的构建脚本路径和正常前端项目有差异: 脚本在 `./s
 $ npm run dist
 ```
 
+## 关联分支
+* master, 主干分支.
+* demo, 部署 demo 页面分支, 并推送到 gh-pages 分支.
+* e2e-test, e2e 分支, 避免 master 构建失败.
+* release, 发布 alloy-worker npm 包分支.
+
 ## 更新 demo 页面
 
 demo: https://alloyteam.github.io/alloy-worker/index.html
