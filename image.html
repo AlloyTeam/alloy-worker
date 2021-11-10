@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Alloy Worker</title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'PingFang SC', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
+            }
+
+            #operation {
+                display: flex;
+                /* IE10 兼容 */
+                display: -ms-flexbox;
+                flex-direction: row;
+            }
+
+            #start-image-process {
+                margin: 10px 10px;
+                border: 1px solid lightblue;
+                border-radius: 4px;
+                font-size: 20px;
+            }
+
+            #operation-info {
+                color: green;
+                font-size: 20px;
+            }
+
+            #range-input {
+                width: 128px;
+            }
+
+            #original-container {
+                margin: 10px 0 0 20px;
+                width: 170px;
+                height: 186px;
+            }
+
+            #original {
+                width: 512px;
+                height: 512px;
+            }
+
+            #container {
+                width: 250%;
+                display: flex;
+                flex-wrap: wrap;
+                position: absolute;
+                transform-origin: top left;
+                transform: scale(0.4);
+                margin: 10px 10px;
+            }
+
+            .img-canvas {
+                margin: 20px;
+                border: 1px solid;
+            }
+
+            .animotion-container {
+                margin: 20px 0 0 20px;
+                height: 80px;
+                width: 80px;
+            }
+
+            #animotion-image {
+                border-radius: 50%;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="operation">
+            <div id="original-container">
+                <span id="original-info"></span>
+                <div style="display: flex;">
+                    <input id="range-input" type="range" min="32" max="512" value="512" step="32"/>
+                    <span id="range-info"></span>
+                </div>
+                <div style="transform-origin: top left; transform: scale(0.3);">
+                    <img id="original" src="./img/lena.gif" crossorigin="anonymous">
+                </div>
+            </div>
+            <div>
+                <div>
+                    <button id="start-image-process">Start Image Process</button>
+                    <span id="operation-info"></span>
+                </div>
+                <div>
+                    <input type="radio" id="use-main-thread" name="how" value="UseMainThread">
+                    <label for="use-main-thread">UseMainThread</label><br>
+                    <input type="radio" id="use-settimeout" name="how" value="UseSetTimeout">
+                    <label for="use-settimeout">UseSetTimeout</label><br>
+                    <input type="radio" id="use-worker" name="how" value="UseWorker" checked>
+                    <label for="use-worker">UseWorker</label><br>
+                    <input type="radio" id="use-multi-worker" name="how" value="UseMultiWorker">
+                    <label for="use-multi-worker">UseMultiWorker</label><br>
+                </div>
+                <div class="animotion-container">
+                    <img id="animotion-image" src="./img/lena.gif" crossorigin="anonymous">
+                </div>
+            </div>
+        </div>
+        <div id="container">
+        </div>
+    <script type="text/javascript" src="image-4524ae8d.js"></script></body>
+</html>
